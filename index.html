@@ -46,18 +46,23 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .apikey-note{font-size:11px;color:var(--muted);font-weight:600;margin-top:12px;line-height:1.6}
 .apikey-link{color:var(--blue);text-decoration:none;font-weight:800}
 .err-box{color:var(--red);font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
+.ok-box{color:#166534;font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid var(--green)}
 
 /* Auth */
 .auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f)}
-.auth-card{background:#fff;border-radius:24px;padding:40px;max-width:420px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
+.auth-card{background:#fff;border-radius:24px;padding:40px;max-width:440px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
 .auth-owl{font-size:56px;display:block;margin-bottom:12px;animation:float 3s ease-in-out infinite}
 .auth-title{font-size:24px;font-weight:900;color:var(--navy);margin-bottom:6px}
 .auth-title span{background:linear-gradient(90deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.auth-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:24px;line-height:1.6}
-.auth-tabs{display:flex;gap:0;margin-bottom:24px;background:#f1f5f9;border-radius:10px;padding:3px}
+.auth-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:20px;line-height:1.6}
+.auth-tabs{display:flex;gap:0;margin-bottom:20px;background:#f1f5f9;border-radius:10px;padding:3px}
 .auth-tab{flex:1;padding:9px;border-radius:8px;border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
 .auth-tab.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.auth-inp{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;color:var(--text);outline:none;transition:border-color .15s;margin-bottom:12px}
+.auth-type-row{display:flex;gap:10px;margin-bottom:16px}
+.auth-type-btn{flex:1;padding:12px;border-radius:12px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:5px}
+.auth-type-btn.active{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
+.auth-type-icon{font-size:24px}
+.auth-inp{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;color:var(--text);outline:none;transition:border-color .15s;margin-bottom:10px}
 .auth-inp:focus{border-color:var(--blue)}
 .auth-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(59,130,246,.4);margin-top:4px}
 .auth-btn:hover{transform:translateY(-2px)} .auth-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
@@ -129,6 +134,10 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .block-challenge-lbl{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--orange);margin-bottom:4px}
 .block-fact{margin:9px 0;padding:11px 13px;background:linear-gradient(135deg,#eff6ff,#e0f2fe);border:2px solid var(--blue);border-radius:11px;font-size:12px;color:#1e40af}
 .block-fact-lbl{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.block-resource{margin:9px 0;padding:11px 13px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid var(--green);border-radius:11px;font-size:12px;color:#166534}
+.block-resource-lbl{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.resource-link{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:8px;background:#fff;border:1px solid var(--green);color:#166534;font-size:11px;font-weight:800;text-decoration:none;margin:3px 3px 0 0;cursor:pointer;transition:all .15s}
+.resource-link:hover{background:var(--green);color:#fff}
 .block-code{margin:9px 0;background:var(--navy);border-radius:9px;overflow:hidden}
 .block-code-hdr{padding:5px 11px;background:var(--navy2);font-size:9px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;font-family:var(--mono)}
 .block-code-body{padding:9px 11px;font-family:var(--mono);font-size:11px;color:#e2e8f0;line-height:1.7;white-space:pre-wrap;overflow-x:auto}
@@ -155,7 +164,7 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .chip-subject{background:var(--navy);color:#fff} .chip-mode{background:#f1f5f9;color:var(--muted)} .chip-struggling{background:#fff7ed;color:var(--orange);border:1px solid var(--orange)}
 
 /* Tree */
-.tree-panel{width:248px;flex-shrink:0;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.tree-panel{width:252px;flex-shrink:0;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .tree-header{padding:12px 12px 9px;border-bottom:1px solid var(--border)}
 .tree-title{font-size:13px;font-weight:900;color:var(--navy);margin-bottom:7px}
 .tree-tabs{display:flex;gap:4px}
@@ -167,19 +176,22 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .tree-body::-webkit-scrollbar{width:4px} .tree-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px}
 .tree-unit{margin-bottom:13px}
 .tree-unit-label{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;padding-left:2px}
-.tree-node{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:9px;border:2px solid var(--border);background:#fff;margin-bottom:4px;cursor:pointer;transition:all .15s}
+.tree-node{display:flex;align-items:flex-start;gap:7px;padding:7px 9px;border-radius:9px;border:2px solid var(--border);background:#fff;margin-bottom:4px;cursor:pointer;transition:all .15s}
 .tree-node:hover:not(.locked){transform:translateX(2px);box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .tree-node.locked{opacity:.4;cursor:default}
 .tree-node.mastered{border-color:var(--green);background:#f0fdf4}
 .tree-node.gap{border-color:var(--orange);background:#fff7ed}
 .tree-node.current{border-color:#bfdbfe;background:#eff6ff}
 .tree-node.struggling-node{border-color:var(--red);background:#fef2f2;animation:pulseGlow 2s infinite}
-.tree-node-icon{font-size:15px;flex-shrink:0} .tree-node-text{flex:1;min-width:0}
+.tree-node-icon{font-size:15px;flex-shrink:0;margin-top:1px} .tree-node-text{flex:1;min-width:0}
 .tree-node-name{font-size:10px;font-weight:800;color:var(--text);line-height:1.3}
 .tree-node-sub{font-size:9px;font-weight:600;color:var(--muted)}
 .tree-node-bar{height:3px;background:var(--border);border-radius:3px;margin-top:3px;overflow:hidden}
 .tree-node-fill{height:100%;border-radius:3px;transition:width .5s}
-.tree-node-pct{font-size:9px;font-weight:800;flex-shrink:0}
+.tree-node-resources{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.tree-resource-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:5px;font-size:8px;font-weight:800;text-decoration:none;transition:all .15s}
+.tree-resource-badge:hover{opacity:.8;transform:scale(1.05)}
+.tree-node-pct{font-size:9px;font-weight:800;flex-shrink:0;margin-top:2px}
 .tree-legend{padding:8px 11px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:3px;font-size:9px;font-weight:700;color:var(--muted)}
 .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
@@ -221,8 +233,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .btn-primary:hover{transform:translateY(-2px)} .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .btn-secondary{padding:14px 20px;border-radius:12px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
 .btn-secondary:hover{border-color:var(--navy);color:var(--navy)}
-
-/* Diag */
 .diag-card{background:#fff;border-radius:22px;padding:36px;max-width:540px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.12)}
 .diag-prog-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px}
 .diag-bar{height:7px;background:var(--border);border-radius:6px;overflow:hidden;margin-bottom:20px}
@@ -242,8 +252,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .fb-no{background:#fef2f2;border:2px solid var(--red);color:#991b1b}
 .next-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:13px;font-weight:900;cursor:pointer;transition:all .15s}
 .next-btn:hover{transform:translateY(-2px)}
-
-/* Results */
 .results-card{background:#fff;border-radius:22px;padding:36px;max-width:540px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center}
 .mastery-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px}
 .m-card{padding:16px 12px;border-radius:13px;border:2px solid var(--border);text-align:center}
@@ -258,8 +266,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .box-str-item{font-size:11px;font-weight:700;color:#166534;margin-bottom:3px}
 .big-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(59,130,246,.4)}
 .big-btn:hover{transform:translateY(-2px)}
-
-/* PIN */
 .pin-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}
 .pin-card{background:#fff;border-radius:22px;padding:36px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.12)}
 .pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:22px}
@@ -271,18 +277,40 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .pin-key.del{font-size:13px;color:var(--red);border-color:transparent}
 .pin-err{color:var(--red);font-size:11px;font-weight:700;margin-top:6px}
 
-/* Dashboard */
-.dash-layout{flex:1;display:flex;overflow:hidden}
-.dash-nav{width:180px;flex-shrink:0;background:var(--navy);padding:16px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
-.dash-nav-title{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px;margin-top:8px}
-.dash-nav-btn{width:100%;padding:9px 12px;border-radius:9px;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;color:#94a3b8;transition:all .15s;text-align:left}
-.dash-nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.dash-nav-btn.active{background:var(--blue);color:#fff}
-.dash-nav-bottom{margin-top:auto;display:flex;flex-direction:column;gap:6px}
-.dash-nav-lock{width:100%;padding:9px 12px;border-radius:9px;border:2px solid rgba(255,255,255,.1);background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:#94a3b8;transition:all .15s;display:flex;align-items:center;gap:7px}
-.dash-nav-lock:hover{border-color:var(--red);color:var(--red)}
-.dash-content{flex:1;overflow-y:auto;padding:24px 28px}
-.dash-content::-webkit-scrollbar{width:5px} .dash-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+/* ── Parent Hub ── */
+.parent-hub{flex:1;display:flex;overflow:hidden}
+.parent-hub-sidebar{width:220px;flex-shrink:0;background:var(--navy);display:flex;flex-direction:column;overflow:hidden}
+.parent-hub-header{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.parent-hub-name{font-size:14px;font-weight:900;color:#fff;margin-bottom:2px}
+.parent-hub-role{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+.children-list{flex:1;overflow-y:auto;padding:12px 12px 0}
+.children-list-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px}
+.child-btn{width:100%;padding:10px 12px;border-radius:10px;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:9px;color:#94a3b8;transition:all .15s;margin-bottom:4px;text-align:left}
+.child-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.child-btn.active{background:linear-gradient(135deg,rgba(59,130,246,.3),rgba(20,184,166,.2));color:#fff;border:1px solid rgba(59,130,246,.3)}
+.child-avatar{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.child-info{flex:1;min-width:0}
+.child-name{font-size:12px;font-weight:800;line-height:1.2}
+.child-grade{font-size:10px;font-weight:600;opacity:.7}
+.add-child-btn{width:100%;padding:9px 12px;border-radius:10px;border:2px dashed rgba(255,255,255,.15);background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:#64748b;transition:all .15s;display:flex;align-items:center;gap:7px;margin-top:8px}
+.add-child-btn:hover{border-color:var(--blue);color:var(--blue)}
+.parent-hub-nav{padding:12px}
+.parent-nav-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px}
+.parent-nav-btn{width:100%;padding:8px 10px;border-radius:9px;border:none;background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;color:#94a3b8;transition:all .15s;margin-bottom:3px;text-align:left}
+.parent-nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.parent-nav-btn.active{background:var(--blue);color:#fff}
+.parent-hub-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto}
+.parent-hub-content{flex:1;overflow-y:auto;padding:24px 28px}
+.parent-hub-content::-webkit-scrollbar{width:5px} .parent-hub-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* Add child modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-card{background:#fff;border-radius:20px;padding:32px;max-width:420px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.2)}
+.modal-title{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:20px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
+
+/* Dashboard shared */
 .dash-page-title{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:4px}
 .dash-page-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:22px}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
@@ -348,6 +376,8 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .alert-title{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
 .alert-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(249,115,22,.15);font-size:11px;font-weight:700;color:#92400e}
 .alert-item:last-child{border-bottom:none}
+.no-child-state{flex:1;display:flex;align-items:center;justify-content:center;padding:40px}
+.no-child-card{background:#fff;border-radius:20px;padding:40px;max-width:420px;width:100%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)}
 </style>
 </head>
 <body>
@@ -358,74 +388,66 @@ const{useState,useEffect,useRef,useCallback}=React;
 /* ── Supabase ── */
 const SB_URL="https://ifayrtuouxlfnvtyhnjz.supabase.co";
 const SB_KEY="sb_publishable_jDQ4waUP5brWgKyp8zUiYg_PfOp4NkJ";
-const sbHeaders={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
+const sbH={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
 const sb={
-  getProfile:async(u)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbHeaders});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
-  upsertProfile:async(u,h,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles",{method:"POST",headers:{...sbHeaders,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}},
-  updateProfile:async(u,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbHeaders,body:JSON.stringify({profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}}
+  getProfile:async(u)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbH});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
+  upsertProfile:async(u,h,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles",{method:"POST",headers:{...sbH,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}},
+  updateProfile:async(u,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbH,body:JSON.stringify({profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}},
+  getParent:async(u)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbH});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
+  upsertParent:async(u,h,name,children)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts",{method:"POST",headers:{...sbH,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,full_name:name,children:children||[]})});return r.ok;}catch{return false;}},
+  updateParent:async(u,data)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbH,body:JSON.stringify(data)});return r.ok;}catch{return false;}}
 };
 async function hashPassword(pw){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pw));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
+const ls={get:(k)=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},del:(k)=>{try{localStorage.removeItem(k);}catch{}}};
 
-/* ── localStorage ── */
-const ls={
-  get:(k)=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},
-  set:(k,v)=>{try{localStorage.setItem(k,v);return true;}catch{return false;}},
-  del:(k)=>{try{localStorage.removeItem(k);return true;}catch{return false;}}
+/* ── External Resources per topic ── */
+const RESOURCES={
+  m1:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/multiplication-in-third-grade",color:"#16a34a",bg:"#f0fdf4"},{label:"Times Tables Rock Stars",url:"https://ttrockstars.com",color:"#7c3aed",bg:"#f5f3ff"}],
+  m2:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/arithmetic/arith-review-multiply-divide",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/divide-by-1-digit-numbers",color:"#0369a1",bg:"#eff6ff"}],
+  m3:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/fractions-topic",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
+  m4:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/equivalent-fractions",color:"#0369a1",bg:"#eff6ff"}],
+  m5:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
+  m6:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-area-and-perimeter",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/perimeter",color:"#0369a1",bg:"#eff6ff"}],
+  m7:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-angle",color:"#16a34a",bg:"#f0fdf4"}],
+  m8:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-transformations",color:"#16a34a",bg:"#f0fdf4"}],
+  m9:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
+  m10:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/pre-algebra/pre-algebra-arith-prop",color:"#16a34a",bg:"#f0fdf4"}],
+  s1:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
+  s2:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws/gravity-newtonian/a/what-is-gravity",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
+  s3:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"}],
+  s4:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/work-and-energy",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
+  s5:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
+  s6:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry",color:"#16a34a",bg:"#f0fdf4"}],
+  s7:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"}],
+  s8:[{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/space",color:"#f59e0b",bg:"#fffbeb"}],
+  s9:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/cosmology-and-astronomy",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature/article/weather",color:"#f59e0b",bg:"#fffbeb"}],
+  s10:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/biology/ecology",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature",color:"#f59e0b",bg:"#fffbeb"}],
+  c1:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
+  c2:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c3:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c4:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c5:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
+  c6:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c7:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
+  c8:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
 };
 
 /* ── Data ── */
 const CURRICULUM={
   math:[
-    {unit:"Number Sense",nodes:[
-      {id:"m1",name:"Multiplication Facts",sub:"Up to 12×12",icon:"✖️"},
-      {id:"m2",name:"Long Division",sub:"1 & 2-digit divisors",icon:"➗",requires:"m1"},
-      {id:"m3",name:"Fractions Intro",sub:"Parts of a whole",icon:"🍕"},
-      {id:"m4",name:"Equivalent Fractions",sub:"Same value, different look",icon:"⚖️",requires:"m3"},
-      {id:"m5",name:"Adding Fractions",sub:"Same denominator",icon:"➕",requires:"m4"},
-    ]},
-    {unit:"Geometry",nodes:[
-      {id:"m6",name:"Perimeter & Area",sub:"Shapes and space",icon:"📐"},
-      {id:"m7",name:"Angles",sub:"Acute, obtuse, right",icon:"📏",requires:"m6"},
-      {id:"m8",name:"Symmetry",sub:"Lines and reflections",icon:"🪞",requires:"m6"},
-    ]},
-    {unit:"Problem Solving",nodes:[
-      {id:"m9",name:"Word Problems",sub:"Real-world math",icon:"📖"},
-      {id:"m10",name:"Patterns & Sequences",sub:"Finding the rule",icon:"🔢"},
-    ]},
+    {unit:"Number Sense",nodes:[{id:"m1",name:"Multiplication Facts",sub:"Up to 12×12",icon:"✖️"},{id:"m2",name:"Long Division",sub:"1 & 2-digit divisors",icon:"➗",requires:"m1"},{id:"m3",name:"Fractions Intro",sub:"Parts of a whole",icon:"🍕"},{id:"m4",name:"Equivalent Fractions",sub:"Same value, different look",icon:"⚖️",requires:"m3"},{id:"m5",name:"Adding Fractions",sub:"Same denominator",icon:"➕",requires:"m4"}]},
+    {unit:"Geometry",nodes:[{id:"m6",name:"Perimeter & Area",sub:"Shapes and space",icon:"📐"},{id:"m7",name:"Angles",sub:"Acute, obtuse, right",icon:"📏",requires:"m6"},{id:"m8",name:"Symmetry",sub:"Lines and reflections",icon:"🪞",requires:"m6"}]},
+    {unit:"Problem Solving",nodes:[{id:"m9",name:"Word Problems",sub:"Real-world math",icon:"📖"},{id:"m10",name:"Patterns & Sequences",sub:"Finding the rule",icon:"🔢"}]},
   ],
   science:[
-    {unit:"Forces & Motion",nodes:[
-      {id:"s1",name:"What is Force?",sub:"Pushes and pulls",icon:"💪"},
-      {id:"s2",name:"Gravity",sub:"Why things fall",icon:"🌍",requires:"s1"},
-      {id:"s3",name:"Friction",sub:"Slowing things down",icon:"🛞",requires:"s1"},
-      {id:"s4",name:"Simple Machines",sub:"Levers, pulleys, ramps",icon:"⚙️",requires:"s2"},
-    ]},
-    {unit:"Matter",nodes:[
-      {id:"s5",name:"States of Matter",sub:"Solid, liquid, gas",icon:"💧"},
-      {id:"s6",name:"Material Properties",sub:"Hard, soft, magnetic",icon:"🧲",requires:"s5"},
-      {id:"s7",name:"Changes in Matter",sub:"Melting, freezing, evaporation",icon:"🔥",requires:"s5"},
-    ]},
-    {unit:"Earth & Space",nodes:[
-      {id:"s8",name:"Solar System",sub:"Planets & the Sun",icon:"🌌"},
-      {id:"s9",name:"Weather & Climate",sub:"Rain, wind, temperature",icon:"🌦️"},
-      {id:"s10",name:"Ecosystems",sub:"Food chains & habitats",icon:"🌿"},
-    ]},
+    {unit:"Forces & Motion",nodes:[{id:"s1",name:"What is Force?",sub:"Pushes and pulls",icon:"💪"},{id:"s2",name:"Gravity",sub:"Why things fall",icon:"🌍",requires:"s1"},{id:"s3",name:"Friction",sub:"Slowing things down",icon:"🛞",requires:"s1"},{id:"s4",name:"Simple Machines",sub:"Levers, pulleys, ramps",icon:"⚙️",requires:"s2"}]},
+    {unit:"Matter",nodes:[{id:"s5",name:"States of Matter",sub:"Solid, liquid, gas",icon:"💧"},{id:"s6",name:"Material Properties",sub:"Hard, soft, magnetic",icon:"🧲",requires:"s5"},{id:"s7",name:"Changes in Matter",sub:"Melting, freezing, evaporation",icon:"🔥",requires:"s5"}]},
+    {unit:"Earth & Space",nodes:[{id:"s8",name:"Solar System",sub:"Planets & the Sun",icon:"🌌"},{id:"s9",name:"Weather & Climate",sub:"Rain, wind, temperature",icon:"🌦️"},{id:"s10",name:"Ecosystems",sub:"Food chains & habitats",icon:"🌿"}]},
   ],
   coding:[
-    {unit:"Foundations",nodes:[
-      {id:"c1",name:"What is an Algorithm?",sub:"Step-by-step instructions",icon:"📋"},
-      {id:"c2",name:"Sequences",sub:"Order of instructions",icon:"1️⃣",requires:"c1"},
-      {id:"c3",name:"Loops",sub:"Repeating actions",icon:"🔄",requires:"c2"},
-      {id:"c4",name:"Conditionals",sub:"IF/ELSE decisions",icon:"🔀",requires:"c3"},
-    ]},
-    {unit:"Data & Functions",nodes:[
-      {id:"c5",name:"Variables",sub:"Storing information",icon:"📦",requires:"c4"},
-      {id:"c6",name:"Functions",sub:"Reusable code blocks",icon:"🧩",requires:"c5"},
-    ]},
-    {unit:"Projects",nodes:[
-      {id:"c7",name:"Mini Calculator",sub:"Build with variables",icon:"🔢",requires:"c5"},
-      {id:"c8",name:"Guessing Game",sub:"Conditionals & loops",icon:"🎮",requires:"c4"},
-    ]},
+    {unit:"Foundations",nodes:[{id:"c1",name:"What is an Algorithm?",sub:"Step-by-step instructions",icon:"📋"},{id:"c2",name:"Sequences",sub:"Order of instructions",icon:"1️⃣",requires:"c1"},{id:"c3",name:"Loops",sub:"Repeating actions",icon:"🔄",requires:"c2"},{id:"c4",name:"Conditionals",sub:"IF/ELSE decisions",icon:"🔀",requires:"c3"}]},
+    {unit:"Data & Functions",nodes:[{id:"c5",name:"Variables",sub:"Storing information",icon:"📦",requires:"c4"},{id:"c6",name:"Functions",sub:"Reusable code blocks",icon:"🧩",requires:"c5"}]},
+    {unit:"Projects",nodes:[{id:"c7",name:"Mini Calculator",sub:"Build with variables",icon:"🔢",requires:"c5"},{id:"c8",name:"Guessing Game",sub:"Conditionals & loops",icon:"🎮",requires:"c4"}]},
   ],
 };
 const TKW={m1:["multiplication","times table","multiply","product"],m2:["division","divide","quotient"],m3:["fraction","numerator","denominator"],m4:["equivalent fraction","simplify fraction"],m5:["add fraction","adding fraction"],m6:["perimeter","area","rectangle"],m7:["angle","acute","obtuse","right angle"],m8:["symmetry","reflection","mirror"],m9:["word problem","real world math"],m10:["pattern","sequence","next number"],s1:["force","push","pull","newton"],s2:["gravity","fall","weight","drop"],s3:["friction","rough surface","smooth surface"],s4:["simple machine","lever","pulley","ramp"],s5:["solid","liquid","gas","state of matter"],s6:["material property","magnetic","conductor"],s7:["melt","freeze","evaporate","boil"],s8:["planet","solar system","sun","orbit","space"],s9:["weather","rain","wind","temperature","climate"],s10:["ecosystem","food chain","habitat"],c1:["algorithm","instructions","program"],c2:["sequence","order","step by step"],c3:["loop","repeat","while loop","for loop"],c4:["if statement","else","conditional"],c5:["variable","store value","data"],c6:["function","def ","method","reusable"],c7:["calculator","arithmetic program"],c8:["game","guessing game","random number"]};
@@ -456,27 +478,38 @@ const dT=text=>{const l=text.toLowerCase();return Object.entries(TKW).filter(([,
 const dS=text=>STRUGGLE.some(p=>text.toLowerCase().includes(p));
 const fD=iso=>{const d=new Date(iso);return{month:d.toLocaleString("default",{month:"short"}),day:d.getDate(),time:d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})};};
 const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const CHILD_COLORS=["linear-gradient(135deg,#3b82f6,#14b8a6)","linear-gradient(135deg,#8b5cf6,#ec4899)","linear-gradient(135deg,#f97316,#fbbf24)","linear-gradient(135deg,#22c55e,#14b8a6)"];
+const CHILD_EMOJIS=["🧑","👧","🧒","👦","🙋"];
 
 function parseBlocks(text){
   const blocks=[];const lines=text.split("\n");let i=0,cb=null,cl="";
   while(i<lines.length){const line=lines[i];
     if(line.startsWith("```")){if(cb!==null){blocks.push({type:"code",lang:cl,content:cb.join("\n")});cb=null;cl="";}else{cb=[];cl=line.slice(3).trim()||"code";}i++;continue;}
     if(cb!==null){cb.push(line);i++;continue;}
-    if(line.includes("🤔")||line.toLowerCase().includes("think about this")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"challenge",content:c});i++;continue;}
-    if(line.includes("⭐")||line.toLowerCase().includes("fun fact")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"funfact",content:c});i++;continue;}
+    if(line.includes("🤔")||line.toLowerCase().includes("think about this")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("📚")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"challenge",content:c});i++;continue;}
+    if(line.includes("⭐")||line.toLowerCase().includes("fun fact")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("📚")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"funfact",content:c});i++;continue;}
+    if(line.includes("📚")||line.toLowerCase().includes("practice this")||line.toLowerCase().includes("khan academy")||line.toLowerCase().includes("try this on")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"resource",content:c});i++;continue;}
     if(line.trim()){if(blocks.length&&blocks[blocks.length-1].type==="text")blocks[blocks.length-1].content+="\n"+line;else blocks.push({type:"text",content:line});}i++;
   }
   return blocks;
 }
-function Blocks({blocks}){
+
+function Blocks({blocks,topicIds}){
+  const res=topicIds&&topicIds.length>0?RESOURCES[topicIds[0]]||[]:[];
   return blocks.map((b,i)=>{
     if(b.type==="text")return React.createElement("div",{key:i,style:{whiteSpace:"pre-wrap",marginBottom:4}},b.content);
     if(b.type==="challenge")return React.createElement("div",{key:i,className:"block-challenge"},React.createElement("div",{className:"block-challenge-lbl"},"🤔 Think About This!"),React.createElement("div",{style:{whiteSpace:"pre-wrap"}},b.content.replace(/🤔[^:]*:/i,"").trim()));
     if(b.type==="funfact")return React.createElement("div",{key:i,className:"block-fact"},React.createElement("div",{className:"block-fact-lbl"},"⭐ Fun Fact"),React.createElement("div",{style:{whiteSpace:"pre-wrap"}},b.content.replace(/⭐[^:]*:/i,"").trim()));
+    if(b.type==="resource")return React.createElement("div",{key:i,className:"block-resource"},
+      React.createElement("div",{className:"block-resource-lbl"},"📚 Practice Resources"),
+      React.createElement("div",{style:{whiteSpace:"pre-wrap",marginBottom:res.length>0?8:0}},b.content.replace(/📚[^:]*:/i,"").trim()),
+      res.length>0&&React.createElement("div",null,res.map((r,j)=>React.createElement("a",{key:j,className:"resource-link",href:r.url,target:"_blank",rel:"noreferrer",style:{background:r.bg,borderColor:r.color,color:r.color}},r.label," →")))
+    );
     if(b.type==="code")return React.createElement("div",{key:i,className:"block-code"},React.createElement("div",{className:"block-code-hdr"},"💻 "+b.lang),React.createElement("div",{className:"block-code-body"},b.content));
     return null;
   });
 }
+
 function buildPrompt(profile,subject,mode,isRem,remTopic){
   const{name,grade,mastery,gaps,strengths,topicMastery={},interests=[],struggleCount=0}=profile;
   const modeMap={mixed:"Mix of Socratic, explanation, and project ideas.",socratic:"ONLY guiding questions — never direct answers.",lecture:"Explain clearly, vivid example, comprehension check.",project:"Frame everything as hands-on experiment."};
@@ -484,29 +517,37 @@ function buildPrompt(profile,subject,mode,isRem,remTopic){
   const ic=interests.length?"INTERESTS: "+interests.join(", ")+" — weave into examples naturally.":"";
   const rn=isRem&&remTopic?"\n⚠️ REMEDIATION: "+name+" is struggling with \""+remTopic+"\". Stop advancing. Use a different analogy. One simple guiding question to rebuild confidence.":"";
   const sn=struggleCount>2?"\nNote: "+name+" has struggled "+struggleCount+" times. Be extra patient.":"";
-  return "You are Nova, an enthusiastic STEM tutor for "+name+", a "+grade+" grade student (~10 years old).\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None")+" | STRENGTHS: "+(strengths.join(", ")||"Discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet")+"\n"+ic+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"FOCUS: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Use "+name+"'s name. Connect to his interests. 4-8 sentences per idea. Guide discovery. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.";
+  return "You are Nova, an enthusiastic STEM tutor for "+name+", a "+grade+" grade student (~10 years old).\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None")+" | STRENGTHS: "+(strengths.join(", ")||"Discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet")+"\n"+ic+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"FOCUS: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Use "+name+"'s name. Connect to his interests. 4-8 sentences per idea. Guide discovery — never just give answers. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.\nRESOURCES: After teaching a topic, naturally mention that they can practice on Khan Academy, Mathnasium, Code.org, or Scratch as relevant. Start that block with 📚 Practice Resources: and briefly mention what to search for or try.";
 }
 
 /* ── App ── */
 function App(){
-  /* All state declared together — no splits */
   const[apiKeyInput,setApiKeyInput]=useState("");
   const[apiKeyError,setApiKeyError]=useState("");
   const[apiKeyLoading,setApiKeyLoading]=useState(false);
   const[authMode,setAuthMode]=useState("login");
+  const[authType,setAuthType]=useState("student");
   const[authUser,setAuthUser]=useState("");
   const[authPass,setAuthPass]=useState("");
+  const[authFullName,setAuthFullName]=useState("");
   const[authErr,setAuthErr]=useState("");
   const[authLoading,setAuthLoading]=useState(false);
   const[syncStatus,setSyncStatus]=useState("idle");
   const[screen,setScreen]=useState("loading");
+  const[accountType,setAccountType]=useState(null);
+  const[parentData,setParentData]=useState(null);
+  const[selectedChild,setSelectedChild]=useState(null);
+  const[childProfiles,setChildProfiles]=useState({});
+  const[parentDashPage,setParentDashPage]=useState("overview");
+  const[showAddChild,setShowAddChild]=useState(false);
+  const[addChildUsername,setAddChildUsername]=useState("");
+  const[addChildErr,setAddChildErr]=useState("");
+  const[addChildLoading,setAddChildLoading]=useState(false);
   const[wizardStep,setWizardStep]=useState(0);
   const[profile,setProfile]=useState(null);
-  const[tab,setTab]=useState("tutor");
   const[subject,setSubject]=useState(null);
   const[mode,setMode]=useState("mixed");
   const[treeSubject,setTreeSubject]=useState("math");
-  const[dashPage,setDashPage]=useState("overview");
   const[messages,setMessages]=useState([]);
   const[apiHistory,setApiHistory]=useState([]);
   const[input,setInput]=useState("");
@@ -525,9 +566,6 @@ function App(){
   const[selected,setSelected]=useState(null);
   const[answered,setAnswered]=useState(false);
   const[diagScores,setDiagScores]=useState({math:[],science:[],coding:[]});
-  const[pinInput,setPinInput]=useState("");
-  const[pinError,setPinError]=useState(false);
-  const[parentUnlocked,setParentUnlocked]=useState(false);
   const[storedPin,setStoredPin]=useState(()=>localStorage.getItem("nova_pin")||"1234");
   const[newPin,setNewPin]=useState("");
   const[confirmPin,setConfirmPin]=useState("");
@@ -545,37 +583,48 @@ function App(){
       const key=localStorage.getItem("nova_api_key");
       if(!key){setScreen("apikey");return;}
       const user=localStorage.getItem("nova_user");
-      if(!user){setScreen("auth");return;}
+      const type=localStorage.getItem("nova_account_type");
+      if(!user||!type){setScreen("auth");return;}
+      setAccountType(type);
+      if(type==="parent"){
+        try{
+          const row=await sb.getParent(user);
+          if(row){setParentData(row);setScreen("parent-hub");return;}
+        }catch(e){console.log(e);}
+        setScreen("auth");return;
+      }
       try{
         const row=await sb.getProfile(user);
-        if(row&&row.profile_data&&row.profile_data.setupComplete){
-          setProfile(row.profile_data);
-          ls.set("nova_profile",JSON.stringify(row.profile_data));
-          setScreen("tutor");return;
-        }
-      }catch(e){console.log("boot cloud err",e);}
+        if(row&&row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setScreen("tutor");return;}
+      }catch(e){console.log(e);}
       const saved=ls.get("nova_profile");
-      if(saved&&saved.value){
-        const p=JSON.parse(saved.value);
-        if(p.setupComplete){setProfile(p);setScreen("tutor");return;}
-      }
+      if(saved&&saved.value){const p=JSON.parse(saved.value);if(p.setupComplete){setProfile(p);setScreen("tutor");return;}}
       setScreen("onboard");
     })();
   },[]);
 
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight;},[messages]);
-  useEffect(()=>{if(!profile)return;if(tab==="parent")setScreen(parentUnlocked?"parent-dash":"parent-pin");else setScreen("tutor");},[tab]);
 
-  /* Save profile */
+  /* Load child profiles for parent */
+  useEffect(()=>{
+    if(screen==="parent-hub"&&parentData&&parentData.children&&parentData.children.length>0){
+      (async()=>{
+        const loaded={};
+        for(const childUser of parentData.children){
+          try{const row=await sb.getProfile(childUser);if(row&&row.profile_data)loaded[childUser]=row.profile_data;}catch{}
+        }
+        setChildProfiles(loaded);
+        if(parentData.children.length>0&&!selectedChild)setSelectedChild(parentData.children[0]);
+      })();
+    }
+  },[screen,parentData]);
+
   const saveProfile=useCallback((p)=>{
-    setProfile(p);
-    ls.set("nova_profile",JSON.stringify(p));
-    if(saveTimer.current)clearTimeout(saveTimer.current);
-    setSyncStatus("saving");
+    setProfile(p);ls.set("nova_profile",JSON.stringify(p));
+    if(saveTimer.current)clearTimeout(saveTimer.current);setSyncStatus("saving");
     saveTimer.current=setTimeout(async()=>{
       const user=localStorage.getItem("nova_user");
-      if(user){const ok=await sb.updateProfile(user,p);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}
-      else setSyncStatus("idle");
+      if(user){const ok=await sb.updateProfile(user,p);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}else setSyncStatus("idle");
     },1500);
   },[]);
 
@@ -588,51 +637,87 @@ function App(){
       const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});
       const d=await r.json();
       if(d.error){setApiKeyError("Key error: "+d.error.message);setApiKeyLoading(false);return;}
-      localStorage.setItem("nova_api_key",key);
-      setApiKeyLoading(false);
-      setScreen("auth");
-    }catch(e){setApiKeyError("Could not connect. Check internet.");setApiKeyLoading(false);}
+      localStorage.setItem("nova_api_key",key);setApiKeyLoading(false);setScreen("auth");
+    }catch(e){setApiKeyError("Could not connect.");setApiKeyLoading(false);}
   };
 
   /* Auth */
   const handleAuth=async()=>{
-    const u=authUser.trim().toLowerCase();
-    const p=authPass.trim();
+    const u=authUser.trim().toLowerCase();const p=authPass.trim();
     if(!u||!p){setAuthErr("Please enter a username and password.");return;}
     if(u.length<3){setAuthErr("Username must be at least 3 characters.");return;}
     if(p.length<4){setAuthErr("Password must be at least 4 characters.");return;}
+    if(authMode==="signup"&&authType==="parent"&&!authFullName.trim()){setAuthErr("Please enter your full name.");return;}
     setAuthLoading(true);setAuthErr("");
     try{
       const hash=await hashPassword(p);
-      if(authMode==="signup"){
-        const existing=await sb.getProfile(u);
-        if(existing){setAuthErr("Username taken. Try another or log in.");setAuthLoading(false);return;}
-        const ok=await sb.upsertProfile(u,hash,{});
-        if(!ok){setAuthErr("Could not create account. Check connection.");setAuthLoading(false);return;}
-        localStorage.setItem("nova_user",u);
-        setAuthLoading(false);
-        setScreen("onboard");
+      if(authType==="parent"){
+        if(authMode==="signup"){
+          const existing=await sb.getParent(u);
+          if(existing){setAuthErr("Username taken.");setAuthLoading(false);return;}
+          const ok=await sb.upsertParent(u,hash,authFullName.trim(),[]);
+          if(!ok){setAuthErr("Could not create account.");setAuthLoading(false);return;}
+          const row=await sb.getParent(u);
+          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","parent");
+          setAccountType("parent");setParentData(row);setAuthLoading(false);setScreen("parent-hub");
+        }else{
+          const row=await sb.getParent(u);
+          if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}
+          if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
+          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","parent");
+          setAccountType("parent");setParentData(row);setAuthLoading(false);setScreen("parent-hub");
+        }
       }else{
-        const row=await sb.getProfile(u);
-        if(!row){setAuthErr("Username not found. Check spelling or sign up.");setAuthLoading(false);return;}
-        if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
-        localStorage.setItem("nova_user",u);
-        if(row.profile_data&&row.profile_data.setupComplete){
-          setProfile(row.profile_data);
-          ls.set("nova_profile",JSON.stringify(row.profile_data));
-          setAuthLoading(false);
-          setScreen("tutor");
-        }else{setAuthLoading(false);setScreen("onboard");}
+        if(authMode==="signup"){
+          const existing=await sb.getProfile(u);
+          if(existing){setAuthErr("Username taken.");setAuthLoading(false);return;}
+          const ok=await sb.upsertProfile(u,hash,{});
+          if(!ok){setAuthErr("Could not create account.");setAuthLoading(false);return;}
+          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
+          setAccountType("student");setAuthLoading(false);setScreen("onboard");
+        }else{
+          const row=await sb.getProfile(u);
+          if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}
+          if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
+          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
+          setAccountType("student");
+          if(row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setAuthLoading(false);setScreen("tutor");}
+          else{setAuthLoading(false);setScreen("onboard");}
+        }
       }
     }catch(e){setAuthErr("Error: "+e.message);setAuthLoading(false);}
   };
 
   const handleLogout=()=>{
-    localStorage.removeItem("nova_user");
-    setProfile(null);setMessages([]);setApiHistory([]);
-    setParentUnlocked(false);setTab("tutor");
-    setAuthUser("");setAuthPass("");setAuthErr("");setAuthMode("login");
+    localStorage.removeItem("nova_user");localStorage.removeItem("nova_account_type");
+    setProfile(null);setMessages([]);setApiHistory([]);setParentData(null);setSelectedChild(null);setChildProfiles({});
+    setAccountType(null);setAuthUser("");setAuthPass("");setAuthFullName("");setAuthErr("");setAuthMode("login");setAuthType("student");
     setScreen("auth");
+  };
+
+  /* Add child to parent account */
+  const handleAddChild=async()=>{
+    const childUser=addChildUsername.trim().toLowerCase();
+    if(!childUser){setAddChildErr("Enter a username.");return;}
+    setAddChildLoading(true);setAddChildErr("");
+    const row=await sb.getProfile(childUser);
+    if(!row){setAddChildErr("No student account found with that username.");setAddChildLoading(false);return;}
+    if(parentData.children&&parentData.children.includes(childUser)){setAddChildErr("This child is already linked.");setAddChildLoading(false);return;}
+    const newChildren=[...(parentData.children||[]),childUser];
+    await sb.updateParent(localStorage.getItem("nova_user"),{children:newChildren});
+    const updatedParent={...parentData,children:newChildren};
+    setParentData(updatedParent);
+    if(row.profile_data)setChildProfiles(prev=>({...prev,[childUser]:row.profile_data}));
+    setSelectedChild(childUser);
+    setAddChildUsername("");setAddChildLoading(false);setShowAddChild(false);
+  };
+
+  const handleRemoveChild=async(childUser)=>{
+    const newChildren=(parentData.children||[]).filter(c=>c!==childUser);
+    await sb.updateParent(localStorage.getItem("nova_user"),{children:newChildren});
+    setParentData({...parentData,children:newChildren});
+    const cp={...childProfiles};delete cp[childUser];setChildProfiles(cp);
+    if(selectedChild===childUser)setSelectedChild(newChildren[0]||null);
   };
 
   /* Toasts */
@@ -640,24 +725,20 @@ function App(){
   const showMastered=n=>{setMasteredToast("🏆 Mastered: "+n+"!");setTimeout(()=>setMasteredToast(null),3000);};
   const showGap=t=>{setGapToast("🎯 Remediating: "+t);setTimeout(()=>setGapToast(null),3000);};
 
-  /* Topic mastery */
   const updateTM=(ids,struggling,p)=>{const tm={...(p.topicMastery||{})};const nm=[];ids.forEach(id=>{const prev=tm[id]||0;const d=struggling?-8:12+Math.floor(Math.random()*6);tm[id]=Math.min(100,Math.max(0,prev+d));if(prev<80&&tm[id]>=80){const n=gN(id);if(n)nm.push(n.name);}});return{tm,newlyMastered:nm};};
   const recompute=tm=>{const c=s=>{const nodes=CURRICULUM[s].flatMap(u=>u.nodes);const sc=nodes.filter(n=>tm[n.id]!==undefined);if(!sc.length)return null;return Math.round(sc.reduce((a,n)=>a+(tm[n.id]||0),0)/sc.length);};return{math:c("math"),science:c("science"),coding:c("coding")};};
   const updateGaps=useCallback((tm,gaps,strengths)=>{const MAP={"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"],"Multiplication":["m1","m2"],"Geometry":["m6","m7"],"States of Matter":["s5","s6","s7"]};const ng=[...gaps],ns=[...strengths];Object.entries(MAP).forEach(([name,ids])=>{const covered=ids.filter(id=>tm[id]!==undefined);if(!covered.length)return;const avg=covered.reduce((s,id)=>s+(tm[id]||0),0)/covered.length;if(avg<45&&!ng.includes(name)){ng.push(name);ns.splice(ns.indexOf(name),1);}if(avg>=70&&ng.includes(name)){ng.splice(ng.indexOf(name),1);if(!ns.includes(name))ns.push(name);}});return{gaps:ng,strengths:ns};},[]);
 
-  /* Send message */
   const sendMessage=async(text,forceRem,remTopic)=>{
     const userText=(text||input).trim();if(!userText||isLoading)return;
     setInput("");if(taRef.current)taRef.current.style.height="20px";
-    const struggling=dS(userText)||forceRem;
-    const detT=dT(userText);
+    const struggling=dS(userText)||forceRem;const detT=dT(userText);
     if(struggling){setConsecutiveStruggle(c=>c+1);setIsStruggling(true);if(detT.length>0){setStruggleTopics(detT);const n=gN(detT[0]);if(n)showGap(n.name);}}
     else{setConsecutiveStruggle(0);if(!forceRem)setIsStruggling(false);}
-    const um={role:"user",content:userText};
-    const nh=[...apiHistory,um];setApiHistory(nh);
+    const um={role:"user",content:userText};const nh=[...apiHistory,um];setApiHistory(nh);
     setMessages(prev=>[...prev,{type:"user",content:userText,struggling,topics:detT}]);
     const aid=Date.now();setIsLoading(true);
-    setMessages(prev=>[...prev,{type:"nova",id:aid,blocks:[],loading:true,isRem:struggling}]);
+    setMessages(prev=>[...prev,{type:"nova",id:aid,blocks:[],loading:true,isRem:struggling,topics:[]}]);
     const rl=remTopic||(detT.length>0?(gN(detT[0])?.name||null):null);
     try{
       const key=localStorage.getItem("nova_api_key");
@@ -666,7 +747,7 @@ function App(){
       const raw=data.content?.[0]?.text||"";const blocks=parseBlocks(raw);
       const nt=dT(raw);const allT=[...new Set([...detT,...nt])];
       setApiHistory(prev=>[...prev,{role:"assistant",content:raw}]);
-      setMessages(prev=>prev.map(m=>m.id===aid?{...m,blocks,loading:false,isRem:struggling}:m));
+      setMessages(prev=>prev.map(m=>m.id===aid?{...m,blocks,loading:false,isRem:struggling,topics:allT}:m));
       let up={...profile};
       if(allT.length>0){const{tm,newlyMastered}=updateTM(allT,struggling,up);up.topicMastery=tm;const rc=recompute(tm);if(rc.math!==null)up.mastery.math=rc.math;if(rc.science!==null)up.mastery.science=rc.science;if(rc.coding!==null)up.mastery.coding=rc.coding;const{gaps,strengths}=updateGaps(tm,up.gaps,up.strengths);up.gaps=gaps;up.strengths=strengths;if(newlyMastered.length>0)showMastered(newlyMastered[0]);}
       const xg=struggling?5:10+Math.floor(Math.random()*8);
@@ -697,21 +778,17 @@ function App(){
     saveProfile(p);setWizardStep(3);
   };
 
-  /* PIN */
-  const handlePin=key=>{if(key==="del"){setPinInput(p=>p.slice(0,-1));setPinError(false);return;}const next=pinInput+key;setPinInput(next);if(next.length===4){if(next===storedPin){setParentUnlocked(true);setScreen("parent-dash");setPinInput("");}else{setPinError(true);setTimeout(()=>{setPinInput("");setPinError(false);},800);}}};
-  const saveNewPin=()=>{if(newPin.length!==4||newPin!==confirmPin)return;localStorage.setItem("nova_pin",newPin);setStoredPin(newPin);setNewPin("");setConfirmPin("");setPinSaved(true);setTimeout(()=>setPinSaved(false),3000);};
-
   /* Export / Import */
-  const exportProfile=()=>{const blob=new Blob([JSON.stringify({...profile,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="nova-profile-ibraheem-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);};
+  const exportProfile=()=>{const blob=new Blob([JSON.stringify({...profile,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="nova-profile-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);};
   const handleImportFile=e=>{const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const parsed=JSON.parse(ev.target.result);if(!parsed.name||!parsed.mastery)throw new Error("Invalid");setImportData(parsed);setImportStatus("confirm");}catch{setImportStatus("error");}};reader.readAsText(file);e.target.value="";};
   const confirmImport=()=>{if(!importData)return;saveProfile(importData);setImportStatus("success");setImportData(null);setTimeout(()=>setImportStatus(null),4000);};
-  const resetProfile=()=>{ls.del("nova_profile");setProfile(null);setMessages([]);setApiHistory([]);setDiagScores({math:[],science:[],coding:[]});setQIndex(0);setSelected(null);setAnswered(false);setWizardStep(0);setIsStruggling(false);setConsecutiveStruggle(0);setStruggleTopics([]);setParentUnlocked(false);setTab("tutor");setScreen("onboard");};
+  const saveNewPin=()=>{if(newPin.length!==4||newPin!==confirmPin)return;localStorage.setItem("nova_pin",newPin);setStoredPin(newPin);setNewPin("");setConfirmPin("");setPinSaved(true);setTimeout(()=>setPinSaved(false),3000);};
   const changeApiKey=()=>{localStorage.removeItem("nova_api_key");setApiKeyInput("");setScreen("apikey");};
 
   /* Quick starts */
   const getQS=()=>{const base=[{emoji:"🔢",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"Explain gravity with a fun example!"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧠",text:"Give me a tricky math challenge!"},{emoji:"🔬",text:"Why do things float in water?"},{emoji:"🚀",text:"How do rockets escape Earth's gravity?"}];if(!profile?.interests?.length)return base;const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🐬",text:"How do dolphins use echolocation?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How do robots know what to do?"});return[...extra.slice(0,2),...base].slice(0,6);};
 
-  /* Tree */
+  /* Tree Panel */
   function TreePanel(){
     const tm=profile?.topicMastery||{};const units=CURRICULUM[treeSubject];const sc={math:"#3b82f6",science:"#8b5cf6",coding:"#14b8a6"};
     const getStatus=node=>{if(!isUL(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"]}[g]||[]).includes(node.id)))return"gap";return"current";};
@@ -725,13 +802,14 @@ function App(){
           {units.map((unit,ui)=>(
             <div key={ui} className="tree-unit">
               <div className="tree-unit-label">{unit.unit}</div>
-              {unit.nodes.map(node=>{const status=getStatus(node);const pct=tm[node.id]||0;const color=sc[treeSubject];return(
+              {unit.nodes.map(node=>{const status=getStatus(node);const pct=tm[node.id]||0;const color=sc[treeSubject];const nodeRes=RESOURCES[node.id]||[];return(
                 <div key={node.id} className={"tree-node "+status} onClick={()=>isUL(node,tm)&&sendMessage("Let's learn about: "+node.name+". "+node.sub)}>
                   <div className="tree-node-icon">{node.icon}</div>
                   <div className="tree-node-text">
                     <div className="tree-node-name">{node.name}</div>
                     <div className="tree-node-sub">{node.sub}</div>
                     {status!=="locked"&&pct>0&&<div className="tree-node-bar"><div className="tree-node-fill" style={{width:pct+"%",background:pct>=80?"#22c55e":pct>=40?"#fbbf24":color}}/></div>}
+                    {nodeRes.length>0&&<div className="tree-node-resources">{nodeRes.map((r,ri)=><a key={ri} className="tree-resource-badge" href={r.url} target="_blank" rel="noreferrer" style={{background:r.bg,color:r.color,border:"1px solid "+r.color}} onClick={e=>e.stopPropagation()}>{r.label}</a>)}</div>}
                   </div>
                   {status==="locked"?<span style={{fontSize:11}}>🔒</span>:status==="struggling-node"?<span style={{fontSize:11}}>⚠️</span>:pct>0?<div className="tree-node-pct" style={{color:mc(pct)}}>{pct}%</div>:null}
                 </div>
@@ -750,171 +828,91 @@ function App(){
     );
   }
 
-  /* Dashboard pages */
-  function DashOverview(){
-    const{mastery,gaps,strengths,xp,sessions,topicMastery={},struggleCount=0,name}=profile;
-    const mc2=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;
-    const lvl=getLevel(xp||0);const nxt=getNextLevel(xp||0);const rs=struggleTopics.map(id=>gN(id)).filter(Boolean);
-    return(<>
-      <div className="dash-page-title">👨‍👩‍👧 {name}'s Overview</div>
-      <div className="dash-page-sub">Last session: {profile.lastSession?new Date(profile.lastSession).toLocaleDateString():"Not yet"}</div>
+  /* Parent Hub Dashboard Pages */
+  function ParentChildDashboard({childUser}){
+    const cp=childProfiles[childUser];
+    if(!cp)return<div className="empty-state"><div className="empty-icon">⏳</div><div className="empty-text">Loading {childUser}'s profile...</div></div>;
+    const{mastery,gaps,strengths,xp,sessions,topicMastery={},struggleCount=0,name,grade,sessionLog=[],interests=[]}=cp;
+    const masteredCount=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;
+    const lvl=getLevel(xp||0);const nxt=getNextLevel(xp||0);
+    if(parentDashPage==="overview")return(<>
+      <div className="dash-page-title">{name}'s Overview</div>
+      <div className="dash-page-sub">{grade} grade · Last session: {cp.lastSession?new Date(cp.lastSession).toLocaleDateString():"Not yet"}</div>
       <div className="stat-grid">
         <div className="stat-card"><div className="stat-icon">📅</div><div className="stat-val">{sessions||0}</div><div className="stat-lbl">Messages</div></div>
-        <div className="stat-card"><div className="stat-icon">🏆</div><div className="stat-val">{mc2}/{tot}</div><div className="stat-lbl">Mastered</div></div>
+        <div className="stat-card"><div className="stat-icon">🏆</div><div className="stat-val">{masteredCount}/{tot}</div><div className="stat-lbl">Mastered</div></div>
         <div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{xp||50}</div><div className="stat-lbl">XP · Lvl {lvl.lvl}</div></div>
         <div className="stat-card"><div className="stat-icon">⚠️</div><div className="stat-val">{struggleCount||0}</div><div className="stat-lbl">Struggles</div></div>
       </div>
       {nxt&&<div className="dash-card" style={{marginBottom:16,background:"linear-gradient(135deg,#f5f3ff,#ede9fe)"}}>
         <div style={{fontSize:11,fontWeight:800,color:"var(--purple)",marginBottom:6}}>🎮 LEVEL — {lvl.name}</div>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <div style={{flex:1,height:10,background:"rgba(139,92,246,.15)",borderRadius:6,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,background:"linear-gradient(90deg,var(--purple),var(--pink))",width:Math.min(100,((xp-lvl.min)/(nxt.min-lvl.min))*100)+"%",transition:"width .5s"}}/></div>
-          <div style={{fontSize:11,fontWeight:800,color:"var(--purple)",flexShrink:0}}>{xp}/{nxt.min} → {nxt.name}</div>
+          <div style={{flex:1,height:10,background:"rgba(139,92,246,.15)",borderRadius:6,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,background:"linear-gradient(90deg,var(--purple),var(--pink))",width:Math.min(100,((xp-lvl.min)/(nxt.min-lvl.min))*100)+"%"}}/></div>
+          <div style={{fontSize:11,fontWeight:800,color:"var(--purple)"}}>{xp}/{nxt.min} → {nxt.name}</div>
         </div>
       </div>}
-      {rs.length>0&&<div className="alert-card"><div className="alert-title">⚠️ Active Struggles</div>{rs.map((n,i)=><div key={i} className="alert-item"><span className="badge-alert">Struggling</span>{n.icon} {n.name}</div>)}</div>}
       <div className="sec-title">Subject Mastery</div>
       <div className="dash-card">{[{label:"Math",key:"math",color:"#3b82f6"},{label:"Science",key:"science",color:"#8b5cf6"},{label:"Coding",key:"coding",color:"#14b8a6"}].map(s=>(
         <div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:mastery[s.key]+"%",background:s.color}}/></div><div className="dash-mastery-pct" style={{color:mc(mastery[s.key])}}>{mastery[s.key]}%</div></div>
       ))}</div>
-      {profile.interests?.length>0&&<><div className="sec-title">Ibraheem's Interests</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{profile.interests.map((int,i)=><span key={i} style={{padding:"4px 12px",borderRadius:"20px",background:"#eff6ff",color:"var(--blue)",fontSize:12,fontWeight:700,border:"1px solid #bfdbfe"}}>{int}</span>)}</div></div></>}
+      {interests.length>0&&<><div className="sec-title">Interests</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{interests.map((int,i)=><span key={i} style={{padding:"4px 12px",borderRadius:"20px",background:"#eff6ff",color:"var(--blue)",fontSize:12,fontWeight:700,border:"1px solid #bfdbfe"}}>{int}</span>)}</div></div></>}
       <div className="sec-title">Focus Areas & Strengths</div>
       <div className="dash-card">
         {gaps.map((g,i)=><div key={i} className="gap-row"><span className="badge-needs">Gap</span>{g}</div>)}
         {strengths.map((s,i)=><div key={i} className="gap-row"><span className="badge-ok">Strong</span>{s}</div>)}
       </div>
     </>);
-  }
-
-  function DashWeekly(){
-    const now=new Date();const log=profile.sessionLog||[];
-    const days=Array.from({length:7},(_,i)=>{const d=new Date(now);d.setDate(d.getDate()-6+i);const ds=d.toDateString();const ds2=log.filter(s=>new Date(s.date).toDateString()===ds);return{label:DAYS[d.getDay()],isToday:ds===now.toDateString(),sessions:ds2,xp:ds2.reduce((a,s)=>a+s.xpGained,0)};});
-    const wXP=days.reduce((a,d)=>a+d.xp,0);const wT=[...new Set(log.flatMap(s=>s.topics||[]))].slice(0,8);const aD=days.filter(d=>d.sessions.length>0).length;
-    return(<>
-      <div className="dash-page-title">📅 Weekly Snapshot</div>
-      <div className="dash-page-sub">This week at a glance</div>
-      <div className="stat-grid">
-        <div className="stat-card"><div className="stat-icon">🔥</div><div className="stat-val">{aD}/7</div><div className="stat-lbl">Active Days</div></div>
-        <div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{wXP}</div><div className="stat-lbl">XP This Week</div></div>
-        <div className="stat-card"><div className="stat-icon">📚</div><div className="stat-val">{wT.length}</div><div className="stat-lbl">Topics</div></div>
-        <div className="stat-card"><div className="stat-icon">📝</div><div className="stat-val">{log.length}</div><div className="stat-lbl">Log Entries</div></div>
-      </div>
-      <div className="sec-title">Daily Activity</div>
-      <div className="week-grid">{days.map((d,i)=><div key={i} className={"day-cell"+(d.sessions.length>0?" active":"")+(d.isToday?" today":"")}><div className="day-name">{d.label}</div><div className={"day-dot"+(d.sessions.length>0?" has-session":"")+(d.isToday&&d.sessions.length>0?" today-dot":"")}/><div className="day-xp">{d.xp>0?"+"+d.xp:d.isToday?"Today":"—"}</div></div>)}</div>
-      {wT.length>0&&<><div className="sec-title">Topics This Week</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{wT.map((t,i)=><span key={i} className="session-topic-tag">{t}</span>)}</div></div></>}
-      <div className="sec-title">Recommendation</div>
-      <div className="dash-card"><div style={{fontSize:13,fontWeight:700,color:aD>=4?"#166534":aD>=1?"#92400e":"var(--muted)"}}>{aD===0?"🌟 No sessions yet — encourage 10 minutes with Nova today!":aD<=3?"📈 Good start! Aim for 5 days this week.":"🔥 Excellent consistency — keep it going!"}</div></div>
-    </>);
-  }
-
-  function DashHeatmap(){
-    const tm=profile.topicMastery||{};const h=v=>{if(v>=80)return 4;if(v>=60)return 3;if(v>=40)return 2;if(v>0)return 1;return 0;};
-    return(<>
-      <div className="dash-page-title">🗺️ Mastery Heatmap</div>
+    if(parentDashPage==="heatmap"){const h=v=>{if(v>=80)return 4;if(v>=60)return 3;if(v>=40)return 2;if(v>0)return 1;return 0;};return(<>
+      <div className="dash-page-title">🗺️ {name}'s Mastery Heatmap</div>
       <div className="dash-page-sub">Topic-level mastery across the full curriculum</div>
       {Object.entries({math:CURRICULUM.math,science:CURRICULUM.science,coding:CURRICULUM.coding}).map(([subj,units])=>(
         <div key={subj} style={{marginBottom:20}}>
           <div className="sec-title">{SUBJ.find(s=>s.key===subj)?.icon} {SUBJ.find(s=>s.key===subj)?.label}</div>
-          <div className="heatmap-grid">{units.flatMap(u=>u.nodes).map(node=>{const pct=tm[node.id]||0;return(<div key={node.id} className={"heat-cell heat-"+h(pct)} title={node.name+": "+pct+"%"}><div className="heat-icon">{node.icon}</div><div className="heat-name">{node.name}</div><div className="heat-pct" style={{color:pct>0?mc(pct):"var(--muted)"}}>{pct>0?pct+"%":"—"}</div></div>);})}</div>
+          <div className="heatmap-grid">{units.flatMap(u=>u.nodes).map(node=>{const pct=topicMastery[node.id]||0;return(<div key={node.id} className={"heat-cell heat-"+h(pct)} title={node.name+": "+pct+"%"}><div className="heat-icon">{node.icon}</div><div className="heat-name">{node.name}</div><div className="heat-pct" style={{color:pct>0?mc(pct):"var(--muted)"}}>{pct>0?pct+"%":"—"}</div></div>);})}</div>
         </div>
       ))}
-    </>);
-  }
-
-  function DashLog(){
-    const log=profile.sessionLog||[];
-    return(<>
-      <div className="dash-page-title">📋 Session Log</div>
+    </>);}
+    if(parentDashPage==="log"){return(<>
+      <div className="dash-page-title">📋 {name}'s Session Log</div>
       <div className="dash-page-sub">Recent learning activity</div>
-      {log.length===0?<div className="empty-state"><div className="empty-icon">📭</div><div className="empty-text">No sessions yet.<br/>Logged every 5 messages.</div></div>
-        :log.map((s,i)=>{const{month,day,time}=fD(s.date);return(<div key={i} className="session-card"><div className="session-date-col"><div className="session-month">{month}</div><div className="session-day">{day}</div></div><div className="session-body"><div className="session-title">Session at {time}</div><div className="session-meta">Math {s.mastery?.math}% · Science {s.mastery?.science}% · Coding {s.mastery?.coding}%{s.hadStruggle?" · ⚠️ Struggled":""}</div><div className="session-topics">{(s.topics||[]).map((t,j)=><span key={j} className="session-topic-tag">{t}</span>)}{s.hadStruggle&&<span className="session-topic-tag gap-tag">Remediation</span>}</div></div><div className="session-xp">+{s.xpGained} XP</div></div>);})}
-    </>);
-  }
-
-  function DashSettings(){
-    return(<>
+      {sessionLog.length===0?<div className="empty-state"><div className="empty-icon">📭</div><div className="empty-text">No sessions yet.</div></div>
+        :sessionLog.map((s,i)=>{const{month,day,time}=fD(s.date);return(<div key={i} className="session-card"><div className="session-date-col"><div className="session-month">{month}</div><div className="session-day">{day}</div></div><div className="session-body"><div className="session-title">Session at {time}</div><div className="session-meta">Math {s.mastery?.math}% · Science {s.mastery?.science}% · Coding {s.mastery?.coding}%{s.hadStruggle?" · ⚠️ Struggled":""}</div><div className="session-topics">{(s.topics||[]).map((t,j)=><span key={j} className="session-topic-tag">{t}</span>)}{s.hadStruggle&&<span className="session-topic-tag gap-tag">Remediation</span>}</div></div><div className="session-xp">+{s.xpGained} XP</div></div>);})}
+    </>);}
+    if(parentDashPage==="settings")return(<>
       <div className="dash-page-title">⚙️ Settings</div>
-      <div className="dash-page-sub">Manage profile, PIN, and portability</div>
-      <div className="dash-card" style={{marginBottom:16}}>
-        <div className="settings-title">💾 Profile Portability</div>
-        <div className="settings-sub">Export saves everything. Import restores on any device.</div>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",borderRadius:11,background:"#f0fdf4",border:"2px solid var(--green)",marginBottom:10}}>
-          <div><div style={{fontSize:13,fontWeight:800,color:"#166534"}}>📤 Export Profile</div><div style={{fontSize:11,fontWeight:600,color:"#15803d",marginTop:2}}>Downloads a .json backup file</div></div>
-          <button onClick={exportProfile} style={{padding:"9px 18px",borderRadius:9,border:"none",background:"var(--green)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Export ↓</button>
-        </div>
-        <div style={{padding:"12px 14px",borderRadius:11,background:"#eff6ff",border:"2px solid var(--blue)"}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:importStatus?10:0}}>
-            <div><div style={{fontSize:13,fontWeight:800,color:"#1e40af"}}>📥 Import Profile</div><div style={{fontSize:11,fontWeight:600,color:"#1d4ed8",marginTop:2}}>Restore from exported file</div></div>
-            <button onClick={()=>importRef.current&&importRef.current.click()} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--blue)",background:"#fff",color:"var(--blue)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Choose File ↑</button>
-          </div>
-          <input ref={importRef} type="file" accept=".json" style={{display:"none"}} onChange={handleImportFile}/>
-          {importStatus==="confirm"&&importData&&(<div style={{marginTop:10,padding:"12px 14px",borderRadius:10,background:"#fff",border:"2px solid var(--orange)"}} className="pop"><div style={{fontSize:12,fontWeight:800,color:"#92400e",marginBottom:4}}>⚠️ Replace current progress?</div><div style={{fontSize:11,fontWeight:600,color:"#b45309",marginBottom:10,lineHeight:1.6}}>Load <strong>{importData.name}</strong>'s profile ({importData.grade} · {importData.xp} XP)?</div><div style={{display:"flex",gap:8}}><button onClick={confirmImport} style={{flex:1,padding:"8px",borderRadius:8,border:"none",background:"var(--orange)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Yes, load this profile</button><button onClick={()=>{setImportStatus(null);setImportData(null);}} style={{padding:"8px 14px",borderRadius:8,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Cancel</button></div></div>)}
-          {importStatus==="success"&&<div style={{marginTop:10,padding:"10px 12px",borderRadius:9,background:"#f0fdf4",border:"2px solid var(--green)",fontSize:12,fontWeight:700,color:"#166534"}} className="pop">✅ Profile loaded successfully!</div>}
-          {importStatus==="error"&&<div style={{marginTop:10,padding:"10px 12px",borderRadius:9,background:"#fef2f2",border:"2px solid var(--red)",fontSize:12,fontWeight:700,color:"#991b1b"}} className="pop">❌ Invalid file. Use a Nova profile export.</div>}
-        </div>
-      </div>
-      <div className="dash-card" style={{marginBottom:16}}>
-        <div className="settings-title">🎓 Update Grade</div>
-        <div className="settings-sub">Moving up a grade? All XP, mastery, and history are kept. Nova updates instantly.</div>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
-          {GRADES.map(g=>(
-            <button key={g} onClick={()=>{if(g===profile.grade)return;saveProfile({...profile,grade:g,gradeUpdatedAt:new Date().toISOString()});}}
-              style={{padding:"7px 14px",borderRadius:9,border:"2px solid "+(g===profile.grade?"var(--blue)":"var(--border)"),background:g===profile.grade?"var(--blue)":"#fff",color:g===profile.grade?"#fff":"var(--muted)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:g===profile.grade?"default":"pointer",transition:"all .15s"}}>
-              {g}{g===profile.grade?" ✓":""}
-            </button>
-          ))}
-        </div>
-        {profile.gradeUpdatedAt&&<div style={{fontSize:11,fontWeight:700,color:"var(--green)"}}>✅ Grade last updated: {new Date(profile.gradeUpdatedAt).toLocaleDateString()}</div>}
-      </div>
-      <div className="dash-card" style={{marginBottom:16}}>
-        <div className="settings-title">🔐 Change Parent PIN</div>
-        <div className="settings-sub">Default PIN is 1234.</div>
-        <div className="field-lbl">New PIN</div>
-        <div className="pin-input-row"><input className="pin-field" type="password" maxLength={4} value={newPin} onChange={e=>setNewPin(e.target.value.replace(/\D/g,"").slice(0,4))} placeholder="••••"/></div>
-        <div className="field-lbl">Confirm PIN</div>
-        <div className="pin-input-row"><input className="pin-field" type="password" maxLength={4} value={confirmPin} onChange={e=>setConfirmPin(e.target.value.replace(/\D/g,"").slice(0,4))} placeholder="••••"/><button className="save-btn" onClick={saveNewPin} disabled={newPin.length!==4||newPin!==confirmPin}>Save</button></div>
-        {newPin.length>0&&confirmPin.length>0&&newPin!==confirmPin&&<div style={{fontSize:11,fontWeight:700,color:"var(--red)",marginTop:4}}>PINs don't match</div>}
-        {pinSaved&&<div className="save-confirm">✅ PIN updated!</div>}
+      <div className="dash-page-sub">Manage children and account</div>
+      <div className="dash-card">
+        <div className="settings-title">👶 Linked Children</div>
+        <div className="settings-sub">Remove a child from your dashboard (their account and progress are not deleted).</div>
+        {(parentData?.children||[]).map((cu,i)=>{const cp2=childProfiles[cu];return(<div key={i} className="gap-row"><span className="badge-ok">{cp2?.name||cu}</span>{cp2?.grade||""}<button onClick={()=>handleRemoveChild(cu)} style={{marginLeft:"auto",padding:"4px 10px",borderRadius:7,border:"2px solid var(--red)",background:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--red)"}}>Remove</button></div>);})}
+        <button onClick={()=>setShowAddChild(true)} style={{marginTop:12,padding:"9px 18px",borderRadius:9,border:"2px solid var(--blue)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--blue)"}}>+ Add Another Child</button>
       </div>
       <div className="dash-card">
         <div className="settings-title">🔑 API Key</div>
-        <div className="settings-sub">Change the Anthropic API key powering Nova.</div>
+        <div className="settings-sub">Change the Anthropic API key.</div>
         <button onClick={changeApiKey} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Change API Key</button>
       </div>
-      <div className="dash-card">
-        <div className="settings-title">👤 Student Profile</div>
-        <div className="settings-sub"><strong>{profile.name}</strong> · {profile.grade} · Level {getLevel(profile.xp||0).lvl} {getLevel(profile.xp||0).name} · {profile.xp} XP</div>
-        <div className="danger-zone">
-          <div className="danger-title">⚠️ Danger Zone</div>
-          <div className="danger-sub">Resets all progress. Export first to keep a backup.</div>
-          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-            <button onClick={exportProfile} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--green)",background:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"var(--green)"}}>💾 Export First</button>
-            <button className="danger-btn" onClick={resetProfile}>🔄 Reset All Progress</button>
-          </div>
-        </div>
-      </div>
     </>);
+    return null;
   }
-
-  const dashPages={overview:<DashOverview/>,weekly:<DashWeekly/>,heatmap:<DashHeatmap/>,log:<DashLog/>,settings:<DashSettings/>};
 
   /* Header */
   function Header(){
     const lvl=profile?getLevel(profile.xp||0):null;
+    const isParent=accountType==="parent";
     return(
       <header className="header">
         <div className="mascot">🦉</div>
-        <div><div className="header-title">Nova <span>STEM Tutor</span></div><div className="header-sub">Ibraheem's Personal Tutor</div></div>
+        <div><div className="header-title">Nova <span>STEM Tutor</span></div><div className="header-sub">{isParent?(parentData?.full_name||"Parent")+" · Parent Account":"Ibraheem's Personal Tutor"}</div></div>
         <div className="header-right">
-          {profile&&<>
-            <button className={"tab-btn"+(tab==="tutor"?" active":"")} onClick={()=>setTab("tutor")}>🎓 Learn</button>
-            <button className={"tab-btn"+(tab==="parent"?" active":"")} onClick={()=>setTab("parent")}>👨‍👩‍👧 Parent</button>
+          {!isParent&&profile&&<>
             {lvl&&<div className="level-chip">Lvl {lvl.lvl} · {lvl.name}</div>}
             <div className="xp-chip">⭐ {profile.xp||0}</div>
             {syncStatus==="saving"&&<div className={"sync-badge sync-warn"}>⏳ Saving...</div>}
             {syncStatus==="saved"&&<div className="sync-badge">☁️ Saved</div>}
             {syncStatus==="error"&&<div className={"sync-badge sync-warn"}>⚠️ Offline</div>}
-            <button className="signout-btn" onClick={handleLogout}>Sign Out</button>
           </>}
+          <button className="signout-btn" onClick={handleLogout}>Sign Out</button>
         </div>
       </header>
     );
@@ -938,7 +936,7 @@ function App(){
           {apiKeyError&&<div className="err-box">{apiKeyError}</div>}
           <input className="apikey-inp" type="password" placeholder="sk-ant-api03-..." value={apiKeyInput} onChange={e=>setApiKeyInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&validateKey()}/>
           <button className="apikey-btn" onClick={validateKey} disabled={!apiKeyInput.trim()||apiKeyLoading}>{apiKeyLoading?<span className="spin">◌</span>:"Save & Continue 🚀"}</button>
-          <div className="apikey-note">🔒 Stored only in your browser. Never shared. Free tier gets hundreds of lessons.</div>
+          <div className="apikey-note">🔒 Stored only in your browser. Free tier gets hundreds of lessons.</div>
         </div>
       </div>
     </div>
@@ -950,18 +948,88 @@ function App(){
         <div className="auth-card">
           <span className="auth-owl">🦉</span>
           <div className="auth-title">Nova <span>STEM Tutor</span></div>
-          <div className="auth-sub">{authMode==="login"?"Welcome back! Log in to load progress from any device.":"Create an account to keep progress safe in the cloud."}</div>
+          <div className="auth-sub">Who is signing in?</div>
           <div className="auth-tabs">
             <button className={"auth-tab"+(authMode==="login"?" active":"")} onClick={()=>{setAuthMode("login");setAuthErr("");}}>Log In</button>
             <button className={"auth-tab"+(authMode==="signup"?" active":"")} onClick={()=>{setAuthMode("signup");setAuthErr("");}}>Sign Up</button>
           </div>
+          <div className="auth-type-row">
+            <button className={"auth-type-btn"+(authType==="student"?" active":"")} onClick={()=>setAuthType("student")}><span className="auth-type-icon">🎓</span><span>I'm a Student</span></button>
+            <button className={"auth-type-btn"+(authType==="parent"?" active":"")} onClick={()=>setAuthType("parent")}><span className="auth-type-icon">👨‍👩‍👧</span><span>I'm a Parent</span></button>
+          </div>
           {authErr&&<div className="err-box">{authErr}</div>}
-          <input className="auth-inp" type="text" placeholder="Username (e.g. ibraheem)" value={authUser} onChange={e=>setAuthUser(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          {authMode==="signup"&&authType==="parent"&&<input className="auth-inp" type="text" placeholder="Your full name (e.g. Haleem Masood)" value={authFullName} onChange={e=>setAuthFullName(e.target.value)}/>}
+          <input className="auth-inp" type="text" placeholder={authType==="parent"?"Parent username (e.g. haleem)":"Student username (e.g. ibraheem)"} value={authUser} onChange={e=>setAuthUser(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
           <input className="auth-inp" type="password" placeholder="Password (min 4 characters)" value={authPass} onChange={e=>setAuthPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
           <button className="auth-btn" onClick={handleAuth} disabled={authLoading||!authUser.trim()||!authPass.trim()}>
-            {authLoading?<span className="spin">◌</span>:authMode==="login"?"Log In & Load Progress →":"Create Account & Start →"}
+            {authLoading?<span className="spin">◌</span>:authMode==="login"?"Log In →":"Create Account →"}
           </button>
-          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>☁️ Progress saves to the cloud — works on any device, any browser.</div>
+          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>
+            {authType==="parent"?"👨‍👩‍👧 Parent accounts can monitor all children from one dashboard.":"🎓 Student accounts get a personalized Nova tutor experience."}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* Parent Hub */
+  if(screen==="parent-hub")return(
+    <div className="app">
+      <Header/>
+      {showAddChild&&(
+        <div className="modal-overlay">
+          <div className="modal-card pop">
+            <div className="modal-title">➕ Add a Child</div>
+            <div className="modal-sub">Enter the student username your child used when they signed up. Their profile will appear in your dashboard immediately.</div>
+            {addChildErr&&<div className="err-box">{addChildErr}</div>}
+            <div className="field-lbl">Student username</div>
+            <input className="field-inp" style={{marginBottom:0}} placeholder="e.g. ibraheem" value={addChildUsername} onChange={e=>setAddChildUsername(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAddChild()}/>
+            <div className="modal-actions">
+              <button className="btn-secondary" onClick={()=>{setShowAddChild(false);setAddChildErr("");setAddChildUsername("");}}>Cancel</button>
+              <button className="btn-primary" onClick={handleAddChild} disabled={addChildLoading||!addChildUsername.trim()}>{addChildLoading?<span className="spin">◌</span>:"Add Child"}</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="parent-hub">
+        <div className="parent-hub-sidebar">
+          <div className="parent-hub-header">
+            <div className="parent-hub-name">{parentData?.full_name||"Parent"}</div>
+            <div className="parent-hub-role">Parent Account</div>
+          </div>
+          <div className="children-list">
+            <div className="children-list-lbl">My Children</div>
+            {(parentData?.children||[]).length===0&&<div style={{fontSize:11,color:"#475569",fontWeight:600,lineHeight:1.6,marginBottom:8}}>No children linked yet. Add a child below.</div>}
+            {(parentData?.children||[]).map((childUser,i)=>{
+              const cp=childProfiles[childUser];
+              return(<button key={i} className={"child-btn"+(selectedChild===childUser?" active":"")} onClick={()=>setSelectedChild(childUser)}>
+                <div className="child-avatar" style={{background:CHILD_COLORS[i%CHILD_COLORS.length]}}>{CHILD_EMOJIS[i%CHILD_EMOJIS.length]}</div>
+                <div className="child-info"><div className="child-name">{cp?.name||childUser}</div><div className="child-grade">{cp?.grade||""} · {cp?.xp||0} XP</div></div>
+              </button>);
+            })}
+            <button className="add-child-btn" onClick={()=>setShowAddChild(true)}>+ Add Child</button>
+          </div>
+          <div className="parent-hub-nav">
+            <div className="parent-nav-lbl">Dashboard</div>
+            {[{key:"overview",icon:"📊",label:"Overview"},{key:"heatmap",icon:"🗺️",label:"Heatmap"},{key:"log",icon:"📋",label:"Session Log"},{key:"settings",icon:"⚙️",label:"Settings"}].map(p=>(
+              <button key={p.key} className={"parent-nav-btn"+(parentDashPage===p.key?" active":"")} onClick={()=>setParentDashPage(p.key)}>{p.icon} {p.label}</button>
+            ))}
+          </div>
+          <div className="parent-hub-bottom">
+            <button className="parent-nav-btn" style={{width:"100%",border:"2px solid rgba(255,255,255,.1)",borderRadius:9}} onClick={handleLogout}>🔒 Sign Out</button>
+          </div>
+        </div>
+        <div className="parent-hub-content fade-in">
+          {!selectedChild||!(parentData?.children||[]).length?(
+            <div className="no-child-state">
+              <div className="no-child-card">
+                <div style={{fontSize:48,marginBottom:12}}>👶</div>
+                <div style={{fontSize:20,fontWeight:900,color:"var(--navy)",marginBottom:8}}>No children linked yet</div>
+                <div style={{fontSize:13,color:"var(--muted)",fontWeight:600,lineHeight:1.7,marginBottom:20}}>Click <strong>"Add Child"</strong> in the sidebar and enter your child's student username to link their account to your dashboard.</div>
+                <button className="big-btn" onClick={()=>setShowAddChild(true)}>+ Add My First Child</button>
+              </div>
+            </div>
+          ):<ParentChildDashboard childUser={selectedChild}/>}
         </div>
       </div>
     </div>
@@ -980,9 +1048,9 @@ function App(){
           <div className="wizard-main">
             {wizardStep===0&&(<div className="wizard-card slide-up">
               <div className="wizard-badge">Step 1 of 4 · About You</div>
-              <div className="wizard-title">Let's set up the profile! 👋</div>
+              <div className="wizard-title">Let's set up your profile! 👋</div>
               <div className="wizard-sub">Nova uses this to personalize every lesson.</div>
-              <div className="field-lbl">Student's name</div>
+              <div className="field-lbl">Your name</div>
               <input className="field-inp" value={nameVal} onChange={e=>setNameVal(e.target.value)} placeholder="Enter name..."/>
               <div className="field-lbl">Current grade</div>
               <div className="grade-row">{GRADES.map(g=><button key={g} className={"grade-pill"+(gradeVal===g?" active":"")} onClick={()=>setGradeVal(g)}>{g}</button>)}</div>
@@ -990,7 +1058,7 @@ function App(){
             </div>)}
             {wizardStep===1&&(<div className="wizard-card slide-up">
               <div className="wizard-badge">Step 2 of 4 · Interests</div>
-              <div className="wizard-title">What does {nameVal} love? ❤️</div>
+              <div className="wizard-title">What do you love? ❤️</div>
               <div className="wizard-sub">Nova weaves these into examples to make learning fun.</div>
               <div className="interest-grid">{INTERESTS.map(int=>(<button key={int.key} className={"interest-btn"+(selInterests.includes(int.key)?" active":"")} onClick={()=>setSelInterests(prev=>prev.includes(int.key)?prev.filter(k=>k!==int.key):[...prev,int.key])}><span className="interest-icon">{int.icon}</span>{int.label}{selInterests.includes(int.key)&&<span style={{marginLeft:"auto",fontSize:14}}>✓</span>}</button>))}</div>
               <div className="wizard-nav"><button className="btn-secondary" onClick={()=>setWizardStep(0)}>← Back</button><button className="btn-primary" onClick={()=>setWizardStep(2)}>Next: Quick Quiz →</button></div>
@@ -1018,36 +1086,6 @@ function App(){
       </div>
     );
   }
-
-  if(screen==="parent-pin")return(
-    <div className="app"><Header/>
-      <div className="pin-wrap"><div className="pin-card pop">
-        <div style={{fontSize:40,marginBottom:9}}>🔒</div>
-        <div style={{fontSize:20,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Parent Dashboard</div>
-        <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:22}}>Enter your 4-digit PIN.</div>
-        <div className="pin-dots">{[0,1,2,3].map(i=><div key={i} className={"pin-dot"+(pinInput.length>i?" filled":"")}/>)}</div>
-        <div className="pin-pad">{["1","2","3","4","5","6","7","8","9","","0","del"].map((k,i)=>k===""?<div key={i}/>:<button key={i} className={"pin-key"+(k==="del"?" del":"")} onClick={()=>handlePin(k)}>{k==="del"?"⌫":k}</button>)}</div>
-        {pinError&&<div className="pin-err">Incorrect PIN.</div>}
-        <div style={{fontSize:10,color:"var(--muted)",fontWeight:600,marginTop:8}}>Default: 1234 · Change in Settings</div>
-      </div></div>
-    </div>
-  );
-
-  if(screen==="parent-dash"&&profile)return(
-    <div className="app"><Header/>
-      <div className="dash-layout">
-        <nav className="dash-nav">
-          <div style={{fontSize:12,fontWeight:900,color:"#fff",marginBottom:4}}>Dashboard</div>
-          <div className="dash-nav-title">Reports</div>
-          {[{key:"overview",icon:"📊",label:"Overview"},{key:"weekly",icon:"📅",label:"Weekly"},{key:"heatmap",icon:"🗺️",label:"Heatmap"},{key:"log",icon:"📋",label:"Session Log"}].map(p=>(<button key={p.key} className={"dash-nav-btn"+(dashPage===p.key?" active":"")} onClick={()=>setDashPage(p.key)}>{p.icon} {p.label}</button>))}
-          <div className="dash-nav-title">Account</div>
-          <button className={"dash-nav-btn"+(dashPage==="settings"?" active":"")} onClick={()=>setDashPage("settings")}>⚙️ Settings</button>
-          <div className="dash-nav-bottom"><button className="dash-nav-lock" onClick={()=>{setParentUnlocked(false);setTab("tutor");}}>🔒 Lock Dashboard</button></div>
-        </nav>
-        <div className="dash-content fade-in">{dashPages[dashPage]}</div>
-      </div>
-    </div>
-  );
 
   /* Tutor */
   return(
@@ -1088,7 +1126,7 @@ function App(){
               </div>
             ):messages.map((msg,i)=>{
               if(msg.type==="user")return(<div key={i} className="msg user"><div className="avatar av-user">😊</div><div><div className="bubble bubble-user">{msg.content}</div>{msg.topics&&msg.topics.length>0&&<div style={{marginTop:4,display:"flex",justifyContent:"flex-end",flexWrap:"wrap"}}>{msg.topics.slice(0,3).map(tid=>{const node=gN(tid);return node?<span key={tid} className={"topic-tag "+sOI(tid)}>{node.icon}{node.name}</span>:null;})}</div>}</div></div>);
-              return(<div key={i} className="msg"><div className="avatar av-nova">🦉</div>{msg.loading?<div className="typing"><div className="tdot"/><div className="tdot"/><div className="tdot"/></div>:<div className={"bubble "+(msg.isRem?"bubble-remediation":"bubble-nova")}>{msg.isRem&&<div className="remediation-badge">🎯 REMEDIATION MODE</div>}<Blocks blocks={msg.blocks}/></div>}</div>);
+              return(<div key={i} className="msg"><div className="avatar av-nova">🦉</div>{msg.loading?<div className="typing"><div className="tdot"/><div className="tdot"/><div className="tdot"/></div>:<div className={"bubble "+(msg.isRem?"bubble-remediation":"bubble-nova")}>{msg.isRem&&<div className="remediation-badge">🎯 REMEDIATION MODE</div>}<Blocks blocks={msg.blocks} topicIds={msg.topics||[]}/></div>}</div>);
             })}
           </div>
           <div className="input-area">
@@ -1098,7 +1136,7 @@ function App(){
               {isStruggling&&<span className="status-chip chip-struggling">⚠️ Remediation Active</span>}
             </div>
             <div className={"input-box"+(isStruggling?" struggling":"")}>
-              <textarea ref={taRef} className="chat-input" placeholder={isStruggling?"It's okay "+profile?.name+"! Ask Nova to explain it differently 🤝":"Ask Nova anything, "+profile?.name+"! 🌟"} value={input} onChange={e=>{setInput(e.target.value);e.target.style.height="20px";e.target.style.height=Math.min(e.target.scrollHeight,90)+"px";}} onKeyDown={handleKey} rows={1} disabled={isLoading}/>
+              <textarea ref={taRef} className="chat-input" placeholder={"Ask Nova anything, "+(profile?.name||"")+"! 🌟"} value={input} onChange={e=>{setInput(e.target.value);e.target.style.height="20px";e.target.style.height=Math.min(e.target.scrollHeight,90)+"px";}} onKeyDown={handleKey} rows={1} disabled={isLoading}/>
               <button className="send-btn" onClick={()=>sendMessage()} disabled={isLoading||!input.trim()}>{isLoading?<span className="spin" style={{fontSize:13}}>◌</span>:"✈️"}</button>
             </div>
           </div>
