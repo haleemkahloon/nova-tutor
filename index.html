@@ -797,6 +797,23 @@ function App(){
       <div className="dash-card">
         <div className="settings-title">👤 Student Profile</div>
         <div className="settings-sub"><strong>{profile.name}</strong> · {profile.grade} · Level {getLevel(profile.xp||0).lvl} {getLevel(profile.xp||0).name} · {profile.xp} XP</div>
+
+        {/* Grade Update */}
+        <div style={{marginBottom:16,padding:"14px 16px",borderRadius:12,background:"linear-gradient(135deg,#eff6ff,#e0f2fe)",border:"2px solid var(--blue)"}}>
+          <div style={{fontSize:13,fontWeight:800,color:"#1e40af",marginBottom:4}}>🎓 Update Grade</div>
+          <div style={{fontSize:11,fontWeight:600,color:"#1d4ed8",marginBottom:12,lineHeight:1.6}}>Moving up a grade? All XP, mastery, and history are kept. Nova updates instantly.</div>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
+            {["1st","2nd","3rd","4th","5th","6th","7th","8th"].map(g=>(
+              <button key={g} onClick={()=>{if(g===profile.grade)return;saveProfile({...profile,grade:g,gradeUpdatedAt:new Date().toISOString()});}}
+                style={{padding:"7px 14px",borderRadius:9,border:`2px solid ${g===profile.grade?"var(--blue)":"var(--border)"}`,background:g===profile.grade?"var(--blue)":"#fff",color:g===profile.grade?"#fff":"var(--muted)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:g===profile.grade?"default":"pointer",transition:"all .15s"}}>
+                {g}{g===profile.grade?" ✓":""}
+              </button>
+            ))}
+          </div>
+          {profile.gradeUpdatedAt&&<div style={{fontSize:11,fontWeight:700,color:"var(--green)"}}>✅ Grade last updated: {new Date(profile.gradeUpdatedAt).toLocaleDateString()}</div>}
+          <div style={{fontSize:11,color:"#1d4ed8",fontWeight:600,marginTop:8}}>💡 <strong>Tip for September:</strong> Just tap the new grade — Nova updates immediately.</div>
+        </div>
+
         <div className="danger-zone">
           <div className="danger-title">⚠️ Danger Zone</div>
           <div className="danger-sub">Resets all progress. Export first to keep a backup.</div>
