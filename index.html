@@ -613,7 +613,7 @@ function App(){
   // ── API key validation ───────────────────────────────────────────
   const validateAndSaveKey=async()=>{
     const key=apiKeyInput.trim();
-    if(!key.startsWith("sk-ant-")){setApiKeyError("That doesn't look like a valid Anthropic API key. It should start with sk-ant-");return;}
+    if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){setApiKeyError("That doesn't look like a valid Anthropic API key.");return;}
     setApiKeyLoading(true);setApiKeyError("");
     try{
       const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});
@@ -621,10 +621,9 @@ function App(){
       if(data.error){setApiKeyError(`API key error: ${data.error.message}`);setApiKeyLoading(false);return;}
       localStorage.setItem("nova_api_key",key);
       setApiKey(key);
-      const saved=storage.get("nova_profile");
-      if(saved?.value){setProfile(JSON.parse(saved.value));setScreen("tutor");}
-      else setScreen("onboard");
-    }catch(e){setApiKeyError("Could not connect. Check your internet connection and try again.");}
+      // Always go to auth after saving key
+      setScreen("auth");
+    }catch(e){setApiKeyError("Could not connect. Check your internet and try again.");}
     setApiKeyLoading(false);
   };
 
