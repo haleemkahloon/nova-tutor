@@ -3,26 +3,51 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nova STEM Tutor — Ibraheem</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<title>Nova STEM Tutor</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-:root {
-  --navy:#1a2744; --navy2:#243258; --blue:#3b82f6; --teal:#14b8a6;
-  --yellow:#fbbf24; --orange:#f97316; --green:#22c55e; --purple:#8b5cf6;
-  --red:#ef4444; --pink:#ec4899; --white:#fff; --border:#e2e8f0;
-  --muted:#64748b; --text:#1e293b; --font:'Nunito',sans-serif;
-  --mono:'Fira Code',monospace;
-}
-html, body, #root { height:100%; margin:0; }
-body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf4 50%,#fef9c3 100%); color:var(--text); }
-.app { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#1a2744;--navy2:#243258;--blue:#3b82f6;--teal:#14b8a6;--yellow:#fbbf24;--orange:#f97316;--green:#22c55e;--purple:#8b5cf6;--red:#ef4444;--pink:#ec4899;--white:#fff;--border:#e2e8f0;--muted:#64748b;--text:#1e293b;--font:'Nunito',sans-serif;--mono:'Fira Code',monospace}
+html,body,#root{height:100%;margin:0}
+body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf4 50%,#fef9c3 100%);color:var(--text)}
+.app{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes popIn{from{opacity:0;transform:scale(.92) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDownToast{from{opacity:0;transform:translateX(-50%) translateY(-14px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.2)}50%{box-shadow:0 0 0 6px rgba(249,115,22,0)}}
+.fade-in{animation:fadeIn .35s ease forwards}
+.slide-up{animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) forwards}
+.pop{animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.spin{animation:spin 1s linear infinite;display:inline-block}
 
-/* ── Login / Signup ── */
+/* API Key */
+.apikey-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f)}
+.apikey-card{background:#fff;border-radius:24px;padding:40px;max-width:480px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
+.apikey-owl{font-size:64px;display:block;margin-bottom:14px;animation:float 3s ease-in-out infinite}
+.apikey-title{font-size:26px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.apikey-title span{background:linear-gradient(90deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.apikey-sub{font-size:13px;color:var(--muted);font-weight:600;line-height:1.7;margin-bottom:24px}
+.apikey-steps{background:#f8fafc;border-radius:12px;padding:16px;margin-bottom:20px;text-align:left}
+.apikey-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--text);line-height:1.5}
+.apikey-step:last-child{margin-bottom:0}
+.apikey-step-num{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.apikey-inp{width:100%;padding:13px 15px;border:2px solid var(--border);border-radius:11px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);outline:none;transition:border-color .15s;margin-bottom:14px;letter-spacing:.5px}
+.apikey-inp:focus{border-color:var(--blue)}
+.apikey-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(59,130,246,.4)}
+.apikey-btn:hover{transform:translateY(-2px)} .apikey-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.apikey-note{font-size:11px;color:var(--muted);font-weight:600;margin-top:12px;line-height:1.6}
+.apikey-link{color:var(--blue);text-decoration:none;font-weight:800}
+.err-box{color:var(--red);font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
+
+/* Auth */
 .auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f)}
 .auth-card{background:#fff;border-radius:24px;padding:40px;max-width:420px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
 .auth-owl{font-size:56px;display:block;margin-bottom:12px;animation:float 3s ease-in-out infinite}
@@ -36,95 +61,66 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .auth-inp:focus{border-color:var(--blue)}
 .auth-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(59,130,246,.4);margin-top:4px}
 .auth-btn:hover{transform:translateY(-2px)} .auth-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.auth-err{color:var(--red);font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
-.auth-ok{color:#166534;font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid var(--green)}
-.sync-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:#f0fdf4;border:1px solid var(--green);color:#166534;font-size:10px;font-weight:800;margin-top:8px}
-.sync-badge-warn{background:#fff7ed;border-color:var(--orange);color:#92400e}
-.apikey-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:24px; background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f); }
-.apikey-card { background:#fff; border-radius:24px; padding:40px; max-width:480px; width:100%; box-shadow:0 12px 48px rgba(0,0,0,.3); text-align:center; }
-.apikey-owl { font-size:64px; display:block; margin-bottom:14px; animation:float 3s ease-in-out infinite; }
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.apikey-title { font-size:26px; font-weight:900; color:var(--navy); margin-bottom:8px; }
-.apikey-title span { background:linear-gradient(90deg,var(--yellow),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.apikey-sub { font-size:13px; color:var(--muted); font-weight:600; line-height:1.7; margin-bottom:24px; }
-.apikey-steps { background:#f8fafc; border-radius:12px; padding:16px; margin-bottom:20px; text-align:left; }
-.apikey-step { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; font-size:12px; font-weight:700; color:var(--text); line-height:1.5; }
-.apikey-step:last-child { margin-bottom:0; }
-.apikey-step-num { width:22px; height:22px; border-radius:50%; background:var(--blue); color:#fff; font-size:11px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-.apikey-inp { width:100%; padding:13px 15px; border:2px solid var(--border); border-radius:11px; font-family:var(--mono); font-size:13px; font-weight:600; color:var(--text); outline:none; transition:border-color .15s; margin-bottom:14px; letter-spacing:.5px; }
-.apikey-inp:focus { border-color:var(--blue); }
-.apikey-btn { width:100%; padding:14px; border-radius:12px; border:none; background:linear-gradient(135deg,var(--navy),var(--blue)); color:#fff; font-family:var(--font); font-size:14px; font-weight:900; cursor:pointer; transition:all .15s; box-shadow:0 4px 14px rgba(59,130,246,.4); }
-.apikey-btn:hover { transform:translateY(-2px); }
-.apikey-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; }
-.apikey-note { font-size:11px; color:var(--muted); font-weight:600; margin-top:12px; line-height:1.6; }
-.apikey-link { color:var(--blue); text-decoration:none; font-weight:800; }
-.apikey-link:hover { text-decoration:underline; }
-.apikey-err { color:var(--red); font-size:12px; font-weight:700; margin-bottom:10px; padding:8px 12px; background:#fef2f2; border-radius:8px; border:1px solid #fecaca; }
-
-/* Transitions */
-.fade-in { animation:fadeIn .35s ease forwards; }
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.slide-up { animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) forwards; }
-@keyframes slideUp{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.pop { animation:popIn .3s cubic-bezier(.34,1.56,.64,1); }
-@keyframes popIn{from{opacity:0;transform:scale(.92) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:#f0fdf4;border:1px solid var(--green);color:#166534;font-size:10px;font-weight:800}
+.sync-warn{background:#fff7ed;border-color:var(--orange);color:#92400e}
 
 /* Header */
-.header { background:var(--navy); padding:0 20px; height:64px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 20px rgba(26,39,68,.3); flex-shrink:0; }
-.mascot { font-size:32px; animation:float 3s ease-in-out infinite; }
-.header-title { font-size:20px; font-weight:900; color:#fff; }
-.header-title span { background:linear-gradient(90deg,var(--yellow),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.header-sub { font-size:10px; color:#94a3b8; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-top:1px; }
-.header-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
-.tab-btn { padding:6px 14px; border-radius:20px; border:2px solid rgba(255,255,255,.2); background:transparent; color:#94a3b8; font-family:var(--font); font-size:12px; font-weight:800; cursor:pointer; transition:all .15s; }
-.tab-btn.active { background:var(--blue); border-color:var(--blue); color:#fff; }
-.tab-btn:hover:not(.active) { border-color:rgba(255,255,255,.4); color:#fff; }
-.xp-chip { display:flex; align-items:center; gap:5px; background:rgba(251,191,36,.15); border:1px solid rgba(251,191,36,.3); border-radius:20px; padding:5px 11px; color:var(--yellow); font-size:12px; font-weight:800; }
-.level-chip { display:flex; align-items:center; gap:5px; background:rgba(139,92,246,.15); border:1px solid rgba(139,92,246,.3); border-radius:20px; padding:5px 11px; color:#a78bfa; font-size:12px; font-weight:800; }
+.header{background:var(--navy);padding:0 20px;height:64px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(26,39,68,.3);flex-shrink:0}
+.mascot{font-size:32px;animation:float 3s ease-in-out infinite}
+.header-title{font-size:20px;font-weight:900;color:#fff}
+.header-title span{background:linear-gradient(90deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header-sub{font-size:10px;color:#94a3b8;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.tab-btn{padding:6px 14px;border-radius:20px;border:2px solid rgba(255,255,255,.2);background:transparent;color:#94a3b8;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;transition:all .15s}
+.tab-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.tab-btn:hover:not(.active){border-color:rgba(255,255,255,.4);color:#fff}
+.xp-chip{display:flex;align-items:center;gap:5px;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);border-radius:20px;padding:5px 11px;color:var(--yellow);font-size:12px;font-weight:800}
+.level-chip{display:flex;align-items:center;gap:5px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);border-radius:20px;padding:5px 11px;color:#a78bfa;font-size:12px;font-weight:800}
+.signout-btn{padding:5px 11px;border-radius:20px;border:2px solid rgba(255,255,255,.15);background:transparent;color:#94a3b8;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;transition:all .15s}
+.signout-btn:hover{border-color:var(--red);color:var(--red)}
 
-/* Main layout */
-.main { flex:1; display:flex; overflow:hidden; }
-.sidebar { width:196px; flex-shrink:0; background:rgba(255,255,255,.75); backdrop-filter:blur(8px); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow-y:auto; padding:12px 10px; gap:11px; }
-.sidebar-label { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-.mastery-row { margin-bottom:7px; }
-.mastery-row-top { display:flex; justify-content:space-between; font-size:11px; font-weight:800; margin-bottom:3px; }
-.mastery-bar { height:6px; background:var(--border); border-radius:6px; overflow:hidden; }
-.mastery-fill { height:100%; border-radius:6px; transition:width .5s; }
-.subject-btn { width:100%; padding:8px 10px; border-radius:9px; border:2px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all .15s; color:var(--text); margin-bottom:4px; }
-.subject-btn:hover,.subject-btn.active { transform:translateX(3px); }
+/* Main */
+.main{flex:1;display:flex;overflow:hidden}
+.sidebar{width:196px;flex-shrink:0;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding:12px 10px;gap:11px}
+.sidebar-label{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.mastery-row{margin-bottom:7px}
+.mastery-row-top{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:3px}
+.mastery-bar{height:6px;background:var(--border);border-radius:6px;overflow:hidden}
+.mastery-fill{height:100%;border-radius:6px;transition:width .5s}
+.subject-btn{width:100%;padding:8px 10px;border-radius:9px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;color:var(--text);margin-bottom:4px}
+.subject-btn:hover,.subject-btn.active{transform:translateX(3px)}
 .subject-btn.math{color:var(--blue)} .subject-btn.math.active,.subject-btn.math:hover{background:#eff6ff;border-color:var(--blue)}
 .subject-btn.science{color:var(--purple)} .subject-btn.science.active,.subject-btn.science:hover{background:#f5f3ff;border-color:var(--purple)}
 .subject-btn.coding{color:var(--teal)} .subject-btn.coding.active,.subject-btn.coding:hover{background:#f0fdfa;border-color:var(--teal)}
-.mode-btn { width:100%; padding:7px 10px; border-radius:9px; border:2px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all .15s; color:var(--muted); margin-bottom:4px; }
-.mode-btn.active { background:var(--navy); border-color:var(--navy); color:#fff; }
-.gap-pill { display:flex; align-items:center; gap:5px; padding:5px 9px; border-radius:8px; background:#fff7ed; border:1px solid var(--orange); color:#92400e; font-size:10px; font-weight:700; margin-bottom:4px; cursor:pointer; transition:all .15s; }
-.gap-pill:hover { background:#fed7aa; }
-.strength-pill { display:flex; align-items:center; gap:5px; padding:5px 9px; border-radius:8px; background:#f0fdf4; border:1px solid var(--green); color:#166534; font-size:10px; font-weight:700; margin-bottom:4px; }
-.struggle-indicator { padding:8px 10px; border-radius:10px; background:linear-gradient(135deg,#fff7ed,#fef3c7); border:2px solid var(--orange); font-size:10px; font-weight:800; color:#92400e; display:flex; align-items:center; gap:6px; animation:pulseGlow 2s ease-in-out infinite; }
-@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.2)}50%{box-shadow:0 0 0 6px rgba(249,115,22,0)}}
-.struggle-bar { height:4px; background:rgba(249,115,22,.2); border-radius:4px; margin-top:5px; overflow:hidden; }
-.struggle-fill { height:100%; border-radius:4px; background:linear-gradient(90deg,var(--yellow),var(--orange)); transition:width .4s; }
+.mode-btn{width:100%;padding:7px 10px;border-radius:9px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;color:var(--muted);margin-bottom:4px}
+.mode-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.gap-pill{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:8px;background:#fff7ed;border:1px solid var(--orange);color:#92400e;font-size:10px;font-weight:700;margin-bottom:4px;cursor:pointer;transition:all .15s}
+.gap-pill:hover{background:#fed7aa}
+.strength-pill{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:8px;background:#f0fdf4;border:1px solid var(--green);color:#166534;font-size:10px;font-weight:700;margin-bottom:4px}
+.struggle-indicator{padding:8px 10px;border-radius:10px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border:2px solid var(--orange);font-size:10px;font-weight:800;color:#92400e;display:flex;align-items:center;gap:6px;animation:pulseGlow 2s ease-in-out infinite}
+.struggle-bar{height:4px;background:rgba(249,115,22,.2);border-radius:4px;margin-top:5px;overflow:hidden}
+.struggle-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--yellow),var(--orange));transition:width .4s}
 
 /* Chat */
-.chat-wrap { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-.chat-area { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:12px; scroll-behavior:smooth; }
+.chat-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-area{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
 .chat-area::-webkit-scrollbar{width:5px} .chat-area::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
-.welcome { margin:auto; text-align:center; padding:16px; max-width:500px; animation:fadeIn .4s ease; }
-.welcome-emoji { font-size:56px; display:block; animation:float 3s ease-in-out infinite; margin-bottom:10px; }
-.welcome-title { font-size:26px; font-weight:900; color:var(--navy); margin-bottom:7px; }
-.welcome-title em { font-style:normal; background:linear-gradient(90deg,var(--blue),var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.welcome-sub { font-size:13px; color:var(--muted); font-weight:600; line-height:1.7; margin-bottom:6px; }
-.welcome-interests { display:flex; justify-content:center; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
-.welcome-interest-tag { padding:4px 12px; border-radius:20px; font-size:11px; font-weight:800; background:#eff6ff; color:var(--blue); border:1px solid #bfdbfe; }
-.qs-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
-.qs-btn { padding:10px 12px; border-radius:11px; border:2px solid var(--border); background:#fff; font-family:var(--font); font-size:11px; font-weight:700; cursor:pointer; text-align:left; line-height:1.4; transition:all .15s; color:var(--text); display:flex; gap:7px; align-items:flex-start; box-shadow:0 2px 6px rgba(0,0,0,.05); }
-.qs-btn:hover { transform:translateY(-2px); box-shadow:0 5px 14px rgba(0,0,0,.1); border-color:var(--blue); }
-.qs-emoji { font-size:16px; flex-shrink:0; }
-.msg { display:flex; gap:9px; animation:popIn .25s cubic-bezier(.34,1.56,.64,1); max-width:660px; width:100%; }
-.msg.user { flex-direction:row-reverse; align-self:flex-end; }
-.avatar { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; box-shadow:0 2px 7px rgba(0,0,0,.12); }
+.welcome{margin:auto;text-align:center;padding:16px;max-width:500px;animation:fadeIn .4s ease}
+.welcome-emoji{font-size:56px;display:block;animation:float 3s ease-in-out infinite;margin-bottom:10px}
+.welcome-title{font-size:26px;font-weight:900;color:var(--navy);margin-bottom:7px}
+.welcome-title em{font-style:normal;background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.welcome-sub{font-size:13px;color:var(--muted);font-weight:600;line-height:1.7;margin-bottom:6px}
+.welcome-interests{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.welcome-interest-tag{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800;background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe}
+.qs-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.qs-btn{padding:10px 12px;border-radius:11px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer;text-align:left;line-height:1.4;transition:all .15s;color:var(--text);display:flex;gap:7px;align-items:flex-start;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.qs-btn:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(0,0,0,.1);border-color:var(--blue)}
+.qs-emoji{font-size:16px;flex-shrink:0}
+.msg{display:flex;gap:9px;animation:popIn .25s cubic-bezier(.34,1.56,.64,1);max-width:660px;width:100%}
+.msg.user{flex-direction:row-reverse;align-self:flex-end}
+.avatar{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 2px 7px rgba(0,0,0,.12)}
 .av-nova{background:linear-gradient(135deg,var(--navy),var(--blue))} .av-user{background:linear-gradient(135deg,var(--orange),var(--pink))}
-.bubble { padding:11px 15px; border-radius:15px; font-size:13px; line-height:1.75; max-width:calc(100% - 42px); font-weight:600; }
+.bubble{padding:11px 15px;border-radius:15px;font-size:13px;line-height:1.75;max-width:calc(100% - 42px);font-weight:600}
 .bubble-nova{background:#fff;border:2px solid var(--border);border-top-left-radius:4px;box-shadow:0 2px 9px rgba(0,0,0,.07)}
 .bubble-user{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-top-right-radius:4px}
 .bubble-remediation{background:linear-gradient(135deg,#fff7ed,#fef3c7);border:2px solid var(--orange);border-top-left-radius:4px}
@@ -139,21 +135,14 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .typing{background:#fff;border:2px solid var(--border);border-radius:15px;border-top-left-radius:4px;padding:11px 15px;display:flex;gap:5px;align-items:center}
 .tdot{width:7px;height:7px;border-radius:50%;animation:bounce 1.2s ease infinite}
 .tdot:nth-child(1){background:var(--blue);animation-delay:0s} .tdot:nth-child(2){background:var(--teal);animation-delay:.2s} .tdot:nth-child(3){background:var(--purple);animation-delay:.4s}
-@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
 .topic-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800;margin:2px}
 .topic-tag.math{background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe}
 .topic-tag.science{background:#f5f3ff;color:var(--purple);border:1px solid #ddd6fe}
 .topic-tag.coding{background:#f0fdfa;color:var(--teal);border:1px solid #99f6e4}
-
-/* Toasts */
 .xp-toast{position:fixed;bottom:80px;right:20px;background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;padding:8px 15px;border-radius:18px;font-size:12px;font-weight:800;box-shadow:0 4px 18px rgba(0,0,0,.2);animation:toastIn .3s ease;z-index:100}
 .level-toast{position:fixed;bottom:80px;right:20px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;padding:12px 20px;border-radius:18px;font-size:13px;font-weight:800;box-shadow:0 4px 24px rgba(139,92,246,.5);animation:toastIn .3s ease;z-index:100}
 .mastered-toast{position:fixed;top:74px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--yellow),var(--orange));color:#fff;padding:9px 20px;border-radius:20px;font-size:12px;font-weight:800;box-shadow:0 4px 18px rgba(0,0,0,.2);animation:slideDownToast .3s ease;z-index:200}
 .gap-toast{position:fixed;top:74px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#fff7ed,#fed7aa);border:2px solid var(--orange);color:#92400e;padding:10px 20px;border-radius:20px;font-size:12px;font-weight:800;animation:slideDownToast .3s ease;z-index:200}
-@keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes slideDownToast{from{opacity:0;transform:translateX(-50%) translateY(-14px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-
-/* Input */
 .input-area{padding:10px 20px 14px;background:rgba(255,255,255,.6);backdrop-filter:blur(8px);border-top:1px solid var(--border)}
 .input-box{display:flex;gap:9px;align-items:flex-end;background:#fff;border:2px solid var(--border);border-radius:13px;padding:9px 13px;box-shadow:0 2px 9px rgba(0,0,0,.07);transition:border-color .15s}
 .input-box:focus-within{border-color:var(--blue)} .input-box.struggling{border-color:var(--orange)}
@@ -202,19 +191,19 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .wizard-logo-owl{font-size:28px}
 .wizard-logo-text{font-size:16px;font-weight:900;color:#fff}
 .wizard-logo-text span{background:linear-gradient(90deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.wizard-step{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;margin-bottom:4px;transition:all .2s}
-.wizard-step.active{background:rgba(59,130,246,.2)}
+.wizard-step-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;margin-bottom:4px;transition:all .2s}
+.wizard-step-item.active{background:rgba(59,130,246,.2)}
 .wizard-step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;border:2px solid rgba(255,255,255,.15);color:#94a3b8;transition:all .2s}
-.wizard-step.active .wizard-step-num{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.3)}
-.wizard-step.done .wizard-step-num{background:var(--green);border-color:var(--green);color:#fff}
-.wizard-step-label{font-size:12px;font-weight:800;color:#475569;transition:color .2s}
-.wizard-step.active .wizard-step-label{color:#fff}
-.wizard-step.done .wizard-step-label{color:#64748b}
-.wizard-step-connector{width:2px;height:20px;background:rgba(255,255,255,.08);margin:0 0 0 22px}
-.wizard-step-connector.done{background:var(--green);opacity:.4}
+.wizard-step-item.active .wizard-step-num{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.3)}
+.wizard-step-item.done .wizard-step-num{background:var(--green);border-color:var(--green);color:#fff}
+.wizard-step-lbl{font-size:12px;font-weight:800;color:#475569;transition:color .2s}
+.wizard-step-item.active .wizard-step-lbl{color:#fff}
+.wizard-step-item.done .wizard-step-lbl{color:#64748b}
+.wizard-connector{width:2px;height:20px;background:rgba(255,255,255,.08);margin:0 0 0 22px}
+.wizard-connector.done{background:var(--green);opacity:.4}
 .wizard-main{flex:1;display:flex;flex-direction:column;overflow-y:auto;padding:40px 48px;align-items:center;justify-content:center}
 .wizard-card{background:#fff;border-radius:24px;padding:40px;max-width:520px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.1)}
-.wizard-step-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:#eff6ff;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.wizard-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:#eff6ff;color:var(--blue);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
 .wizard-title{font-size:26px;font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:8px}
 .wizard-sub{font-size:13px;color:var(--muted);font-weight:600;line-height:1.7;margin-bottom:28px}
 .field-lbl{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
@@ -225,8 +214,7 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .grade-pill.active{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
 .interest-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:22px}
 .interest-btn{padding:13px 14px;border-radius:12px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--text);display:flex;align-items:center;gap:9px}
-.interest-btn:hover{border-color:var(--blue);background:#eff6ff}
-.interest-btn.active{border-color:var(--blue);background:#eff6ff;color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.interest-btn:hover,.interest-btn.active{border-color:var(--blue);background:#eff6ff;color:var(--blue)}
 .interest-icon{font-size:22px}
 .wizard-nav{display:flex;gap:10px;margin-top:4px}
 .btn-primary{flex:1;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(59,130,246,.35)}
@@ -234,8 +222,7 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .btn-secondary{padding:14px 20px;border-radius:12px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
 .btn-secondary:hover{border-color:var(--navy);color:var(--navy)}
 
-/* Diag / Results */
-.diag-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,#e0f2fe,#f0fdf4)}
+/* Diag */
 .diag-card{background:#fff;border-radius:22px;padding:36px;max-width:540px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.12)}
 .diag-prog-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px}
 .diag-bar{height:7px;background:var(--border);border-radius:6px;overflow:hidden;margin-bottom:20px}
@@ -255,7 +242,8 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .fb-no{background:#fef2f2;border:2px solid var(--red);color:#991b1b}
 .next-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:13px;font-weight:900;cursor:pointer;transition:all .15s}
 .next-btn:hover{transform:translateY(-2px)}
-.results-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto;background:linear-gradient(160deg,#e0f2fe,#f0fdf4)}
+
+/* Results */
 .results-card{background:#fff;border-radius:22px;padding:36px;max-width:540px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center}
 .mastery-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px}
 .m-card{padding:16px 12px;border-radius:13px;border:2px solid var(--border);text-align:center}
@@ -360,72 +348,33 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 .alert-title{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
 .alert-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(249,115,22,.15);font-size:11px;font-weight:700;color:#92400e}
 .alert-item:last-child{border-bottom:none}
-@keyframes spin{to{transform:rotate(360deg)}}
-.spin{animation:spin 1s linear infinite;display:inline-block}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useRef, useCallback } = React;
+const{useState,useEffect,useRef,useCallback}=React;
 
-// ── Supabase config ───────────────────────────────────────────────────
-const SUPABASE_URL = "https://ifayrtuouxlfnvtyhnjz.supabase.co";
-const SUPABASE_KEY = "sb_publishable_jDQ4waUP5brWgKyp8zUiYg_PfOp4NkJ";
+/* ── Supabase ── */
+const SB_URL="https://ifayrtuouxlfnvtyhnjz.supabase.co";
+const SB_KEY="sb_publishable_jDQ4waUP5brWgKyp8zUiYg_PfOp4NkJ";
+const sbHeaders={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
+const sb={
+  getProfile:async(u)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbHeaders});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
+  upsertProfile:async(u,h,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles",{method:"POST",headers:{...sbHeaders,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}},
+  updateProfile:async(u,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbHeaders,body:JSON.stringify({profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}}
+};
+async function hashPassword(pw){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pw));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
 
-const sb = {
-  async getProfile(username) {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}&select=*`, {
-        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-      });
-      const data = await res.json();
-      return data?.[0] || null;
-    } catch { return null; }
-  },
-  async upsertProfile(username, passwordHash, profileData) {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
-        method: "POST",
-        headers: {
-          "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`,
-          "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates"
-        },
-        body: JSON.stringify({ username, password_hash: passwordHash, profile_data: profileData, updated_at: new Date().toISOString() })
-      });
-      return res.ok;
-    } catch { return false; }
-  },
-  async updateProfile(username, profileData) {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}`, {
-        method: "PATCH",
-        headers: {
-          "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ profile_data: profileData, updated_at: new Date().toISOString() })
-      });
-      return res.ok;
-    } catch { return false; }
-  }
+/* ── localStorage ── */
+const ls={
+  get:(k)=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},
+  set:(k,v)=>{try{localStorage.setItem(k,v);return true;}catch{return false;}},
+  del:(k)=>{try{localStorage.removeItem(k);return true;}catch{return false;}}
 };
 
-// ── Simple password hash (SHA-256 via Web Crypto) ─────────────────────
-async function hashPassword(password) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
-}
-
-// ── localStorage fallback ─────────────────────────────────────────────
-const storage = {
-  get: (key) => { try { const v = localStorage.getItem(key); return v ? { value: v } : null; } catch { return null; } },
-  set: (key, val) => { try { localStorage.setItem(key, val); return true; } catch { return false; } },
-  delete: (key) => { try { localStorage.removeItem(key); return true; } catch { return false; } },
-};
-
-// ── Data ──────────────────────────────────────────────────────────────
-const CURRICULUM = {
+/* ── Data ── */
+const CURRICULUM={
   math:[
     {unit:"Number Sense",nodes:[
       {id:"m1",name:"Multiplication Facts",sub:"Up to 12×12",icon:"✖️"},
@@ -479,14 +428,13 @@ const CURRICULUM = {
     ]},
   ],
 };
-
-const TOPIC_KEYWORDS={m1:["multiplication","times table","multiply","product"],m2:["division","divide","quotient"],m3:["fraction","numerator","denominator"],m4:["equivalent fraction","simplify fraction"],m5:["add fraction","adding fraction"],m6:["perimeter","area","rectangle"],m7:["angle","acute","obtuse","right angle"],m8:["symmetry","reflection","mirror"],m9:["word problem","real world math"],m10:["pattern","sequence","next number"],s1:["force","push","pull","newton"],s2:["gravity","fall","weight","drop"],s3:["friction","rough surface","smooth surface"],s4:["simple machine","lever","pulley","ramp"],s5:["solid","liquid","gas","state of matter"],s6:["material property","magnetic","conductor"],s7:["melt","freeze","evaporate","boil"],s8:["planet","solar system","sun","orbit","space"],s9:["weather","rain","wind","temperature","climate"],s10:["ecosystem","food chain","habitat"],c1:["algorithm","instructions","program"],c2:["sequence","order","step by step"],c3:["loop","repeat","while loop","for loop"],c4:["if statement","else","conditional"],c5:["variable","store value","data"],c6:["function","def ","method","reusable"],c7:["calculator","arithmetic program"],c8:["game","guessing game","random number"]};
-const STRUGGLE_PHRASES=["don't understand","dont understand","confused","confusing","don't get","dont get","i'm lost","im lost","makes no sense","too hard","this is hard","i give up","don't know","dont know","no idea","i'm stuck","im stuck","not getting it","wrong answer","i got it wrong"];
+const TKW={m1:["multiplication","times table","multiply","product"],m2:["division","divide","quotient"],m3:["fraction","numerator","denominator"],m4:["equivalent fraction","simplify fraction"],m5:["add fraction","adding fraction"],m6:["perimeter","area","rectangle"],m7:["angle","acute","obtuse","right angle"],m8:["symmetry","reflection","mirror"],m9:["word problem","real world math"],m10:["pattern","sequence","next number"],s1:["force","push","pull","newton"],s2:["gravity","fall","weight","drop"],s3:["friction","rough surface","smooth surface"],s4:["simple machine","lever","pulley","ramp"],s5:["solid","liquid","gas","state of matter"],s6:["material property","magnetic","conductor"],s7:["melt","freeze","evaporate","boil"],s8:["planet","solar system","sun","orbit","space"],s9:["weather","rain","wind","temperature","climate"],s10:["ecosystem","food chain","habitat"],c1:["algorithm","instructions","program"],c2:["sequence","order","step by step"],c3:["loop","repeat","while loop","for loop"],c4:["if statement","else","conditional"],c5:["variable","store value","data"],c6:["function","def ","method","reusable"],c7:["calculator","arithmetic program"],c8:["game","guessing game","random number"]};
+const STRUGGLE=["don't understand","dont understand","confused","confusing","don't get","dont get","i'm lost","im lost","makes no sense","too hard","this is hard","i give up","don't know","dont know","no idea","i'm stuck","im stuck","not getting it","wrong answer","i got it wrong"];
 const GRADES=["1st","2nd","3rd","4th","5th","6th","7th","8th"];
 const INTERESTS=[{key:"space",label:"Space & Rockets",icon:"🚀"},{key:"animals",label:"Animals & Nature",icon:"🦁"},{key:"games",label:"Video Games",icon:"🎮"},{key:"building",label:"Building & Legos",icon:"🧱"},{key:"sports",label:"Sports",icon:"⚽"},{key:"cooking",label:"Cooking & Food",icon:"🍕"},{key:"art",label:"Art & Drawing",icon:"🎨"},{key:"robots",label:"Robots & Tech",icon:"🤖"}];
-const SUBJECTS_LIST=[{key:"math",label:"Math",icon:"🔢",color:"#3b82f6"},{key:"science",label:"Science",icon:"⚛️",color:"#8b5cf6"},{key:"coding",label:"Coding",icon:"💻",color:"#14b8a6"}];
+const SUBJ=[{key:"math",label:"Math",icon:"🔢",color:"#3b82f6"},{key:"science",label:"Science",icon:"⚛️",color:"#8b5cf6"},{key:"coding",label:"Coding",icon:"💻",color:"#14b8a6"}];
 const MODES=[{key:"mixed",label:"🎲 Mixed"},{key:"socratic",label:"❓ Socratic"},{key:"lecture",label:"📖 Lecture"},{key:"project",label:"🚀 Project"}];
-const QUESTIONS=[
+const QS=[
   {subject:"math",subjectLabel:"Mathematics",badge:"badge-math",icon:"🔢",q:"144 cookies shared among 12 friends. How many each?",hint:"What operation splits equally?",options:["10","12","14","16"],correct:1,explanation:"144 ÷ 12 = 12. Division splits a total into equal groups!"},
   {subject:"math",subjectLabel:"Mathematics",badge:"badge-math",icon:"🔢",q:"What is ¾ of 40?",hint:"Find ¼ first...",options:["20","25","30","35"],correct:2,explanation:"¼ of 40 = 10, so ¾ = 3 × 10 = 30."},
   {subject:"science",subjectLabel:"Science",badge:"badge-science",icon:"⚛️",q:"Toy car: carpet vs. smooth floor — which travels farther?",hint:"What force slows the car?",options:["Carpet","Smooth floor","Same","Depends"],correct:1,explanation:"Smooth floor! Carpet creates more friction."},
@@ -494,68 +442,63 @@ const QUESTIONS=[
   {subject:"coding",subjectLabel:"Coding",badge:"badge-coding",icon:"💻",q:"'Move 3 steps, Turn right' × 4. What shape?",hint:"Count sides...",options:["Triangle","Circle","Square","Hexagon"],correct:2,explanation:"A square! 4 equal sides — that's a loop!"},
   {subject:"coding",subjectLabel:"Coding",badge:"badge-coding",icon:"💻",q:"What does an IF statement do?",hint:"Think decisions...",options:["Repeats code","Makes a decision","Stores a number","Prints text"],correct:1,explanation:"IF checks a condition and runs code only when true!"},
 ];
-
 const LEVELS=[{lvl:1,name:"Curious Explorer",min:0},{lvl:2,name:"STEM Apprentice",min:100},{lvl:3,name:"Science Scout",min:250},{lvl:4,name:"Math Maverick",min:500},{lvl:5,name:"Code Crafter",min:900},{lvl:6,name:"Nova Scholar",min:1400},{lvl:7,name:"STEM Champion",min:2000},{lvl:8,name:"Ivy Bound",min:3000}];
 const getLevel=xp=>{let l=LEVELS[0];for(const lv of LEVELS){if(xp>=lv.min)l=lv;}return l;};
 const getNextLevel=xp=>{for(let i=0;i<LEVELS.length-1;i++){if(xp<LEVELS[i+1].min)return LEVELS[i+1];}return null;};
-
-const scoreToMastery=(c,t)=>Math.round((c/t)*100);
-const masteryColor=s=>s>=70?"#22c55e":s>=40?"#fbbf24":"#ef4444";
-const masteryLabel=s=>s>=80?"Strong 💪":s>=60?"Good 👍":s>=40?"Developing 📈":"Needs Focus 🎯";
-const allNodes=()=>Object.values(CURRICULUM).flat().flatMap(u=>u.nodes);
-const getNode=id=>allNodes().find(n=>n.id===id);
-const isUnlocked=(node,tm)=>!node.requires||(tm[node.requires]||0)>=40;
-const subjectOfId=id=>id.startsWith("m")?"math":id.startsWith("s")?"science":"coding";
-const detectTopics=text=>{const l=text.toLowerCase();return Object.entries(TOPIC_KEYWORDS).filter(([,kws])=>kws.some(k=>l.includes(k))).map(([id])=>id);};
-const detectStruggle=text=>STRUGGLE_PHRASES.some(p=>text.toLowerCase().includes(p));
-const fmtDate=iso=>{const d=new Date(iso);return{month:d.toLocaleString("default",{month:"short"}),day:d.getDate(),time:d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})};};
+const s2m=(c,t)=>Math.round((c/t)*100);
+const mc=s=>s>=70?"#22c55e":s>=40?"#fbbf24":"#ef4444";
+const ml=s=>s>=80?"Strong 💪":s>=60?"Good 👍":s>=40?"Developing 📈":"Needs Focus 🎯";
+const allN=()=>Object.values(CURRICULUM).flat().flatMap(u=>u.nodes);
+const gN=id=>allN().find(n=>n.id===id);
+const isUL=(node,tm)=>!node.requires||(tm[node.requires]||0)>=40;
+const sOI=id=>id.startsWith("m")?"math":id.startsWith("s")?"science":"coding";
+const dT=text=>{const l=text.toLowerCase();return Object.entries(TKW).filter(([,kws])=>kws.some(k=>l.includes(k))).map(([id])=>id);};
+const dS=text=>STRUGGLE.some(p=>text.toLowerCase().includes(p));
+const fD=iso=>{const d=new Date(iso);return{month:d.toLocaleString("default",{month:"short"}),day:d.getDate(),time:d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})};};
 const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
 function parseBlocks(text){
-  const blocks=[];const lines=text.split("\n");let i=0,codeBuf=null,codeLang="";
+  const blocks=[];const lines=text.split("\n");let i=0,cb=null,cl="";
   while(i<lines.length){const line=lines[i];
-    if(line.startsWith("```")){if(codeBuf!==null){blocks.push({type:"code",lang:codeLang,content:codeBuf.join("\n")});codeBuf=null;codeLang="";}else{codeBuf=[];codeLang=line.slice(3).trim()||"code";}i++;continue;}
-    if(codeBuf!==null){codeBuf.push(line);i++;continue;}
+    if(line.startsWith("```")){if(cb!==null){blocks.push({type:"code",lang:cl,content:cb.join("\n")});cb=null;cl="";}else{cb=[];cl=line.slice(3).trim()||"code";}i++;continue;}
+    if(cb!==null){cb.push(line);i++;continue;}
     if(line.includes("🤔")||line.toLowerCase().includes("think about this")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"challenge",content:c});i++;continue;}
     if(line.includes("⭐")||line.toLowerCase().includes("fun fact")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"funfact",content:c});i++;continue;}
     if(line.trim()){if(blocks.length&&blocks[blocks.length-1].type==="text")blocks[blocks.length-1].content+="\n"+line;else blocks.push({type:"text",content:line});}i++;
   }
   return blocks;
 }
-
 function Blocks({blocks}){
   return blocks.map((b,i)=>{
     if(b.type==="text")return React.createElement("div",{key:i,style:{whiteSpace:"pre-wrap",marginBottom:4}},b.content);
     if(b.type==="challenge")return React.createElement("div",{key:i,className:"block-challenge"},React.createElement("div",{className:"block-challenge-lbl"},"🤔 Think About This!"),React.createElement("div",{style:{whiteSpace:"pre-wrap"}},b.content.replace(/🤔[^:]*:/i,"").trim()));
     if(b.type==="funfact")return React.createElement("div",{key:i,className:"block-fact"},React.createElement("div",{className:"block-fact-lbl"},"⭐ Fun Fact"),React.createElement("div",{style:{whiteSpace:"pre-wrap"}},b.content.replace(/⭐[^:]*:/i,"").trim()));
-    if(b.type==="code")return React.createElement("div",{key:i,className:"block-code"},React.createElement("div",{className:"block-code-hdr"},"💻 ",b.lang),React.createElement("div",{className:"block-code-body"},b.content));
+    if(b.type==="code")return React.createElement("div",{key:i,className:"block-code"},React.createElement("div",{className:"block-code-hdr"},"💻 "+b.lang),React.createElement("div",{className:"block-code-body"},b.content));
     return null;
   });
 }
-
-function buildSystemPrompt(profile,subject,mode,isRem=false,remTopic=null){
+function buildPrompt(profile,subject,mode,isRem,remTopic){
   const{name,grade,mastery,gaps,strengths,topicMastery={},interests=[],struggleCount=0}=profile;
-  const modeMap={mixed:"Mix of Socratic, explanation, and project ideas.",socratic:"ONLY guiding questions — never direct answers.",lecture:"Explain clearly, vivid example, comprehension check.",project:"Frame everything as hands-on experiment or mini-project."};
-  const topicCtx=Object.entries(topicMastery).map(([id,pct])=>{const n=getNode(id);return n?`${n.name}:${pct}%`:null;}).filter(Boolean).join(", ");
-  const interestCtx=interests.length?`INTERESTS: ${interests.join(", ")} — weave these into your examples naturally.`:"";
-  const remNote=isRem&&remTopic?`\n⚠️ REMEDIATION: ${name} is struggling with "${remTopic}". Stop advancing. Use a completely different analogy. One simple guiding question to rebuild confidence.`:"";
-  const strNote=struggleCount>2?`\nNote: ${name} has struggled ${struggleCount} times. Be extra patient.`:"";
-  return `You are Nova, an enthusiastic STEM tutor for ${name}, a ${grade} grade student (~10 years old).
-MASTERY: Math ${mastery.math}% · Science ${mastery.science}% · Coding ${mastery.coding}%
-GAPS: ${gaps.join(", ")||"None"} | STRENGTHS: ${strengths.join(", ")||"Discovering"}
-TOPIC PROGRESS: ${topicCtx||"None yet"}
-${interestCtx}
-TEACHING MODE: ${modeMap[mode]||modeMap.mixed}
-${subject?`FOCUS: ${SUBJECTS_LIST.find(s=>s.key===subject)?.label}`:""}${remNote}${strNote}
-RULES: Use ${name}'s name. Connect to his interests. 4-8 sentences per idea. Guide discovery. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.`;
+  const modeMap={mixed:"Mix of Socratic, explanation, and project ideas.",socratic:"ONLY guiding questions — never direct answers.",lecture:"Explain clearly, vivid example, comprehension check.",project:"Frame everything as hands-on experiment."};
+  const tc=Object.entries(topicMastery).map(([id,pct])=>{const n=gN(id);return n?n.name+":"+pct+"%":null;}).filter(Boolean).join(", ");
+  const ic=interests.length?"INTERESTS: "+interests.join(", ")+" — weave into examples naturally.":"";
+  const rn=isRem&&remTopic?"\n⚠️ REMEDIATION: "+name+" is struggling with \""+remTopic+"\". Stop advancing. Use a different analogy. One simple guiding question to rebuild confidence.":"";
+  const sn=struggleCount>2?"\nNote: "+name+" has struggled "+struggleCount+" times. Be extra patient.":"";
+  return "You are Nova, an enthusiastic STEM tutor for "+name+", a "+grade+" grade student (~10 years old).\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None")+" | STRENGTHS: "+(strengths.join(", ")||"Discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet")+"\n"+ic+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"FOCUS: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Use "+name+"'s name. Connect to his interests. 4-8 sentences per idea. Guide discovery. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.";
 }
 
-// ── Main App ──────────────────────────────────────────────────────────
+/* ── App ── */
 function App(){
-  const[apiKey,setApiKey]=useState(()=>localStorage.getItem("nova_api_key")||"");
+  /* All state declared together — no splits */
   const[apiKeyInput,setApiKeyInput]=useState("");
   const[apiKeyError,setApiKeyError]=useState("");
   const[apiKeyLoading,setApiKeyLoading]=useState(false);
+  const[authMode,setAuthMode]=useState("login");
+  const[authUser,setAuthUser]=useState("");
+  const[authPass,setAuthPass]=useState("");
+  const[authErr,setAuthErr]=useState("");
+  const[authLoading,setAuthLoading]=useState(false);
+  const[syncStatus,setSyncStatus]=useState("idle");
   const[screen,setScreen]=useState("loading");
   const[wizardStep,setWizardStep]=useState(0);
   const[profile,setProfile]=useState(null);
@@ -564,7 +507,6 @@ function App(){
   const[mode,setMode]=useState("mixed");
   const[treeSubject,setTreeSubject]=useState("math");
   const[dashPage,setDashPage]=useState("overview");
-
   const[messages,setMessages]=useState([]);
   const[apiHistory,setApiHistory]=useState([]);
   const[input,setInput]=useState("");
@@ -576,15 +518,13 @@ function App(){
   const[isStruggling,setIsStruggling]=useState(false);
   const[struggleTopics,setStruggleTopics]=useState([]);
   const[consecutiveStruggle,setConsecutiveStruggle]=useState(0);
-
   const[nameVal,setNameVal]=useState("Ibraheem");
   const[gradeVal,setGradeVal]=useState("4th");
-  const[selectedInterests,setSelectedInterests]=useState([]);
+  const[selInterests,setSelInterests]=useState([]);
   const[qIndex,setQIndex]=useState(0);
   const[selected,setSelected]=useState(null);
   const[answered,setAnswered]=useState(false);
   const[diagScores,setDiagScores]=useState({math:[],science:[],coding:[]});
-
   const[pinInput,setPinInput]=useState("");
   const[pinError,setPinError]=useState(false);
   const[parentUnlocked,setParentUnlocked]=useState(false);
@@ -595,146 +535,205 @@ function App(){
   const[importStatus,setImportStatus]=useState(null);
   const[importData,setImportData]=useState(null);
   const importRef=useRef(null);
-
   const chatRef=useRef(null);
   const taRef=useRef(null);
+  const saveTimer=useRef(null);
 
+  /* Boot */
   useEffect(()=>{
-    const key=localStorage.getItem("nova_api_key");
-    if(!key){setScreen("apikey");return;}
-    const saved=storage.get("nova_profile");
-    if(saved?.value){setProfile(JSON.parse(saved.value));setScreen("tutor");}
-    else setScreen("onboard");
+    (async()=>{
+      const key=localStorage.getItem("nova_api_key");
+      if(!key){setScreen("apikey");return;}
+      const user=localStorage.getItem("nova_user");
+      if(!user){setScreen("auth");return;}
+      try{
+        const row=await sb.getProfile(user);
+        if(row&&row.profile_data&&row.profile_data.setupComplete){
+          setProfile(row.profile_data);
+          ls.set("nova_profile",JSON.stringify(row.profile_data));
+          setScreen("tutor");return;
+        }
+      }catch(e){console.log("boot cloud err",e);}
+      const saved=ls.get("nova_profile");
+      if(saved&&saved.value){
+        const p=JSON.parse(saved.value);
+        if(p.setupComplete){setProfile(p);setScreen("tutor");return;}
+      }
+      setScreen("onboard");
+    })();
   },[]);
 
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight;},[messages]);
   useEffect(()=>{if(!profile)return;if(tab==="parent")setScreen(parentUnlocked?"parent-dash":"parent-pin");else setScreen("tutor");},[tab]);
 
-  // ── API key validation ───────────────────────────────────────────
-  const validateAndSaveKey=async()=>{
+  /* Save profile */
+  const saveProfile=useCallback((p)=>{
+    setProfile(p);
+    ls.set("nova_profile",JSON.stringify(p));
+    if(saveTimer.current)clearTimeout(saveTimer.current);
+    setSyncStatus("saving");
+    saveTimer.current=setTimeout(async()=>{
+      const user=localStorage.getItem("nova_user");
+      if(user){const ok=await sb.updateProfile(user,p);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}
+      else setSyncStatus("idle");
+    },1500);
+  },[]);
+
+  /* API Key */
+  const validateKey=async()=>{
     const key=apiKeyInput.trim();
-    if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){
-      setApiKeyError("That doesn't look like a valid Anthropic API key.");return;
-    }
+    if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){setApiKeyError("Doesn't look like a valid Anthropic key.");return;}
     setApiKeyLoading(true);setApiKeyError("");
     try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})
-      });
-      const data=await res.json();
-      if(data.error){
-        setApiKeyError("API key error: "+data.error.message);
-        setApiKeyLoading(false);return;
-      }
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});
+      const d=await r.json();
+      if(d.error){setApiKeyError("Key error: "+d.error.message);setApiKeyLoading(false);return;}
       localStorage.setItem("nova_api_key",key);
-      setApiKey(key);
       setApiKeyLoading(false);
       setScreen("auth");
-    }catch(e){
-      setApiKeyError("Could not connect. Check your internet and try again.");
-      setApiKeyLoading(false);
-    }
+    }catch(e){setApiKeyError("Could not connect. Check internet.");setApiKeyLoading(false);}
   };
 
-  const saveProfile=p=>{storage.set("nova_profile",JSON.stringify(p));setProfile(p);};
-  const showXP=(amt,xp)=>{const pl=getLevel(xp-amt);const nl=getLevel(xp);if(nl.lvl>pl.lvl){setLevelToast(`🎉 Level Up! ${nl.name}`);setTimeout(()=>setLevelToast(null),4000);}else{setXpToast(`+${amt} XP! ⭐`);setTimeout(()=>setXpToast(null),2000);}};
-  const showMastered=n=>{setMasteredToast(`🏆 Mastered: ${n}!`);setTimeout(()=>setMasteredToast(null),3000);};
-  const showGap=t=>{setGapToast(`🎯 Remediating: ${t}`);setTimeout(()=>setGapToast(null),3000);};
+  /* Auth */
+  const handleAuth=async()=>{
+    const u=authUser.trim().toLowerCase();
+    const p=authPass.trim();
+    if(!u||!p){setAuthErr("Please enter a username and password.");return;}
+    if(u.length<3){setAuthErr("Username must be at least 3 characters.");return;}
+    if(p.length<4){setAuthErr("Password must be at least 4 characters.");return;}
+    setAuthLoading(true);setAuthErr("");
+    try{
+      const hash=await hashPassword(p);
+      if(authMode==="signup"){
+        const existing=await sb.getProfile(u);
+        if(existing){setAuthErr("Username taken. Try another or log in.");setAuthLoading(false);return;}
+        const ok=await sb.upsertProfile(u,hash,{});
+        if(!ok){setAuthErr("Could not create account. Check connection.");setAuthLoading(false);return;}
+        localStorage.setItem("nova_user",u);
+        setAuthLoading(false);
+        setScreen("onboard");
+      }else{
+        const row=await sb.getProfile(u);
+        if(!row){setAuthErr("Username not found. Check spelling or sign up.");setAuthLoading(false);return;}
+        if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
+        localStorage.setItem("nova_user",u);
+        if(row.profile_data&&row.profile_data.setupComplete){
+          setProfile(row.profile_data);
+          ls.set("nova_profile",JSON.stringify(row.profile_data));
+          setAuthLoading(false);
+          setScreen("tutor");
+        }else{setAuthLoading(false);setScreen("onboard");}
+      }
+    }catch(e){setAuthErr("Error: "+e.message);setAuthLoading(false);}
+  };
 
-  const updateTopicMastery=(ids,struggling,p)=>{const tm={...(p.topicMastery||{})};const nm=[];ids.forEach(id=>{const prev=tm[id]||0;const d=struggling?-8:12+Math.floor(Math.random()*6);tm[id]=Math.min(100,Math.max(0,prev+d));if(prev<80&&tm[id]>=80){const n=getNode(id);if(n)nm.push(n.name);}});return{tm,newlyMastered:nm};};
-  const recomputeMastery=tm=>{const compute=s=>{const nodes=CURRICULUM[s].flatMap(u=>u.nodes);const scored=nodes.filter(n=>tm[n.id]!==undefined);if(!scored.length)return null;return Math.round(scored.reduce((a,n)=>a+(tm[n.id]||0),0)/scored.length);};return{math:compute("math"),science:compute("science"),coding:compute("coding")};};
+  const handleLogout=()=>{
+    localStorage.removeItem("nova_user");
+    setProfile(null);setMessages([]);setApiHistory([]);
+    setParentUnlocked(false);setTab("tutor");
+    setAuthUser("");setAuthPass("");setAuthErr("");setAuthMode("login");
+    setScreen("auth");
+  };
+
+  /* Toasts */
+  const showXP=(amt,xp)=>{const pl=getLevel(xp-amt);const nl=getLevel(xp);if(nl.lvl>pl.lvl){setLevelToast("🎉 Level Up! "+nl.name);setTimeout(()=>setLevelToast(null),4000);}else{setXpToast("+"+amt+" XP! ⭐");setTimeout(()=>setXpToast(null),2000);}};
+  const showMastered=n=>{setMasteredToast("🏆 Mastered: "+n+"!");setTimeout(()=>setMasteredToast(null),3000);};
+  const showGap=t=>{setGapToast("🎯 Remediating: "+t);setTimeout(()=>setGapToast(null),3000);};
+
+  /* Topic mastery */
+  const updateTM=(ids,struggling,p)=>{const tm={...(p.topicMastery||{})};const nm=[];ids.forEach(id=>{const prev=tm[id]||0;const d=struggling?-8:12+Math.floor(Math.random()*6);tm[id]=Math.min(100,Math.max(0,prev+d));if(prev<80&&tm[id]>=80){const n=gN(id);if(n)nm.push(n.name);}});return{tm,newlyMastered:nm};};
+  const recompute=tm=>{const c=s=>{const nodes=CURRICULUM[s].flatMap(u=>u.nodes);const sc=nodes.filter(n=>tm[n.id]!==undefined);if(!sc.length)return null;return Math.round(sc.reduce((a,n)=>a+(tm[n.id]||0),0)/sc.length);};return{math:c("math"),science:c("science"),coding:c("coding")};};
   const updateGaps=useCallback((tm,gaps,strengths)=>{const MAP={"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"],"Multiplication":["m1","m2"],"Geometry":["m6","m7"],"States of Matter":["s5","s6","s7"]};const ng=[...gaps],ns=[...strengths];Object.entries(MAP).forEach(([name,ids])=>{const covered=ids.filter(id=>tm[id]!==undefined);if(!covered.length)return;const avg=covered.reduce((s,id)=>s+(tm[id]||0),0)/covered.length;if(avg<45&&!ng.includes(name)){ng.push(name);ns.splice(ns.indexOf(name),1);}if(avg>=70&&ng.includes(name)){ng.splice(ng.indexOf(name),1);if(!ns.includes(name))ns.push(name);}});return{gaps:ng,strengths:ns};},[]);
 
-  const sendMessage=async(text,forceRem=false,remTopic=null)=>{
+  /* Send message */
+  const sendMessage=async(text,forceRem,remTopic)=>{
     const userText=(text||input).trim();if(!userText||isLoading)return;
     setInput("");if(taRef.current)taRef.current.style.height="20px";
-    const userStruggling=detectStruggle(userText)||forceRem;
-    const detectedTopics=detectTopics(userText);
-    if(userStruggling){const nc=consecutiveStruggle+1;setConsecutiveStruggle(nc);setIsStruggling(true);if(detectedTopics.length>0){setStruggleTopics(detectedTopics);const n=getNode(detectedTopics[0]);if(n)showGap(n.name);}}
+    const struggling=dS(userText)||forceRem;
+    const detT=dT(userText);
+    if(struggling){setConsecutiveStruggle(c=>c+1);setIsStruggling(true);if(detT.length>0){setStruggleTopics(detT);const n=gN(detT[0]);if(n)showGap(n.name);}}
     else{setConsecutiveStruggle(0);if(!forceRem)setIsStruggling(false);}
-    const userMsg={role:"user",content:userText};
-    const newHistory=[...apiHistory,userMsg];setApiHistory(newHistory);
-    setMessages(prev=>[...prev,{type:"user",content:userText,struggling:userStruggling,topics:detectedTopics}]);
-    const agentId=Date.now();setIsLoading(true);
-    setMessages(prev=>[...prev,{type:"nova",id:agentId,blocks:[],loading:true,isRemediation:userStruggling}]);
-    const remLabel=remTopic||(detectedTopics.length>0?(getNode(detectedTopics[0])?.name||null):null);
+    const um={role:"user",content:userText};
+    const nh=[...apiHistory,um];setApiHistory(nh);
+    setMessages(prev=>[...prev,{type:"user",content:userText,struggling,topics:detT}]);
+    const aid=Date.now();setIsLoading(true);
+    setMessages(prev=>[...prev,{type:"nova",id:aid,blocks:[],loading:true,isRem:struggling}]);
+    const rl=remTopic||(detT.length>0?(gN(detT[0])?.name||null):null);
     try{
-      const currentKey=localStorage.getItem("nova_api_key");
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":currentKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1000,system:buildSystemPrompt(profile,subject,mode,userStruggling,remLabel),messages:newHistory})});
-      const data=await res.json();if(data.error)throw new Error(data.error.message);
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1000,system:buildPrompt(profile,subject,mode,struggling,rl),messages:nh})});
+      const data=await r.json();if(data.error)throw new Error(data.error.message);
       const raw=data.content?.[0]?.text||"";const blocks=parseBlocks(raw);
-      const novaTopics=detectTopics(raw);const allT=[...new Set([...detectedTopics,...novaTopics])];
+      const nt=dT(raw);const allT=[...new Set([...detT,...nt])];
       setApiHistory(prev=>[...prev,{role:"assistant",content:raw}]);
-      setMessages(prev=>prev.map(m=>m.id===agentId?{...m,blocks,loading:false,isRemediation:userStruggling}:m));
+      setMessages(prev=>prev.map(m=>m.id===aid?{...m,blocks,loading:false,isRem:struggling}:m));
       let up={...profile};
-      if(allT.length>0){const{tm,newlyMastered}=updateTopicMastery(allT,userStruggling,up);up.topicMastery=tm;const rc=recomputeMastery(tm);if(rc.math!==null)up.mastery.math=rc.math;if(rc.science!==null)up.mastery.science=rc.science;if(rc.coding!==null)up.mastery.coding=rc.coding;const{gaps,strengths}=updateGaps(tm,up.gaps,up.strengths);up.gaps=gaps;up.strengths=strengths;if(newlyMastered.length>0)showMastered(newlyMastered[0]);}
-      const xpGain=userStruggling?5:10+Math.floor(Math.random()*8);
-      up.struggleCount=(up.struggleCount||0)+(userStruggling?1:0);up.xp=(up.xp||0)+xpGain;up.sessions=(up.sessions||0)+1;up.lastSession=new Date().toISOString();
-      if((up.sessions||0)%5===0){const log=up.sessionLog||[];up.sessionLog=[{id:Date.now(),date:new Date().toISOString(),topics:allT.map(id=>getNode(id)?.name).filter(Boolean),xpGained:xpGain,hadStruggle:userStruggling,mastery:{...up.mastery}},...log].slice(0,30);}
-      saveProfile(up);if(!userStruggling)showXP(xpGain,up.xp);
-    }catch(err){setMessages(prev=>prev.map(m=>m.id===agentId?{...m,blocks:[{type:"text",content:`Oops! ${err.message}`}],loading:false}:m));}
+      if(allT.length>0){const{tm,newlyMastered}=updateTM(allT,struggling,up);up.topicMastery=tm;const rc=recompute(tm);if(rc.math!==null)up.mastery.math=rc.math;if(rc.science!==null)up.mastery.science=rc.science;if(rc.coding!==null)up.mastery.coding=rc.coding;const{gaps,strengths}=updateGaps(tm,up.gaps,up.strengths);up.gaps=gaps;up.strengths=strengths;if(newlyMastered.length>0)showMastered(newlyMastered[0]);}
+      const xg=struggling?5:10+Math.floor(Math.random()*8);
+      up.struggleCount=(up.struggleCount||0)+(struggling?1:0);up.xp=(up.xp||0)+xg;up.sessions=(up.sessions||0)+1;up.lastSession=new Date().toISOString();
+      if((up.sessions||0)%5===0){const log=up.sessionLog||[];up.sessionLog=[{id:Date.now(),date:new Date().toISOString(),topics:allT.map(id=>gN(id)?.name).filter(Boolean),xpGained:xg,hadStruggle:struggling,mastery:{...up.mastery}},...log].slice(0,30);}
+      saveProfile(up);if(!struggling)showXP(xg,up.xp);
+    }catch(err){setMessages(prev=>prev.map(m=>m.id===aid?{...m,blocks:[{type:"text",content:"Oops! "+err.message}],loading:false}:m));}
     setIsLoading(false);
   };
-
   const handleKey=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}};
-  const toggleInterest=key=>setSelectedInterests(prev=>prev.includes(key)?prev.filter(k=>k!==key):[...prev,key]);
 
-  const handleAnswer=idx=>{if(answered)return;setSelected(idx);setAnswered(true);const q=QUESTIONS[qIndex];setDiagScores(prev=>({...prev,[q.subject]:[...prev[q.subject],idx===q.correct?1:0]}));};
+  /* Diagnostic */
+  const handleAnswer=idx=>{if(answered)return;setSelected(idx);setAnswered(true);const q=QS[qIndex];setDiagScores(prev=>({...prev,[q.subject]:[...prev[q.subject],idx===q.correct?1:0]}));};
   const handleNext=()=>{
-    if(qIndex<QUESTIONS.length-1){setQIndex(i=>i+1);setSelected(null);setAnswered(false);return;}
-    const final={...diagScores};const q=QUESTIONS[qIndex];final[q.subject]=[...final[q.subject],selected===q.correct?1:0];
-    const math=scoreToMastery(final.math.filter(Boolean).length,2),science=scoreToMastery(final.science.filter(Boolean).length,2),coding=scoreToMastery(final.coding.filter(Boolean).length,2);
+    if(qIndex<QS.length-1){setQIndex(i=>i+1);setSelected(null);setAnswered(false);return;}
+    const final={...diagScores};const q=QS[qIndex];final[q.subject]=[...final[q.subject],selected===q.correct?1:0];
+    const math=s2m(final.math.filter(Boolean).length,2),science=s2m(final.science.filter(Boolean).length,2),coding=s2m(final.coding.filter(Boolean).length,2);
     const gaps=[],strengths=[];
     if(math<60)gaps.push("Fractions & Division");else strengths.push("Math Operations");
     if(science<60)gaps.push("Forces & Matter");else strengths.push("Science Concepts");
     if(coding<60)gaps.push("Logic & Loops");else strengths.push("Coding Thinking");
-    const topicMastery={};
-    if(math>=50){topicMastery["m1"]=math;topicMastery["m2"]=Math.max(0,math-10);}
-    if(science>=50){topicMastery["s1"]=science;topicMastery["s5"]=Math.max(0,science-10);}
-    if(coding>=50){topicMastery["c1"]=coding;topicMastery["c2"]=Math.max(0,coding-10);}
-    const interestLabels=selectedInterests.map(k=>INTERESTS.find(i=>i.key===k)?.label).filter(Boolean);
-    const p={name:nameVal,grade:gradeVal,setupComplete:true,mastery:{math,science,coding},gaps,strengths,xp:50,streak:1,sessions:0,struggleCount:0,lastSession:new Date().toISOString(),topicMastery,sessionLog:[],interests:interestLabels};
+    const tm={};
+    if(math>=50){tm["m1"]=math;tm["m2"]=Math.max(0,math-10);}
+    if(science>=50){tm["s1"]=science;tm["s5"]=Math.max(0,science-10);}
+    if(coding>=50){tm["c1"]=coding;tm["c2"]=Math.max(0,coding-10);}
+    const il=selInterests.map(k=>INTERESTS.find(i=>i.key===k)?.label).filter(Boolean);
+    const p={name:nameVal,grade:gradeVal,setupComplete:true,mastery:{math,science,coding},gaps,strengths,xp:50,streak:1,sessions:0,struggleCount:0,lastSession:new Date().toISOString(),topicMastery:tm,sessionLog:[],interests:il};
     saveProfile(p);setWizardStep(3);
   };
 
+  /* PIN */
   const handlePin=key=>{if(key==="del"){setPinInput(p=>p.slice(0,-1));setPinError(false);return;}const next=pinInput+key;setPinInput(next);if(next.length===4){if(next===storedPin){setParentUnlocked(true);setScreen("parent-dash");setPinInput("");}else{setPinError(true);setTimeout(()=>{setPinInput("");setPinError(false);},800);}}};
   const saveNewPin=()=>{if(newPin.length!==4||newPin!==confirmPin)return;localStorage.setItem("nova_pin",newPin);setStoredPin(newPin);setNewPin("");setConfirmPin("");setPinSaved(true);setTimeout(()=>setPinSaved(false),3000);};
 
-  // Export / Import
-  const exportProfile=()=>{const data={...profile,exportedAt:new Date().toISOString(),exportVersion:1};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=`nova-profile-${profile.name.toLowerCase().replace(/\s+/g,"-")}-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url);};
+  /* Export / Import */
+  const exportProfile=()=>{const blob=new Blob([JSON.stringify({...profile,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="nova-profile-ibraheem-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);};
   const handleImportFile=e=>{const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const parsed=JSON.parse(ev.target.result);if(!parsed.name||!parsed.mastery)throw new Error("Invalid");setImportData(parsed);setImportStatus("confirm");}catch{setImportStatus("error");}};reader.readAsText(file);e.target.value="";};
   const confirmImport=()=>{if(!importData)return;saveProfile(importData);setImportStatus("success");setImportData(null);setTimeout(()=>setImportStatus(null),4000);};
+  const resetProfile=()=>{ls.del("nova_profile");setProfile(null);setMessages([]);setApiHistory([]);setDiagScores({math:[],science:[],coding:[]});setQIndex(0);setSelected(null);setAnswered(false);setWizardStep(0);setIsStruggling(false);setConsecutiveStruggle(0);setStruggleTopics([]);setParentUnlocked(false);setTab("tutor");setScreen("onboard");};
+  const changeApiKey=()=>{localStorage.removeItem("nova_api_key");setApiKeyInput("");setScreen("apikey");};
 
-  const resetProfile=()=>{storage.delete("nova_profile");setProfile(null);setMessages([]);setApiHistory([]);setDiagScores({math:[],science:[],coding:[]});setQIndex(0);setSelected(null);setAnswered(false);setWizardStep(0);setIsStruggling(false);setConsecutiveStruggle(0);setStruggleTopics([]);setParentUnlocked(false);setTab("tutor");setScreen("onboard");};
-  const changeApiKey=()=>{localStorage.removeItem("nova_api_key");setApiKey("");setApiKeyInput("");setScreen("apikey");};
+  /* Quick starts */
+  const getQS=()=>{const base=[{emoji:"🔢",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"Explain gravity with a fun example!"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧠",text:"Give me a tricky math challenge!"},{emoji:"🔬",text:"Why do things float in water?"},{emoji:"🚀",text:"How do rockets escape Earth's gravity?"}];if(!profile?.interests?.length)return base;const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🐬",text:"How do dolphins use echolocation?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How do robots know what to do?"});return[...extra.slice(0,2),...base].slice(0,6);};
 
-  const getQuickStarts=()=>{const base=[{emoji:"🔢",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"Explain gravity with a fun example!"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧠",text:"Give me a tricky math challenge!"},{emoji:"🔬",text:"Why do things float in water?"},{emoji:"🚀",text:"How do rockets escape Earth's gravity?"}];if(!profile?.interests?.length)return base;const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🐬",text:"How do dolphins use echolocation?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How do robots know what to do?"});return[...extra.slice(0,2),...base].slice(0,6);};
-
-  // Tree Panel
-  const TreePanel=()=>{
+  /* Tree */
+  function TreePanel(){
     const tm=profile?.topicMastery||{};const units=CURRICULUM[treeSubject];const sc={math:"#3b82f6",science:"#8b5cf6",coding:"#14b8a6"};
-    const getStatus=node=>{if(!isUnlocked(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"]}[g]||[]).includes(node.id)))return"gap";return"current";};
+    const getStatus=node=>{if(!isUL(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"]}[g]||[]).includes(node.id)))return"gap";return"current";};
     return(
       <div className="tree-panel">
         <div className="tree-header">
           <div className="tree-title">📚 Curriculum Tree</div>
-          <div className="tree-tabs">{SUBJECTS_LIST.map(s=><button key={s.key} className={`tree-tab ${s.key} ${treeSubject===s.key?"active":""}`} onClick={()=>setTreeSubject(s.key)}>{s.icon}</button>)}</div>
+          <div className="tree-tabs">{SUBJ.map(s=><button key={s.key} className={"tree-tab "+s.key+(treeSubject===s.key?" active":"")} onClick={()=>setTreeSubject(s.key)}>{s.icon}</button>)}</div>
         </div>
         <div className="tree-body">
           {units.map((unit,ui)=>(
             <div key={ui} className="tree-unit">
               <div className="tree-unit-label">{unit.unit}</div>
               {unit.nodes.map(node=>{const status=getStatus(node);const pct=tm[node.id]||0;const color=sc[treeSubject];return(
-                <div key={node.id} className={`tree-node ${status}`} onClick={()=>isUnlocked(node,tm)&&sendMessage(`Let's learn about: ${node.name}. ${node.sub}`)}>
+                <div key={node.id} className={"tree-node "+status} onClick={()=>isUL(node,tm)&&sendMessage("Let's learn about: "+node.name+". "+node.sub)}>
                   <div className="tree-node-icon">{node.icon}</div>
                   <div className="tree-node-text">
                     <div className="tree-node-name">{node.name}</div>
                     <div className="tree-node-sub">{node.sub}</div>
-                    {status!=="locked"&&pct>0&&<div className="tree-node-bar"><div className="tree-node-fill" style={{width:`${pct}%`,background:pct>=80?"#22c55e":pct>=40?"#fbbf24":color}}/></div>}
+                    {status!=="locked"&&pct>0&&<div className="tree-node-bar"><div className="tree-node-fill" style={{width:pct+"%",background:pct>=80?"#22c55e":pct>=40?"#fbbf24":color}}/></div>}
                   </div>
-                  {status==="locked"?<span style={{fontSize:11}}>🔒</span>:status==="struggling-node"?<span style={{fontSize:11}}>⚠️</span>:pct>0?<div className="tree-node-pct" style={{color:masteryColor(pct)}}>{pct}%</div>:null}
+                  {status==="locked"?<span style={{fontSize:11}}>🔒</span>:status==="struggling-node"?<span style={{fontSize:11}}>⚠️</span>:pct>0?<div className="tree-node-pct" style={{color:mc(pct)}}>{pct}%</div>:null}
                 </div>
               );})}
             </div>
@@ -749,90 +748,90 @@ function App(){
         </div>
       </div>
     );
-  };
+  }
 
-  // Dashboard pages
-  const DashOverview=()=>{
+  /* Dashboard pages */
+  function DashOverview(){
     const{mastery,gaps,strengths,xp,sessions,topicMastery={},struggleCount=0,name}=profile;
-    const masteredCount=Object.values(topicMastery).filter(v=>v>=80).length;const totalTopics=allNodes().length;
-    const lvl=getLevel(xp||0);const nextLvl=getNextLevel(xp||0);const recentStruggles=struggleTopics.map(id=>getNode(id)).filter(Boolean);
+    const mc2=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;
+    const lvl=getLevel(xp||0);const nxt=getNextLevel(xp||0);const rs=struggleTopics.map(id=>gN(id)).filter(Boolean);
     return(<>
       <div className="dash-page-title">👨‍👩‍👧 {name}'s Overview</div>
       <div className="dash-page-sub">Last session: {profile.lastSession?new Date(profile.lastSession).toLocaleDateString():"Not yet"}</div>
       <div className="stat-grid">
         <div className="stat-card"><div className="stat-icon">📅</div><div className="stat-val">{sessions||0}</div><div className="stat-lbl">Messages</div></div>
-        <div className="stat-card"><div className="stat-icon">🏆</div><div className="stat-val">{masteredCount}/{totalTopics}</div><div className="stat-lbl">Mastered</div></div>
+        <div className="stat-card"><div className="stat-icon">🏆</div><div className="stat-val">{mc2}/{tot}</div><div className="stat-lbl">Mastered</div></div>
         <div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{xp||50}</div><div className="stat-lbl">XP · Lvl {lvl.lvl}</div></div>
         <div className="stat-card"><div className="stat-icon">⚠️</div><div className="stat-val">{struggleCount||0}</div><div className="stat-lbl">Struggles</div></div>
       </div>
-      {nextLvl&&<div className="dash-card" style={{marginBottom:16,background:"linear-gradient(135deg,#f5f3ff,#ede9fe)"}}>
+      {nxt&&<div className="dash-card" style={{marginBottom:16,background:"linear-gradient(135deg,#f5f3ff,#ede9fe)"}}>
         <div style={{fontSize:11,fontWeight:800,color:"var(--purple)",marginBottom:6}}>🎮 LEVEL — {lvl.name}</div>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <div style={{flex:1,height:10,background:"rgba(139,92,246,.15)",borderRadius:6,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,background:"linear-gradient(90deg,var(--purple),var(--pink))",width:`${Math.min(100,((profile.xp-lvl.min)/(nextLvl.min-lvl.min))*100)}%`,transition:"width .5s"}}/></div>
-          <div style={{fontSize:11,fontWeight:800,color:"var(--purple)",flexShrink:0}}>{profile.xp}/{nextLvl.min} → {nextLvl.name}</div>
+          <div style={{flex:1,height:10,background:"rgba(139,92,246,.15)",borderRadius:6,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,background:"linear-gradient(90deg,var(--purple),var(--pink))",width:Math.min(100,((xp-lvl.min)/(nxt.min-lvl.min))*100)+"%",transition:"width .5s"}}/></div>
+          <div style={{fontSize:11,fontWeight:800,color:"var(--purple)",flexShrink:0}}>{xp}/{nxt.min} → {nxt.name}</div>
         </div>
       </div>}
-      {recentStruggles.length>0&&<div className="alert-card"><div className="alert-title">⚠️ Active Struggles</div>{recentStruggles.map((n,i)=><div key={i} className="alert-item"><span className="badge-alert">Struggling</span>{n.icon} {n.name}</div>)}</div>}
+      {rs.length>0&&<div className="alert-card"><div className="alert-title">⚠️ Active Struggles</div>{rs.map((n,i)=><div key={i} className="alert-item"><span className="badge-alert">Struggling</span>{n.icon} {n.name}</div>)}</div>}
       <div className="sec-title">Subject Mastery</div>
       <div className="dash-card">{[{label:"Math",key:"math",color:"#3b82f6"},{label:"Science",key:"science",color:"#8b5cf6"},{label:"Coding",key:"coding",color:"#14b8a6"}].map(s=>(
-        <div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:`${mastery[s.key]}%`,background:s.color}}/></div><div className="dash-mastery-pct" style={{color:masteryColor(mastery[s.key])}}>{mastery[s.key]}%</div></div>
+        <div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:mastery[s.key]+"%",background:s.color}}/></div><div className="dash-mastery-pct" style={{color:mc(mastery[s.key])}}>{mastery[s.key]}%</div></div>
       ))}</div>
-      {profile.interests?.length>0&&<><div className="sec-title">Ibraheem's Interests</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{profile.interests.map((interest,i)=><span key={i} style={{padding:"4px 12px",borderRadius:"20px",background:"#eff6ff",color:"var(--blue)",fontSize:12,fontWeight:700,border:"1px solid #bfdbfe"}}>{interest}</span>)}</div></div></>}
+      {profile.interests?.length>0&&<><div className="sec-title">Ibraheem's Interests</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{profile.interests.map((int,i)=><span key={i} style={{padding:"4px 12px",borderRadius:"20px",background:"#eff6ff",color:"var(--blue)",fontSize:12,fontWeight:700,border:"1px solid #bfdbfe"}}>{int}</span>)}</div></div></>}
       <div className="sec-title">Focus Areas & Strengths</div>
       <div className="dash-card">
         {gaps.map((g,i)=><div key={i} className="gap-row"><span className="badge-needs">Gap</span>{g}</div>)}
         {strengths.map((s,i)=><div key={i} className="gap-row"><span className="badge-ok">Strong</span>{s}</div>)}
       </div>
     </>);
-  };
+  }
 
-  const DashWeekly=()=>{
-    const now=new Date();const sessionLog=profile.sessionLog||[];
-    const days=Array.from({length:7},(_,i)=>{const d=new Date(now);d.setDate(d.getDate()-6+i);const ds=d.toDateString();const daySessions=sessionLog.filter(s=>new Date(s.date).toDateString()===ds);return{label:DAYS[d.getDay()],date:d,isToday:ds===now.toDateString(),sessions:daySessions,xp:daySessions.reduce((a,s)=>a+s.xpGained,0)};});
-    const weekXP=days.reduce((a,d)=>a+d.xp,0);const weekTopics=[...new Set(sessionLog.flatMap(s=>s.topics||[]))].slice(0,8);const activeDays=days.filter(d=>d.sessions.length>0).length;
+  function DashWeekly(){
+    const now=new Date();const log=profile.sessionLog||[];
+    const days=Array.from({length:7},(_,i)=>{const d=new Date(now);d.setDate(d.getDate()-6+i);const ds=d.toDateString();const ds2=log.filter(s=>new Date(s.date).toDateString()===ds);return{label:DAYS[d.getDay()],isToday:ds===now.toDateString(),sessions:ds2,xp:ds2.reduce((a,s)=>a+s.xpGained,0)};});
+    const wXP=days.reduce((a,d)=>a+d.xp,0);const wT=[...new Set(log.flatMap(s=>s.topics||[]))].slice(0,8);const aD=days.filter(d=>d.sessions.length>0).length;
     return(<>
       <div className="dash-page-title">📅 Weekly Snapshot</div>
       <div className="dash-page-sub">This week at a glance</div>
       <div className="stat-grid">
-        <div className="stat-card"><div className="stat-icon">🔥</div><div className="stat-val">{activeDays}/7</div><div className="stat-lbl">Active Days</div></div>
-        <div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{weekXP}</div><div className="stat-lbl">XP This Week</div></div>
-        <div className="stat-card"><div className="stat-icon">📚</div><div className="stat-val">{weekTopics.length}</div><div className="stat-lbl">Topics</div></div>
-        <div className="stat-card"><div className="stat-icon">📝</div><div className="stat-val">{sessionLog.length}</div><div className="stat-lbl">Log Entries</div></div>
+        <div className="stat-card"><div className="stat-icon">🔥</div><div className="stat-val">{aD}/7</div><div className="stat-lbl">Active Days</div></div>
+        <div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{wXP}</div><div className="stat-lbl">XP This Week</div></div>
+        <div className="stat-card"><div className="stat-icon">📚</div><div className="stat-val">{wT.length}</div><div className="stat-lbl">Topics</div></div>
+        <div className="stat-card"><div className="stat-icon">📝</div><div className="stat-val">{log.length}</div><div className="stat-lbl">Log Entries</div></div>
       </div>
       <div className="sec-title">Daily Activity</div>
-      <div className="week-grid">{days.map((d,i)=><div key={i} className={`day-cell ${d.sessions.length>0?"active":""} ${d.isToday?"today":""}`}><div className="day-name">{d.label}</div><div className={`day-dot ${d.sessions.length>0?"has-session":""} ${d.isToday&&d.sessions.length>0?"today-dot":""}`}/><div className="day-xp">{d.xp>0?`+${d.xp}`:d.isToday?"Today":"—"}</div></div>)}</div>
-      {weekTopics.length>0&&<><div className="sec-title">Topics This Week</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{weekTopics.map((t,i)=><span key={i} className="session-topic-tag">{t}</span>)}</div></div></>}
+      <div className="week-grid">{days.map((d,i)=><div key={i} className={"day-cell"+(d.sessions.length>0?" active":"")+(d.isToday?" today":"")}><div className="day-name">{d.label}</div><div className={"day-dot"+(d.sessions.length>0?" has-session":"")+(d.isToday&&d.sessions.length>0?" today-dot":"")}/><div className="day-xp">{d.xp>0?"+"+d.xp:d.isToday?"Today":"—"}</div></div>)}</div>
+      {wT.length>0&&<><div className="sec-title">Topics This Week</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{wT.map((t,i)=><span key={i} className="session-topic-tag">{t}</span>)}</div></div></>}
       <div className="sec-title">Recommendation</div>
-      <div className="dash-card"><div style={{fontSize:13,fontWeight:700,color:activeDays>=4?"#166534":activeDays>=1?"#92400e":"var(--muted)"}}>{activeDays===0?"🌟 No sessions yet — encourage 10 minutes with Nova today!":activeDays>=1&&activeDays<=3?"📈 Good start! Aim for 5 days this week.":"🔥 Excellent consistency — keep it going!"}</div></div>
+      <div className="dash-card"><div style={{fontSize:13,fontWeight:700,color:aD>=4?"#166534":aD>=1?"#92400e":"var(--muted)"}}>{aD===0?"🌟 No sessions yet — encourage 10 minutes with Nova today!":aD<=3?"📈 Good start! Aim for 5 days this week.":"🔥 Excellent consistency — keep it going!"}</div></div>
     </>);
-  };
+  }
 
-  const DashHeatmap=()=>{
-    const tm=profile.topicMastery||{};const heat=v=>{if(v>=80)return 4;if(v>=60)return 3;if(v>=40)return 2;if(v>0)return 1;return 0;};
+  function DashHeatmap(){
+    const tm=profile.topicMastery||{};const h=v=>{if(v>=80)return 4;if(v>=60)return 3;if(v>=40)return 2;if(v>0)return 1;return 0;};
     return(<>
       <div className="dash-page-title">🗺️ Mastery Heatmap</div>
       <div className="dash-page-sub">Topic-level mastery across the full curriculum</div>
       {Object.entries({math:CURRICULUM.math,science:CURRICULUM.science,coding:CURRICULUM.coding}).map(([subj,units])=>(
         <div key={subj} style={{marginBottom:20}}>
-          <div className="sec-title">{SUBJECTS_LIST.find(s=>s.key===subj)?.icon} {SUBJECTS_LIST.find(s=>s.key===subj)?.label}</div>
-          <div className="heatmap-grid">{units.flatMap(u=>u.nodes).map(node=>{const pct=tm[node.id]||0;const h=heat(pct);return(<div key={node.id} className={`heat-cell heat-${h}`} title={`${node.name}: ${pct}%`}><div className="heat-icon">{node.icon}</div><div className="heat-name">{node.name}</div><div className="heat-pct" style={{color:pct>0?masteryColor(pct):"var(--muted)"}}>{pct>0?`${pct}%`:"—"}</div></div>);})}</div>
+          <div className="sec-title">{SUBJ.find(s=>s.key===subj)?.icon} {SUBJ.find(s=>s.key===subj)?.label}</div>
+          <div className="heatmap-grid">{units.flatMap(u=>u.nodes).map(node=>{const pct=tm[node.id]||0;return(<div key={node.id} className={"heat-cell heat-"+h(pct)} title={node.name+": "+pct+"%"}><div className="heat-icon">{node.icon}</div><div className="heat-name">{node.name}</div><div className="heat-pct" style={{color:pct>0?mc(pct):"var(--muted)"}}>{pct>0?pct+"%":"—"}</div></div>);})}</div>
         </div>
       ))}
     </>);
-  };
+  }
 
-  const DashLog=()=>{
+  function DashLog(){
     const log=profile.sessionLog||[];
     return(<>
       <div className="dash-page-title">📋 Session Log</div>
       <div className="dash-page-sub">Recent learning activity</div>
       {log.length===0?<div className="empty-state"><div className="empty-icon">📭</div><div className="empty-text">No sessions yet.<br/>Logged every 5 messages.</div></div>
-        :log.map((s,i)=>{const{month,day,time}=fmtDate(s.date);return(<div key={i} className="session-card"><div className="session-date-col"><div className="session-month">{month}</div><div className="session-day">{day}</div></div><div className="session-body"><div className="session-title">Session at {time}</div><div className="session-meta">Math {s.mastery?.math}% · Science {s.mastery?.science}% · Coding {s.mastery?.coding}%{s.hadStruggle?" · ⚠️ Struggled":""}</div><div className="session-topics">{(s.topics||[]).map((t,j)=><span key={j} className="session-topic-tag">{t}</span>)}{s.hadStruggle&&<span className="session-topic-tag gap-tag">Remediation</span>}</div></div><div className="session-xp">+{s.xpGained} XP</div></div>);})}
+        :log.map((s,i)=>{const{month,day,time}=fD(s.date);return(<div key={i} className="session-card"><div className="session-date-col"><div className="session-month">{month}</div><div className="session-day">{day}</div></div><div className="session-body"><div className="session-title">Session at {time}</div><div className="session-meta">Math {s.mastery?.math}% · Science {s.mastery?.science}% · Coding {s.mastery?.coding}%{s.hadStruggle?" · ⚠️ Struggled":""}</div><div className="session-topics">{(s.topics||[]).map((t,j)=><span key={j} className="session-topic-tag">{t}</span>)}{s.hadStruggle&&<span className="session-topic-tag gap-tag">Remediation</span>}</div></div><div className="session-xp">+{s.xpGained} XP</div></div>);})}
     </>);
-  };
+  }
 
-  const DashSettings=()=>(
-    <>
+  function DashSettings(){
+    return(<>
       <div className="dash-page-title">⚙️ Settings</div>
       <div className="dash-page-sub">Manage profile, PIN, and portability</div>
       <div className="dash-card" style={{marginBottom:16}}>
@@ -845,14 +844,26 @@ function App(){
         <div style={{padding:"12px 14px",borderRadius:11,background:"#eff6ff",border:"2px solid var(--blue)"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:importStatus?10:0}}>
             <div><div style={{fontSize:13,fontWeight:800,color:"#1e40af"}}>📥 Import Profile</div><div style={{fontSize:11,fontWeight:600,color:"#1d4ed8",marginTop:2}}>Restore from exported file</div></div>
-            <button onClick={()=>importRef.current?.click()} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--blue)",background:"#fff",color:"var(--blue)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Choose File ↑</button>
+            <button onClick={()=>importRef.current&&importRef.current.click()} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--blue)",background:"#fff",color:"var(--blue)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Choose File ↑</button>
           </div>
           <input ref={importRef} type="file" accept=".json" style={{display:"none"}} onChange={handleImportFile}/>
-          {importStatus==="confirm"&&importData&&(<div style={{marginTop:10,padding:"12px 14px",borderRadius:10,background:"#fff",border:"2px solid var(--orange)"}} className="pop"><div style={{fontSize:12,fontWeight:800,color:"#92400e",marginBottom:4}}>⚠️ Replace current progress?</div><div style={{fontSize:11,fontWeight:600,color:"#b45309",marginBottom:10,lineHeight:1.6}}>Load <strong>{importData.name}</strong>'s profile ({importData.grade} · {importData.xp} XP)?<br/>Current progress will be overwritten.</div><div style={{display:"flex",gap:8}}><button onClick={confirmImport} style={{flex:1,padding:"8px",borderRadius:8,border:"none",background:"var(--orange)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Yes, load this profile</button><button onClick={()=>{setImportStatus(null);setImportData(null);}} style={{padding:"8px 14px",borderRadius:8,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Cancel</button></div></div>)}
+          {importStatus==="confirm"&&importData&&(<div style={{marginTop:10,padding:"12px 14px",borderRadius:10,background:"#fff",border:"2px solid var(--orange)"}} className="pop"><div style={{fontSize:12,fontWeight:800,color:"#92400e",marginBottom:4}}>⚠️ Replace current progress?</div><div style={{fontSize:11,fontWeight:600,color:"#b45309",marginBottom:10,lineHeight:1.6}}>Load <strong>{importData.name}</strong>'s profile ({importData.grade} · {importData.xp} XP)?</div><div style={{display:"flex",gap:8}}><button onClick={confirmImport} style={{flex:1,padding:"8px",borderRadius:8,border:"none",background:"var(--orange)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Yes, load this profile</button><button onClick={()=>{setImportStatus(null);setImportData(null);}} style={{padding:"8px 14px",borderRadius:8,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Cancel</button></div></div>)}
           {importStatus==="success"&&<div style={{marginTop:10,padding:"10px 12px",borderRadius:9,background:"#f0fdf4",border:"2px solid var(--green)",fontSize:12,fontWeight:700,color:"#166534"}} className="pop">✅ Profile loaded successfully!</div>}
           {importStatus==="error"&&<div style={{marginTop:10,padding:"10px 12px",borderRadius:9,background:"#fef2f2",border:"2px solid var(--red)",fontSize:12,fontWeight:700,color:"#991b1b"}} className="pop">❌ Invalid file. Use a Nova profile export.</div>}
         </div>
-        <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:10,lineHeight:1.6}}>💡 Export → send file to yourself → open Nova on new device → Import</div>
+      </div>
+      <div className="dash-card" style={{marginBottom:16}}>
+        <div className="settings-title">🎓 Update Grade</div>
+        <div className="settings-sub">Moving up a grade? All XP, mastery, and history are kept. Nova updates instantly.</div>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
+          {GRADES.map(g=>(
+            <button key={g} onClick={()=>{if(g===profile.grade)return;saveProfile({...profile,grade:g,gradeUpdatedAt:new Date().toISOString()});}}
+              style={{padding:"7px 14px",borderRadius:9,border:"2px solid "+(g===profile.grade?"var(--blue)":"var(--border)"),background:g===profile.grade?"var(--blue)":"#fff",color:g===profile.grade?"#fff":"var(--muted)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:g===profile.grade?"default":"pointer",transition:"all .15s"}}>
+              {g}{g===profile.grade?" ✓":""}
+            </button>
+          ))}
+        </div>
+        {profile.gradeUpdatedAt&&<div style={{fontSize:11,fontWeight:700,color:"var(--green)"}}>✅ Grade last updated: {new Date(profile.gradeUpdatedAt).toLocaleDateString()}</div>}
       </div>
       <div className="dash-card" style={{marginBottom:16}}>
         <div className="settings-title">🔐 Change Parent PIN</div>
@@ -866,29 +877,12 @@ function App(){
       </div>
       <div className="dash-card">
         <div className="settings-title">🔑 API Key</div>
-        <div className="settings-sub">Your Anthropic API key powers Nova's responses.</div>
+        <div className="settings-sub">Change the Anthropic API key powering Nova.</div>
         <button onClick={changeApiKey} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Change API Key</button>
       </div>
       <div className="dash-card">
         <div className="settings-title">👤 Student Profile</div>
         <div className="settings-sub"><strong>{profile.name}</strong> · {profile.grade} · Level {getLevel(profile.xp||0).lvl} {getLevel(profile.xp||0).name} · {profile.xp} XP</div>
-
-        {/* Grade Update */}
-        <div style={{marginBottom:16,padding:"14px 16px",borderRadius:12,background:"linear-gradient(135deg,#eff6ff,#e0f2fe)",border:"2px solid var(--blue)"}}>
-          <div style={{fontSize:13,fontWeight:800,color:"#1e40af",marginBottom:4}}>🎓 Update Grade</div>
-          <div style={{fontSize:11,fontWeight:600,color:"#1d4ed8",marginBottom:12,lineHeight:1.6}}>Moving up a grade? All XP, mastery, and history are kept. Nova updates instantly.</div>
-          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
-            {["1st","2nd","3rd","4th","5th","6th","7th","8th"].map(g=>(
-              <button key={g} onClick={()=>{if(g===profile.grade)return;saveProfile({...profile,grade:g,gradeUpdatedAt:new Date().toISOString()});}}
-                style={{padding:"7px 14px",borderRadius:9,border:`2px solid ${g===profile.grade?"var(--blue)":"var(--border)"}`,background:g===profile.grade?"var(--blue)":"#fff",color:g===profile.grade?"#fff":"var(--muted)",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:g===profile.grade?"default":"pointer",transition:"all .15s"}}>
-                {g}{g===profile.grade?" ✓":""}
-              </button>
-            ))}
-          </div>
-          {profile.gradeUpdatedAt&&<div style={{fontSize:11,fontWeight:700,color:"var(--green)"}}>✅ Grade last updated: {new Date(profile.gradeUpdatedAt).toLocaleDateString()}</div>}
-          <div style={{fontSize:11,color:"#1d4ed8",fontWeight:600,marginTop:8}}>💡 <strong>Tip for September:</strong> Just tap the new grade — Nova updates immediately.</div>
-        </div>
-
         <div className="danger-zone">
           <div className="danger-title">⚠️ Danger Zone</div>
           <div className="danger-sub">Resets all progress. Export first to keep a backup.</div>
@@ -898,12 +892,13 @@ function App(){
           </div>
         </div>
       </div>
-    </>
-  );
+    </>);
+  }
 
   const dashPages={overview:<DashOverview/>,weekly:<DashWeekly/>,heatmap:<DashHeatmap/>,log:<DashLog/>,settings:<DashSettings/>};
 
-  const Header=()=>{
+  /* Header */
+  function Header(){
     const lvl=profile?getLevel(profile.xp||0):null;
     return(
       <header className="header">
@@ -911,135 +906,109 @@ function App(){
         <div><div className="header-title">Nova <span>STEM Tutor</span></div><div className="header-sub">Ibraheem's Personal Tutor</div></div>
         <div className="header-right">
           {profile&&<>
-            <button className={`tab-btn ${tab==="tutor"?"active":""}`} onClick={()=>setTab("tutor")}>🎓 Learn</button>
-            <button className={`tab-btn ${tab==="parent"?"active":""}`} onClick={()=>setTab("parent")}>👨‍👩‍👧 Parent</button>
+            <button className={"tab-btn"+(tab==="tutor"?" active":"")} onClick={()=>setTab("tutor")}>🎓 Learn</button>
+            <button className={"tab-btn"+(tab==="parent"?" active":"")} onClick={()=>setTab("parent")}>👨‍👩‍👧 Parent</button>
             {lvl&&<div className="level-chip">Lvl {lvl.lvl} · {lvl.name}</div>}
             <div className="xp-chip">⭐ {profile.xp||0}</div>
-            {syncStatus==="saving"&&<div className="sync-badge sync-badge-warn">⏳ Saving...</div>}
+            {syncStatus==="saving"&&<div className={"sync-badge sync-warn"}>⏳ Saving...</div>}
             {syncStatus==="saved"&&<div className="sync-badge">☁️ Saved</div>}
-            {syncStatus==="error"&&<div className="sync-badge sync-badge-warn">⚠️ Offline</div>}
-            <button onClick={handleLogout} style={{padding:"5px 11px",borderRadius:20,border:"2px solid rgba(255,255,255,.15)",background:"transparent",color:"#94a3b8",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--red)";e.currentTarget.style.color="var(--red)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.15)";e.currentTarget.style.color="#94a3b8";}}>
-              Sign Out
-            </button>
+            {syncStatus==="error"&&<div className={"sync-badge sync-warn"}>⚠️ Offline</div>}
+            <button className="signout-btn" onClick={handleLogout}>Sign Out</button>
           </>}
         </div>
       </header>
     );
-  };
+  }
 
-  // ── Screens ───────────────────────────────────────────────────────
-  if(screen==="loading")return <div className="app" style={{alignItems:"center",justifyContent:"center"}}><span style={{fontSize:44,animation:"float 1s ease-in-out infinite"}}>🦉</span></div>;
+  /* ── Screens ── */
+  if(screen==="loading")return<div className="app" style={{alignItems:"center",justifyContent:"center"}}><span style={{fontSize:44,animation:"float 1s ease-in-out infinite"}}>🦉</span></div>;
 
-  // ── API Key screen ────────────────────────────────────────────────
   if(screen==="apikey")return(
     <div className="app">
       <div className="apikey-wrap fade-in">
         <div className="apikey-card">
           <span className="apikey-owl">🦉</span>
           <div className="apikey-title">Nova <span>STEM Tutor</span></div>
-          <div className="apikey-sub">One-time setup: paste your Anthropic API key below. Stored only in this browser.</div>
+          <div className="apikey-sub">One-time setup: paste your Anthropic API key below.</div>
           <div className="apikey-steps">
             <div className="apikey-step"><div className="apikey-step-num">1</div><div>Go to <a className="apikey-link" href="https://console.anthropic.com" target="_blank" rel="noreferrer">console.anthropic.com</a> and sign up (free)</div></div>
-            <div className="apikey-step"><div className="apikey-step-num">2</div><div>Click <strong>"API Keys"</strong> → <strong>"Create Key"</strong></div></div>
-            <div className="apikey-step"><div className="apikey-step-num">3</div><div>Copy the key (starts with <code style={{background:"#f1f5f9",padding:"1px 5px",borderRadius:4}}>sk-ant-</code>) and paste below</div></div>
+            <div className="apikey-step"><div className="apikey-step-num">2</div><div>Click <strong>API Keys</strong> then <strong>Create Key</strong></div></div>
+            <div className="apikey-step"><div className="apikey-step-num">3</div><div>Copy the key starting with <code style={{background:"#f1f5f9",padding:"1px 5px",borderRadius:4}}>sk-ant-</code> and paste below</div></div>
           </div>
-          {apiKeyError&&<div className="apikey-err">{apiKeyError}</div>}
-          <input className="apikey-inp" type="password" placeholder="sk-ant-api03-..." value={apiKeyInput} onChange={e=>setApiKeyInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&validateAndSaveKey()}/>
-          <button className="apikey-btn" onClick={validateAndSaveKey} disabled={!apiKeyInput.trim()||apiKeyLoading}>{apiKeyLoading?<span className="spin">◌</span>:"Save & Continue 🚀"}</button>
-          <div className="apikey-note">🔒 Your key is saved in your browser only. Free tier gets hundreds of lessons.</div>
+          {apiKeyError&&<div className="err-box">{apiKeyError}</div>}
+          <input className="apikey-inp" type="password" placeholder="sk-ant-api03-..." value={apiKeyInput} onChange={e=>setApiKeyInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&validateKey()}/>
+          <button className="apikey-btn" onClick={validateKey} disabled={!apiKeyInput.trim()||apiKeyLoading}>{apiKeyLoading?<span className="spin">◌</span>:"Save & Continue 🚀"}</button>
+          <div className="apikey-note">🔒 Stored only in your browser. Never shared. Free tier gets hundreds of lessons.</div>
         </div>
       </div>
     </div>
   );
 
-  // ── Auth screen ───────────────────────────────────────────────────
   if(screen==="auth")return(
     <div className="app">
       <div className="auth-wrap fade-in">
         <div className="auth-card">
           <span className="auth-owl">🦉</span>
           <div className="auth-title">Nova <span>STEM Tutor</span></div>
-          <div className="auth-sub">
-            {authMode==="login"
-              ?"Welcome back! Log in to load progress from any device."
-              :"Create an account to keep progress safe in the cloud."}
-          </div>
+          <div className="auth-sub">{authMode==="login"?"Welcome back! Log in to load progress from any device.":"Create an account to keep progress safe in the cloud."}</div>
           <div className="auth-tabs">
-            <button className={"auth-tab"+(authMode==="login"?" active":"")}
-              onClick={()=>{setAuthMode("login");setAuthError("");}}>Log In</button>
-            <button className={"auth-tab"+(authMode==="signup"?" active":"")}
-              onClick={()=>{setAuthMode("signup");setAuthError("");}}>Sign Up</button>
+            <button className={"auth-tab"+(authMode==="login"?" active":"")} onClick={()=>{setAuthMode("login");setAuthErr("");}}>Log In</button>
+            <button className={"auth-tab"+(authMode==="signup"?" active":"")} onClick={()=>{setAuthMode("signup");setAuthErr("");}}>Sign Up</button>
           </div>
-          {authError&&<div className="auth-err">{authError}</div>}
-          <input className="auth-inp" type="text"
-            placeholder="Username (e.g. ibraheem)"
-            value={authUsername}
-            onChange={e=>setAuthUsername(e.target.value)}
-            onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
-          <input className="auth-inp" type="password"
-            placeholder="Password (min 4 characters)"
-            value={authPassword}
-            onChange={e=>setAuthPassword(e.target.value)}
-            onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
-          <button className="auth-btn"
-            onClick={handleAuth}
-            disabled={authLoading||!authUsername.trim()||!authPassword.trim()}>
-            {authLoading
-              ?<span className="spin">◌</span>
-              :authMode==="login"
-                ?"Log In & Load Progress →"
-                :"Create Account & Start →"}
+          {authErr&&<div className="err-box">{authErr}</div>}
+          <input className="auth-inp" type="text" placeholder="Username (e.g. ibraheem)" value={authUser} onChange={e=>setAuthUser(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          <input className="auth-inp" type="password" placeholder="Password (min 4 characters)" value={authPass} onChange={e=>setAuthPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          <button className="auth-btn" onClick={handleAuth} disabled={authLoading||!authUser.trim()||!authPass.trim()}>
+            {authLoading?<span className="spin">◌</span>:authMode==="login"?"Log In & Load Progress →":"Create Account & Start →"}
           </button>
-          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>
-            ☁️ Progress saves to the cloud automatically — works on any device.
-          </div>
+          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>☁️ Progress saves to the cloud — works on any device, any browser.</div>
         </div>
       </div>
     </div>
   );
 
   if(screen==="onboard"){
-    const steps=["About You","Your Interests","Quick Quiz","Your Results"];
-    const q=wizardStep===2?QUESTIONS[qIndex]:null;
+    const steps=["About You","Interests","Quick Quiz","Results"];
+    const q=wizardStep===2?QS[qIndex]:null;
     return(
       <div className="app">
         <div className="wizard-wrap fade-in">
           <div className="wizard-sidebar">
             <div className="wizard-logo"><div className="wizard-logo-owl">🦉</div><div className="wizard-logo-text">Nova <span>Tutor</span></div></div>
-            {steps.map((label,i)=>(<div key={i}><div className={`wizard-step ${wizardStep===i?"active":""} ${wizardStep>i?"done":""}`}><div className="wizard-step-num">{wizardStep>i?"✓":i+1}</div><div className="wizard-step-label">{label}</div></div>{i<steps.length-1&&<div className={`wizard-step-connector ${wizardStep>i?"done":""}`}/>}</div>))}
+            {steps.map((label,i)=>(<div key={i}><div className={"wizard-step-item"+(wizardStep===i?" active":"")+(wizardStep>i?" done":"")}><div className="wizard-step-num">{wizardStep>i?"✓":i+1}</div><div className="wizard-step-lbl">{label}</div></div>{i<steps.length-1&&<div className={"wizard-connector"+(wizardStep>i?" done":"")}/>}</div>))}
           </div>
           <div className="wizard-main">
             {wizardStep===0&&(<div className="wizard-card slide-up">
-              <div className="wizard-step-badge">Step 1 of 4 · About You</div>
+              <div className="wizard-badge">Step 1 of 4 · About You</div>
               <div className="wizard-title">Let's set up the profile! 👋</div>
               <div className="wizard-sub">Nova uses this to personalize every lesson.</div>
               <div className="field-lbl">Student's name</div>
               <input className="field-inp" value={nameVal} onChange={e=>setNameVal(e.target.value)} placeholder="Enter name..."/>
               <div className="field-lbl">Current grade</div>
-              <div className="grade-row">{GRADES.map(g=><button key={g} className={`grade-pill ${gradeVal===g?"active":""}`} onClick={()=>setGradeVal(g)}>{g}</button>)}</div>
+              <div className="grade-row">{GRADES.map(g=><button key={g} className={"grade-pill"+(gradeVal===g?" active":"")} onClick={()=>setGradeVal(g)}>{g}</button>)}</div>
               <div className="wizard-nav"><button className="btn-primary" onClick={()=>setWizardStep(1)} disabled={!nameVal.trim()}>Next: Choose Interests →</button></div>
             </div>)}
             {wizardStep===1&&(<div className="wizard-card slide-up">
-              <div className="wizard-step-badge">Step 2 of 4 · Interests</div>
+              <div className="wizard-badge">Step 2 of 4 · Interests</div>
               <div className="wizard-title">What does {nameVal} love? ❤️</div>
               <div className="wizard-sub">Nova weaves these into examples to make learning fun.</div>
-              <div className="interest-grid">{INTERESTS.map(interest=>(<button key={interest.key} className={`interest-btn ${selectedInterests.includes(interest.key)?"active":""}`} onClick={()=>toggleInterest(interest.key)}><span className="interest-icon">{interest.icon}</span>{interest.label}{selectedInterests.includes(interest.key)&&<span style={{marginLeft:"auto",fontSize:14}}>✓</span>}</button>))}</div>
+              <div className="interest-grid">{INTERESTS.map(int=>(<button key={int.key} className={"interest-btn"+(selInterests.includes(int.key)?" active":"")} onClick={()=>setSelInterests(prev=>prev.includes(int.key)?prev.filter(k=>k!==int.key):[...prev,int.key])}><span className="interest-icon">{int.icon}</span>{int.label}{selInterests.includes(int.key)&&<span style={{marginLeft:"auto",fontSize:14}}>✓</span>}</button>))}</div>
               <div className="wizard-nav"><button className="btn-secondary" onClick={()=>setWizardStep(0)}>← Back</button><button className="btn-primary" onClick={()=>setWizardStep(2)}>Next: Quick Quiz →</button></div>
             </div>)}
             {wizardStep===2&&q&&(<div className="diag-card slide-up" style={{maxWidth:520,width:"100%"}}>
-              <div className="diag-prog-lbl"><span>Question {qIndex+1} of {QUESTIONS.length}</span><span style={{color:"var(--blue)"}}>{Math.round(qIndex/QUESTIONS.length*100)}%</span></div>
-              <div className="diag-bar"><div className="diag-bar-fill" style={{width:`${qIndex/QUESTIONS.length*100}%`}}/></div>
-              <div className={`subj-badge ${q.badge}`}>{q.icon} {q.subjectLabel}</div>
+              <div className="diag-prog-lbl"><span>Question {qIndex+1} of {QS.length}</span><span style={{color:"var(--blue)"}}>{Math.round(qIndex/QS.length*100)}%</span></div>
+              <div className="diag-bar"><div className="diag-bar-fill" style={{width:(qIndex/QS.length*100)+"%"}}/></div>
+              <div className={"subj-badge "+q.badge}>{q.icon} {q.subjectLabel}</div>
               <div className="diag-q">{q.q}</div><div className="diag-hint">💡 {q.hint}</div>
               <div className="ans-grid">{q.options.map((opt,i)=>{let cls="ans-btn";if(answered){if(i===q.correct)cls+=" correct";else if(i===selected)cls+=" wrong";}return<button key={i} className={cls} onClick={()=>handleAnswer(i)} disabled={answered}><span style={{fontWeight:900,marginRight:5,color:"var(--muted)"}}>{["A","B","C","D"][i]}.</span>{opt}</button>;})}</div>
-              {answered&&<div className={`feedback pop ${selected===q.correct?"fb-ok":"fb-no"}`}>{selected===q.correct?`✅ Correct! ${q.explanation}`:`❌ Not quite. ${q.explanation}`}</div>}
-              {answered&&<button className="next-btn pop" onClick={handleNext}>{qIndex<QUESTIONS.length-1?"Next →":"See Results! 🎉"}</button>}
+              {answered&&<div className={"feedback pop "+(selected===q.correct?"fb-ok":"fb-no")}>{selected===q.correct?"✅ Correct! "+q.explanation:"❌ Not quite. "+q.explanation}</div>}
+              {answered&&<button className="next-btn pop" onClick={handleNext}>{qIndex<QS.length-1?"Next →":"See Results! 🎉"}</button>}
             </div>)}
-            {wizardStep===3&&profile&&(<div className="results-card slide-up" style={{maxWidth:500,width:"100%",textAlign:"center"}}>
-              <div style={{fontSize:36,marginBottom:10}}>🎉🌟🎊</div>
-              <div style={{fontSize:24,fontWeight:900,color:"var(--navy)",marginBottom:6}}>All set, {profile.name}!</div>
-              <div style={{fontSize:13,color:"var(--muted)",fontWeight:600,marginBottom:20,lineHeight:1.6}}>Nova knows your starting point:</div>
-              <div className="mastery-grid">{[{label:"Math",key:"math",icon:"🔢",color:"#3b82f6"},{label:"Science",key:"science",icon:"⚛️",color:"#8b5cf6"},{label:"Coding",key:"coding",icon:"💻",color:"#14b8a6"}].map(s=>(<div key={s.key} className="m-card"><div className="m-icon">{s.icon}</div><div className="m-lbl">{s.label}</div><div className="m-score" style={{color:masteryColor(profile.mastery[s.key])}}>{profile.mastery[s.key]}%</div><div style={{fontSize:9,fontWeight:700,color:masteryColor(profile.mastery[s.key]),marginTop:2}}>{masteryLabel(profile.mastery[s.key])}</div><div className="m-bar"><div className="m-bar-fill" style={{width:`${profile.mastery[s.key]}%`,background:s.color}}/></div></div>))}</div>
+            {wizardStep===3&&profile&&(<div className="results-card slide-up" style={{maxWidth:500,width:"100%"}}>
+              <div style={{fontSize:36,textAlign:"center",marginBottom:10}}>🎉🌟🎊</div>
+              <div style={{fontSize:24,fontWeight:900,color:"var(--navy)",textAlign:"center",marginBottom:6}}>All set, {profile.name}!</div>
+              <div style={{fontSize:13,color:"var(--muted)",fontWeight:600,textAlign:"center",marginBottom:20,lineHeight:1.6}}>Nova knows your starting point:</div>
+              <div className="mastery-grid">{[{label:"Math",key:"math",icon:"🔢",color:"#3b82f6"},{label:"Science",key:"science",icon:"⚛️",color:"#8b5cf6"},{label:"Coding",key:"coding",icon:"💻",color:"#14b8a6"}].map(s=>(<div key={s.key} className="m-card"><div className="m-icon">{s.icon}</div><div className="m-lbl">{s.label}</div><div className="m-score" style={{color:mc(profile.mastery[s.key])}}>{profile.mastery[s.key]}%</div><div style={{fontSize:9,fontWeight:700,color:mc(profile.mastery[s.key]),marginTop:2}}>{ml(profile.mastery[s.key])}</div><div className="m-bar"><div className="m-bar-fill" style={{width:profile.mastery[s.key]+"%",background:s.color}}/></div></div>))}</div>
               {profile.gaps.length>0&&<div className="box-gap"><div className="box-gap-title">🎯 Nova will focus on</div>{profile.gaps.map((g,i)=><div key={i} className="box-gap-item">→ {g}</div>)}</div>}
               {profile.strengths.length>0&&<div className="box-str"><div className="box-str-title">💪 Strengths</div>{profile.strengths.map((s,i)=><div key={i} className="box-str-item">✓ {s}</div>)}</div>}
               <button className="big-btn" onClick={()=>setScreen("tutor")}>Start Learning with Nova! 🚀</button>
@@ -1056,8 +1025,8 @@ function App(){
         <div style={{fontSize:40,marginBottom:9}}>🔒</div>
         <div style={{fontSize:20,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Parent Dashboard</div>
         <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:22}}>Enter your 4-digit PIN.</div>
-        <div className="pin-dots">{[0,1,2,3].map(i=><div key={i} className={`pin-dot ${pinInput.length>i?"filled":""}`}/>)}</div>
-        <div className="pin-pad">{["1","2","3","4","5","6","7","8","9","","0","del"].map((k,i)=>k===""?<div key={i}/>:<button key={i} className={`pin-key ${k==="del"?"del":""}`} onClick={()=>handlePin(k)}>{k==="del"?"⌫":k}</button>)}</div>
+        <div className="pin-dots">{[0,1,2,3].map(i=><div key={i} className={"pin-dot"+(pinInput.length>i?" filled":"")}/>)}</div>
+        <div className="pin-pad">{["1","2","3","4","5","6","7","8","9","","0","del"].map((k,i)=>k===""?<div key={i}/>:<button key={i} className={"pin-key"+(k==="del"?" del":"")} onClick={()=>handlePin(k)}>{k==="del"?"⌫":k}</button>)}</div>
         {pinError&&<div className="pin-err">Incorrect PIN.</div>}
         <div style={{fontSize:10,color:"var(--muted)",fontWeight:600,marginTop:8}}>Default: 1234 · Change in Settings</div>
       </div></div>
@@ -1070,9 +1039,9 @@ function App(){
         <nav className="dash-nav">
           <div style={{fontSize:12,fontWeight:900,color:"#fff",marginBottom:4}}>Dashboard</div>
           <div className="dash-nav-title">Reports</div>
-          {[{key:"overview",icon:"📊",label:"Overview"},{key:"weekly",icon:"📅",label:"Weekly"},{key:"heatmap",icon:"🗺️",label:"Heatmap"},{key:"log",icon:"📋",label:"Session Log"}].map(p=>(<button key={p.key} className={`dash-nav-btn ${dashPage===p.key?"active":""}`} onClick={()=>setDashPage(p.key)}>{p.icon} {p.label}</button>))}
+          {[{key:"overview",icon:"📊",label:"Overview"},{key:"weekly",icon:"📅",label:"Weekly"},{key:"heatmap",icon:"🗺️",label:"Heatmap"},{key:"log",icon:"📋",label:"Session Log"}].map(p=>(<button key={p.key} className={"dash-nav-btn"+(dashPage===p.key?" active":"")} onClick={()=>setDashPage(p.key)}>{p.icon} {p.label}</button>))}
           <div className="dash-nav-title">Account</div>
-          <button className={`dash-nav-btn ${dashPage==="settings"?"active":""}`} onClick={()=>setDashPage("settings")}>⚙️ Settings</button>
+          <button className={"dash-nav-btn"+(dashPage==="settings"?" active":"")} onClick={()=>setDashPage("settings")}>⚙️ Settings</button>
           <div className="dash-nav-bottom"><button className="dash-nav-lock" onClick={()=>{setParentUnlocked(false);setTab("tutor");}}>🔒 Lock Dashboard</button></div>
         </nav>
         <div className="dash-content fade-in">{dashPages[dashPage]}</div>
@@ -1080,7 +1049,7 @@ function App(){
     </div>
   );
 
-  // ── TUTOR ─────────────────────────────────────────────────────────
+  /* Tutor */
   return(
     <div className="app">
       <Header/>
@@ -1092,45 +1061,44 @@ function App(){
         <div className="sidebar">
           <div>
             <div className="sidebar-label">Mastery</div>
-            {SUBJECTS_LIST.map(s=>(<div key={s.key} className="mastery-row"><div className="mastery-row-top"><span>{s.icon} {s.label}</span><span style={{color:masteryColor(profile?.mastery?.[s.key]||0)}}>{profile?.mastery?.[s.key]||0}%</span></div><div className="mastery-bar"><div className="mastery-fill" style={{width:`${profile?.mastery?.[s.key]||0}%`,background:s.color}}/></div></div>))}
+            {SUBJ.map(s=>(<div key={s.key} className="mastery-row"><div className="mastery-row-top"><span>{s.icon} {s.label}</span><span style={{color:mc(profile?.mastery?.[s.key]||0)}}>{profile?.mastery?.[s.key]||0}%</span></div><div className="mastery-bar"><div className="mastery-fill" style={{width:(profile?.mastery?.[s.key]||0)+"%",background:s.color}}/></div></div>))}
           </div>
-          {isStruggling&&<div className="struggle-indicator"><span>⚠️</span><div><div>Remediating</div><div className="struggle-bar"><div className="struggle-fill" style={{width:`${Math.min(consecutiveStruggle*33,100)}%`}}/></div></div></div>}
+          {isStruggling&&<div className="struggle-indicator"><span>⚠️</span><div><div>Remediating</div><div className="struggle-bar"><div className="struggle-fill" style={{width:Math.min(consecutiveStruggle*33,100)+"%"}}/></div></div></div>}
           <div>
             <div className="sidebar-label">Focus Subject</div>
-            {SUBJECTS_LIST.map(s=><button key={s.key} className={`subject-btn ${s.key} ${subject===s.key?"active":""}`} onClick={()=>setSubject(prev=>prev===s.key?null:s.key)}><span>{s.icon}</span>{s.label}</button>)}
+            {SUBJ.map(s=><button key={s.key} className={"subject-btn "+s.key+(subject===s.key?" active":"")} onClick={()=>setSubject(prev=>prev===s.key?null:s.key)}><span>{s.icon}</span>{s.label}</button>)}
           </div>
           <div>
             <div className="sidebar-label">Teaching Mode</div>
-            {MODES.map(m=><button key={m.key} className={`mode-btn ${mode===m.key?"active":""}`} onClick={()=>setMode(m.key)}>{m.label}</button>)}
+            {MODES.map(m=><button key={m.key} className={"mode-btn"+(mode===m.key?" active":"")} onClick={()=>setMode(m.key)}>{m.label}</button>)}
           </div>
-          {(profile?.gaps||[]).length>0&&<div><div className="sidebar-label">🎯 Gaps (click to fix)</div>{profile.gaps.map((g,i)=><div key={i} className="gap-pill" onClick={()=>sendMessage(`I need help with: ${g}`,true,g)}>→ {g} 🎯</div>)}</div>}
+          {(profile?.gaps||[]).length>0&&<div><div className="sidebar-label">🎯 Gaps (click to fix)</div>{profile.gaps.map((g,i)=><div key={i} className="gap-pill" onClick={()=>sendMessage("I need help with: "+g,true,g)}>→ {g} 🎯</div>)}</div>}
           {(profile?.strengths||[]).length>0&&<div><div className="sidebar-label">💪 Strengths</div>{profile.strengths.map((s,i)=><div key={i} className="strength-pill">✓ {s}</div>)}</div>}
         </div>
-
         <div className="chat-wrap">
           <div className="chat-area" ref={chatRef}>
             {messages.length===0?(
               <div className="welcome">
                 <span className="welcome-emoji">🦉</span>
                 <div className="welcome-title">Hey <em>{profile?.name}</em>! 👋</div>
-                <div className="welcome-sub">Math {profile?.mastery?.math}% · Science {profile?.mastery?.science}% · Coding {profile?.mastery?.coding}%<br/>{(profile?.gaps||[]).length>0&&<span>Focusing on: <strong>{profile.gaps.join(", ")}</strong></span>}</div>
-                {profile?.interests?.length>0&&<div className="welcome-interests">{profile.interests.slice(0,4).map((interest,i)=><span key={i} className="welcome-interest-tag">{interest}</span>)}</div>}
+                <div className="welcome-sub">Math {profile?.mastery?.math}% · Science {profile?.mastery?.science}% · Coding {profile?.mastery?.coding}%<br/>{(profile?.gaps||[]).length>0&&"Focusing on: "+profile.gaps.join(", ")}</div>
+                {profile?.interests?.length>0&&<div className="welcome-interests">{profile.interests.slice(0,4).map((int,i)=><span key={i} className="welcome-interest-tag">{int}</span>)}</div>}
                 <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:14}}>Pick something to explore, or type anything below 👇</div>
-                <div className="qs-grid">{getQuickStarts().map((q,i)=><button key={i} className="qs-btn" onClick={()=>sendMessage(q.text)}><span className="qs-emoji">{q.emoji}</span><span>{q.text}</span></button>)}</div>
+                <div className="qs-grid">{getQS().map((q,i)=><button key={i} className="qs-btn" onClick={()=>sendMessage(q.text)}><span className="qs-emoji">{q.emoji}</span><span>{q.text}</span></button>)}</div>
               </div>
             ):messages.map((msg,i)=>{
-              if(msg.type==="user")return(<div key={i} className="msg user"><div className="avatar av-user">😊</div><div><div className="bubble bubble-user">{msg.content}</div>{msg.topics?.length>0&&<div style={{marginTop:4,display:"flex",justifyContent:"flex-end",flexWrap:"wrap"}}>{msg.topics.slice(0,3).map(tid=>{const node=getNode(tid);return node?<span key={tid} className={`topic-tag ${subjectOfId(tid)}`}>{node.icon}{node.name}</span>:null;})}</div>}</div></div>);
-              return(<div key={i} className="msg"><div className="avatar av-nova">🦉</div>{msg.loading?<div className="typing"><div className="tdot"/><div className="tdot"/><div className="tdot"/></div>:<div className={`bubble ${msg.isRemediation?"bubble-remediation":"bubble-nova"}`}>{msg.isRemediation&&<div className="remediation-badge">🎯 REMEDIATION MODE</div>}<Blocks blocks={msg.blocks}/></div>}</div>);
+              if(msg.type==="user")return(<div key={i} className="msg user"><div className="avatar av-user">😊</div><div><div className="bubble bubble-user">{msg.content}</div>{msg.topics&&msg.topics.length>0&&<div style={{marginTop:4,display:"flex",justifyContent:"flex-end",flexWrap:"wrap"}}>{msg.topics.slice(0,3).map(tid=>{const node=gN(tid);return node?<span key={tid} className={"topic-tag "+sOI(tid)}>{node.icon}{node.name}</span>:null;})}</div>}</div></div>);
+              return(<div key={i} className="msg"><div className="avatar av-nova">🦉</div>{msg.loading?<div className="typing"><div className="tdot"/><div className="tdot"/><div className="tdot"/></div>:<div className={"bubble "+(msg.isRem?"bubble-remediation":"bubble-nova")}>{msg.isRem&&<div className="remediation-badge">🎯 REMEDIATION MODE</div>}<Blocks blocks={msg.blocks}/></div>}</div>);
             })}
           </div>
           <div className="input-area">
             <div className="status-row">
-              {subject&&<span className="status-chip chip-subject">{SUBJECTS_LIST.find(s=>s.key===subject)?.icon} {SUBJECTS_LIST.find(s=>s.key===subject)?.label}</span>}
+              {subject&&<span className="status-chip chip-subject">{SUBJ.find(s=>s.key===subject)?.icon} {SUBJ.find(s=>s.key===subject)?.label}</span>}
               {mode!=="mixed"&&<span className="status-chip chip-mode">{MODES.find(m=>m.key===mode)?.label}</span>}
               {isStruggling&&<span className="status-chip chip-struggling">⚠️ Remediation Active</span>}
             </div>
-            <div className={`input-box ${isStruggling?"struggling":""}`}>
-              <textarea ref={taRef} className="chat-input" placeholder={isStruggling?`It's okay ${profile?.name}! Ask Nova to explain it differently 🤝`:`Ask Nova anything, ${profile?.name}! 🌟`} value={input} onChange={e=>{setInput(e.target.value);e.target.style.height="20px";e.target.style.height=Math.min(e.target.scrollHeight,90)+"px";}} onKeyDown={handleKey} rows={1} disabled={isLoading}/>
+            <div className={"input-box"+(isStruggling?" struggling":"")}>
+              <textarea ref={taRef} className="chat-input" placeholder={isStruggling?"It's okay "+profile?.name+"! Ask Nova to explain it differently 🤝":"Ask Nova anything, "+profile?.name+"! 🌟"} value={input} onChange={e=>{setInput(e.target.value);e.target.style.height="20px";e.target.style.height=Math.min(e.target.scrollHeight,90)+"px";}} onKeyDown={handleKey} rows={1} disabled={isLoading}/>
               <button className="send-btn" onClick={()=>sendMessage()} disabled={isLoading||!input.trim()}>{isLoading?<span className="spin" style={{fontSize:13}}>◌</span>:"✈️"}</button>
             </div>
           </div>
@@ -1140,7 +1108,6 @@ function App(){
     </div>
   );
 }
-
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 </script>
 </body>
