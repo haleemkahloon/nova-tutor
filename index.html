@@ -401,35 +401,90 @@ async function hashPassword(pw){const buf=await crypto.subtle.digest("SHA-256",n
 const ls={get:(k)=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},del:(k)=>{try{localStorage.removeItem(k);}catch{}}};
 
 /* ── External Resources per topic ── */
+/* ── Resources: Khan Academy · Mathnasium · NGSS · Code.org · IXL · NASA · Nat Geo ── */
+const KA="#16a34a",KAB="#f0fdf4",MN="#dc2626",MNB="#fef2f2",IXL="#0369a1",IXLB="#eff6ff",CD="#ea580c",CDB="#fff7ed",SC="#f59e0b",SCB="#fffbeb",NA="#1d4ed8",NAB="#eff6ff",NG="#f59e0b",NGB="#fffbeb";
+const R=(label,url,color,bg)=>({label,url,color,bg});
 const RESOURCES={
-  m1:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/multiplication-in-third-grade",color:"#16a34a",bg:"#f0fdf4"},{label:"Times Tables Rock Stars",url:"https://ttrockstars.com",color:"#7c3aed",bg:"#f5f3ff"}],
-  m2:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/arithmetic/arith-review-multiply-divide",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/divide-by-1-digit-numbers",color:"#0369a1",bg:"#eff6ff"}],
-  m3:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/fractions-topic",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
-  m4:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/equivalent-fractions",color:"#0369a1",bg:"#eff6ff"}],
-  m5:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
-  m6:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-area-and-perimeter",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/perimeter",color:"#0369a1",bg:"#eff6ff"}],
-  m7:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-angle",color:"#16a34a",bg:"#f0fdf4"}],
-  m8:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-transformations",color:"#16a34a",bg:"#f0fdf4"}],
-  m9:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
-  m10:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/pre-algebra/pre-algebra-arith-prop",color:"#16a34a",bg:"#f0fdf4"}],
-  s1:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
-  s2:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws/gravity-newtonian/a/what-is-gravity",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
-  s3:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"}],
-  s4:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/work-and-energy",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
-  s5:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
-  s6:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry",color:"#16a34a",bg:"#f0fdf4"}],
-  s7:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"}],
-  s8:[{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/space",color:"#f59e0b",bg:"#fffbeb"}],
-  s9:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/cosmology-and-astronomy",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature/article/weather",color:"#f59e0b",bg:"#fffbeb"}],
-  s10:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/biology/ecology",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature",color:"#f59e0b",bg:"#fffbeb"}],
-  c1:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
-  c2:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c3:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c4:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c5:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
-  c6:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c7:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
-  c8:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
+  /* ── MATH: Number Sense (Mathnasium pillars: Counting, Wholes & Parts, Proportional Thinking) ── */
+  m1:[R("Khan Academy","https://www.khanacademy.org/math/cc-third-grade-math/multiplication-in-third-grade",KA,KAB),R("Mathnasium","https://www.mathnasium.com/blog/curriculum-structure",MN,MNB),R("Times Tables Rock Stars","https://ttrockstars.com","#7c3aed","#f5f3ff")],
+  m2:[R("Khan Academy","https://www.khanacademy.org/math/cc-fourth-grade-math/multiply-divide-multi-digit",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/divide-by-1-digit-numbers",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/elementary-school-program-samples",MN,MNB)],
+  m3:[R("Khan Academy","https://www.khanacademy.org/math/cc-third-grade-math/fractions-topic",KA,KAB),R("Mathnasium","https://www.mathnasium.com/blog/curriculum-structure",MN,MNB),R("IXL","https://www.ixl.com/math/grade-3/fractions-of-a-whole",IXL,IXLB)],
+  m4:[R("Khan Academy","https://www.khanacademy.org/math/cc-fourth-grade-math/imp-fractions-2",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/equivalent-fractions",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/elementary-school-program-samples",MN,MNB)],
+  m5:[R("Khan Academy","https://www.khanacademy.org/math/cc-fourth-grade-math/imp-fractions-2",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/add-fractions-with-like-denominators",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/curriculum-structure",MN,MNB)],
+  m6:[R("Khan Academy","https://www.khanacademy.org/math/basic-geo/basic-geo-area-and-perimeter",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/perimeter",IXL,IXLB)],
+  m7:[R("Khan Academy","https://www.khanacademy.org/math/basic-geo/basic-geo-angle",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/identify-and-classify-angles",IXL,IXLB)],
+  m8:[R("Khan Academy","https://www.khanacademy.org/math/basic-geo/basic-geo-transformations",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/lines-of-symmetry",IXL,IXLB)],
+  m9:[R("Khan Academy","https://www.khanacademy.org/math/cc-fourth-grade-math/cc-4th-word-problems",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/multi-step-word-problems",IXL,IXLB)],
+  m10:[R("Khan Academy","https://www.khanacademy.org/math/pre-algebra/pre-algebra-arith-prop",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/patterns",IXL,IXLB)],
+  /* New: Place Value & Number Sense (Mathnasium Counting pillar, Common Core 3-5) */
+  m11:[R("Khan Academy","https://www.khanacademy.org/math/cc-third-grade-math/place-value-3rd",KA,KAB),R("Mathnasium","https://www.mathnasium.com/blog/elementary-school-program-samples",MN,MNB),R("IXL","https://www.ixl.com/math/grade-3/place-values",IXL,IXLB)],
+  m12:[R("Khan Academy","https://www.khanacademy.org/math/cc-fourth-grade-math/place-value-4th",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/place-value",IXL,IXLB)],
+  m13:[R("Khan Academy","https://www.khanacademy.org/math/cc-fifth-grade-math/5th-place-value",KA,KAB),R("Mathnasium","https://www.mathnasium.com/blog/elementary-school-program-samples",MN,MNB)],
+  /* Decimals (Mathnasium: Wholes & Parts; KA Grade 4-5) */
+  m14:[R("Khan Academy","https://www.khanacademy.org/math/cc-fourth-grade-math/decimals",KA,KAB),R("IXL","https://www.ixl.com/math/grade-4/decimal-place-value",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/elementary-school-program-samples",MN,MNB)],
+  m15:[R("Khan Academy","https://www.khanacademy.org/math/cc-fifth-grade-math/5th-add-subtract-decimals",KA,KAB),R("IXL","https://www.ixl.com/math/grade-5/add-and-subtract-decimals",IXL,IXLB)],
+  m16:[R("Khan Academy","https://www.khanacademy.org/math/cc-fifth-grade-math/5th-multiply-fractions",KA,KAB),R("IXL","https://www.ixl.com/math/grade-5/multiply-fractions",IXL,IXLB)],
+  /* Ratios & Proportional Thinking (Mathnasium pillar: Proportional Thinking; KA Grade 6) */
+  m17:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-ratios-prop",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/write-a-ratio",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/middle-school-program-samples",MN,MNB)],
+  m18:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-ratios-prop",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/unit-rates",IXL,IXLB)],
+  m19:[R("Khan Academy","https://www.khanacademy.org/math/pre-algebra/pre-algebra-ratios-rates",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/percents-of-numbers-and-money-amounts",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/middle-school-program-samples",MN,MNB)],
+  /* Pre-Algebra (KA Grade 6-7; Mathnasium: Algebra prep) */
+  m20:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-expressions-and-variables",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/write-variable-expressions",IXL,IXLB)],
+  m21:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-equations-and-inequalities",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/solve-one-step-equations",IXL,IXLB),R("Mathnasium","https://www.mathnasium.com/blog/middle-school-program-samples",MN,MNB)],
+  m22:[R("Khan Academy","https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-variables-expressions",KA,KAB),R("IXL","https://www.ixl.com/math/grade-7/solve-two-step-equations",IXL,IXLB)],
+  /* Geometry Advanced (KA Grade 6-7) */
+  m23:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-geometry-topic",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/area-of-triangles-and-quadrilaterals",IXL,IXLB)],
+  m24:[R("Khan Academy","https://www.khanacademy.org/math/basic-geo/basic-geo-pythagorean-topic",KA,KAB),R("IXL","https://www.ixl.com/math/grade-8/pythagorean-theorem",IXL,IXLB)],
+  /* Statistics & Data (KA Grade 6; CCSS) */
+  m25:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-data-statistics",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/calculate-mean-median-mode-and-range",IXL,IXLB)],
+  m26:[R("Khan Academy","https://www.khanacademy.org/math/statistics-probability/basic-probablity",KA,KAB),R("IXL","https://www.ixl.com/math/grade-7/probability",IXL,IXLB)],
+  /* Negative Numbers (KA Grade 6) */
+  m27:[R("Khan Academy","https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-negative-number-topic",KA,KAB),R("IXL","https://www.ixl.com/math/grade-6/understanding-integers",IXL,IXLB)],
+  /* ── SCIENCE: NGSS-aligned ── */
+  /* Physical Science */
+  s1:[R("Khan Academy","https://www.khanacademy.org/science/physics/forces-newtons-laws",KA,KAB),R("NASA Kids","https://www.nasa.gov/kidsclub/index.html",NA,NAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/science/article/what-is-force",NG,NGB)],
+  s2:[R("Khan Academy","https://www.khanacademy.org/science/physics/forces-newtons-laws/gravity-newtonian/a/what-is-gravity",KA,KAB),R("NASA Kids","https://spaceplace.nasa.gov/what-is-gravity/en/",NA,NAB)],
+  s3:[R("Khan Academy","https://www.khanacademy.org/science/physics/forces-newtons-laws",KA,KAB),R("IXL","https://www.ixl.com/science/grade-3/friction",IXL,IXLB)],
+  s4:[R("Khan Academy","https://www.khanacademy.org/science/physics/work-and-energy",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/science",NG,NGB)],
+  /* Matter (NGSS PS1) */
+  s5:[R("Khan Academy","https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/science/article/states-of-matter",NG,NGB)],
+  s6:[R("Khan Academy","https://www.khanacademy.org/science/chemistry",KA,KAB),R("IXL","https://www.ixl.com/science/grade-3/physical-and-chemical-properties",IXL,IXLB)],
+  s7:[R("Khan Academy","https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",KA,KAB),R("IXL","https://www.ixl.com/science/grade-4/changes-in-states-of-matter",IXL,IXLB)],
+  /* Earth & Space (NGSS ESS) */
+  s8:[R("NASA Kids","https://spaceplace.nasa.gov/menu/solar-system/",NA,NAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/space/solar-system",NG,NGB),R("Khan Academy","https://www.khanacademy.org/science/cosmology-and-astronomy",KA,KAB)],
+  s9:[R("Khan Academy","https://www.khanacademy.org/science/cosmology-and-astronomy",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/nature/article/weather",NG,NGB),R("NASA Kids","https://spaceplace.nasa.gov/menu/weather/",NA,NAB)],
+  s10:[R("Khan Academy","https://www.khanacademy.org/science/biology/ecology",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/nature/habitats",NG,NGB)],
+  /* NEW Science: NGSS Life Science */
+  s11:[R("Khan Academy","https://www.khanacademy.org/science/biology/intro-to-biology",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/animals/reference/animal-cells",NG,NGB)],
+  s12:[R("Khan Academy","https://www.khanacademy.org/science/biology/reproduction-and-cell-division",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/animals",NG,NGB)],
+  s13:[R("Khan Academy","https://www.khanacademy.org/science/biology/her-structure-and-function",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/human-body",NG,NGB)],
+  s14:[R("Khan Academy","https://www.khanacademy.org/science/biology/her-structure-and-function",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/human-body/article/digestive-system",NG,NGB)],
+  /* NEW Science: NGSS Earth Science */
+  s15:[R("Khan Academy","https://www.khanacademy.org/science/cosmology-and-astronomy/earth-geological-topic",KA,KAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/science/article/rock-cycle",NG,NGB)],
+  s16:[R("NASA Kids","https://spaceplace.nasa.gov/menu/earth/",NA,NAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/science/article/layers-of-the-atmosphere",NG,NGB)],
+  s17:[R("NASA Kids","https://climatekids.nasa.gov/",NA,NAB),R("Nat Geo Kids","https://kids.nationalgeographic.com/nature/article/climate-change",NG,NGB)],
+  /* NEW Science: NGSS Physical Science – Energy & Waves */
+  s18:[R("Khan Academy","https://www.khanacademy.org/science/physics/work-and-energy",KA,KAB),R("IXL","https://www.ixl.com/science/grade-4/forms-of-energy",IXL,IXLB)],
+  s19:[R("Khan Academy","https://www.khanacademy.org/science/physics/light-waves",KA,KAB),R("NASA Kids","https://spaceplace.nasa.gov/menu/observe/",NA,NAB)],
+  s20:[R("Khan Academy","https://www.khanacademy.org/science/physics/electricity-magnetism",KA,KAB),R("IXL","https://www.ixl.com/science/grade-4/identify-conductors-and-insulators",IXL,IXLB)],
+  /* ── CODING: CS Standards + Code.org K-8 sequence ── */
+  c1:[R("Code.org","https://studio.code.org/courses/csd",CD,CDB),R("Scratch","https://scratch.mit.edu",SC,SCB)],
+  c2:[R("Code.org","https://studio.code.org/s/csp1",CD,CDB),R("Khan Academy","https://www.khanacademy.org/computing/ap-computer-science-principles/algorithms-101",KA,KAB)],
+  c3:[R("Code.org","https://studio.code.org/courses/csd",CD,CDB),R("Scratch","https://scratch.mit.edu/projects/editor/",SC,SCB),R("Khan Academy","https://www.khanacademy.org/computing/intro-to-python-fundamentals",KA,KAB)],
+  c4:[R("Code.org","https://studio.code.org/courses/csd",CD,CDB),R("Khan Academy","https://www.khanacademy.org/computing/intro-to-python-fundamentals",KA,KAB)],
+  c5:[R("Khan Academy","https://www.khanacademy.org/computing/intro-to-python-fundamentals",KA,KAB),R("Scratch","https://scratch.mit.edu/projects/editor/",SC,SCB)],
+  c6:[R("Khan Academy","https://www.khanacademy.org/computing/intro-to-python-fundamentals",KA,KAB),R("Code.org","https://studio.code.org/courses/csd",CD,CDB)],
+  c7:[R("Scratch","https://scratch.mit.edu/projects/editor/",SC,SCB),R("Code.org","https://studio.code.org",CD,CDB)],
+  c8:[R("Scratch","https://scratch.mit.edu/projects/editor/",SC,SCB),R("Code.org","https://studio.code.org",CD,CDB)],
+  /* NEW Coding: Data Structures */
+  c9:[R("Khan Academy","https://www.khanacademy.org/computing/intro-to-python-fundamentals",KA,KAB),R("Code.org","https://studio.code.org/courses/csd",CD,CDB)],
+  c10:[R("Khan Academy","https://www.khanacademy.org/computing/intro-to-python-fundamentals",KA,KAB),R("Scratch","https://scratch.mit.edu/projects/editor/",SC,SCB)],
+  /* NEW Coding: Web & Creative */
+  c11:[R("Khan Academy","https://www.khanacademy.org/computing/computer-programming/html-css",KA,KAB),R("Code.org","https://studio.code.org/courses/csd",CD,CDB)],
+  c12:[R("Khan Academy","https://www.khanacademy.org/computing/computer-programming/programming",KA,KAB),R("Code.org","https://studio.code.org/courses/csd",CD,CDB)],
+  /* NEW Coding: AI & Advanced */
+  c13:[R("Code.org","https://studio.code.org/courses/csd",CD,CDB),R("Khan Academy","https://www.khanacademy.org/computing/ap-computer-science-principles",KA,KAB)],
+  c14:[R("Khan Academy","https://www.khanacademy.org/computing/ap-computer-science-principles/algorithms-101",KA,KAB),R("Code.org","https://studio.code.org/courses/csp",CD,CDB)],
 };
 
 /* ── Games ── */
@@ -734,25 +789,195 @@ function GameBreakScreen({onReturn}){
   );
 }
 
-/* ── Data ── */
+/* ── Curriculum: Khan Academy + Mathnasium + NGSS + Common Core + CS Standards ── */
 const CURRICULUM={
   math:[
-    {unit:"Number Sense",nodes:[{id:"m1",name:"Multiplication Facts",sub:"Up to 12×12",icon:"✖️"},{id:"m2",name:"Long Division",sub:"1 & 2-digit divisors",icon:"➗",requires:"m1"},{id:"m3",name:"Fractions Intro",sub:"Parts of a whole",icon:"🍕"},{id:"m4",name:"Equivalent Fractions",sub:"Same value, different look",icon:"⚖️",requires:"m3"},{id:"m5",name:"Adding Fractions",sub:"Same denominator",icon:"➕",requires:"m4"}]},
-    {unit:"Geometry",nodes:[{id:"m6",name:"Perimeter & Area",sub:"Shapes and space",icon:"📐"},{id:"m7",name:"Angles",sub:"Acute, obtuse, right",icon:"📏",requires:"m6"},{id:"m8",name:"Symmetry",sub:"Lines and reflections",icon:"🪞",requires:"m6"}]},
-    {unit:"Problem Solving",nodes:[{id:"m9",name:"Word Problems",sub:"Real-world math",icon:"📖"},{id:"m10",name:"Patterns & Sequences",sub:"Finding the rule",icon:"🔢"}]},
+    /* ── Unit 1: Counting & Number Sense (Mathnasium Pillar 1: Counting) ── */
+    {unit:"Counting & Number Sense",nodes:[
+      {id:"m11",name:"Place Value (Ones–Thousands)",sub:"Understand position of digits",icon:"🔢",grade:"3rd"},
+      {id:"m12",name:"Place Value (Ten Thousands+)",sub:"Large numbers & rounding",icon:"🏛️",grade:"4th",requires:"m11"},
+      {id:"m1", name:"Multiplication Facts",sub:"Times tables up to 12×12",icon:"✖️",grade:"3rd"},
+      {id:"m2", name:"Long Division",sub:"1 & 2-digit divisors",icon:"➗",grade:"4th",requires:"m1"},
+      {id:"m10",name:"Patterns & Sequences",sub:"Finding the rule",icon:"🔣",grade:"3rd"},
+    ]},
+    /* ── Unit 2: Fractions (Mathnasium Pillar 2: Wholes & Parts) ── */
+    {unit:"Fractions — Mathnasium Method",nodes:[
+      {id:"m3", name:"Fractions Intro",sub:"Parts of a whole — pizza model",icon:"🍕",grade:"3rd"},
+      {id:"m4", name:"Equivalent Fractions",sub:"Same value, different look",icon:"⚖️",grade:"4th",requires:"m3"},
+      {id:"m5", name:"Adding Fractions",sub:"Same denominator",icon:"➕",grade:"4th",requires:"m4"},
+      {id:"m13",name:"Subtracting Fractions",sub:"Borrowing & regrouping",icon:"➖",grade:"4th",requires:"m5"},
+      {id:"m16",name:"Multiplying Fractions",sub:"Fractions of fractions",icon:"✖️",grade:"5th",requires:"m4"},
+      {id:"m14",name:"Decimals Intro",sub:"Tenths, hundredths, thousandths",icon:"🔸",grade:"4th",requires:"m3"},
+      {id:"m15",name:"Add & Subtract Decimals",sub:"Line up the decimal point",icon:"💯",grade:"5th",requires:"m14"},
+    ]},
+    /* ── Unit 3: Geometry (Common Core Geometry Standards) ── */
+    {unit:"Geometry",nodes:[
+      {id:"m6", name:"Perimeter & Area",sub:"Shapes and space",icon:"📐",grade:"3rd"},
+      {id:"m7", name:"Angles",sub:"Acute, obtuse, right, straight",icon:"📏",grade:"4th",requires:"m6"},
+      {id:"m8", name:"Symmetry & Transformations",sub:"Reflections, rotations, translations",icon:"🪞",grade:"4th",requires:"m6"},
+      {id:"m23",name:"Area of Triangles & Polygons",sub:"Decomposing complex shapes",icon:"🔷",grade:"6th",requires:"m6"},
+      {id:"m24",name:"Pythagorean Theorem",sub:"a²+b²=c² for right triangles",icon:"📐",grade:"8th",requires:"m23"},
+    ]},
+    /* ── Unit 4: Proportional Thinking (Mathnasium Pillar 3 + KA Grade 6-7) ── */
+    {unit:"Ratios & Proportional Thinking",nodes:[
+      {id:"m17",name:"Ratios & Rates",sub:"Comparing quantities",icon:"⚖️",grade:"6th",requires:"m4"},
+      {id:"m18",name:"Unit Rates",sub:"Per one — speed, price, etc.",icon:"🏎️",grade:"6th",requires:"m17"},
+      {id:"m19",name:"Percentages",sub:"Out of 100 — discounts, tips",icon:"💯",grade:"6th",requires:"m17"},
+    ]},
+    /* ── Unit 5: Pre-Algebra (KA Grade 6-7; Mathnasium Algebra prep) ── */
+    {unit:"Pre-Algebra",nodes:[
+      {id:"m27",name:"Negative Numbers",sub:"Integers & the number line",icon:"➖",grade:"6th"},
+      {id:"m20",name:"Variables & Expressions",sub:"Letters stand for numbers",icon:"🔡",grade:"6th",requires:"m27"},
+      {id:"m21",name:"Solving Equations",sub:"One-step: x + 3 = 7",icon:"🟰",grade:"6th",requires:"m20"},
+      {id:"m22",name:"Two-Step Equations",sub:"Combine operations to solve",icon:"🔢",grade:"7th",requires:"m21"},
+    ]},
+    /* ── Unit 6: Data & Probability ── */
+    {unit:"Data, Statistics & Probability",nodes:[
+      {id:"m25",name:"Mean, Median, Mode & Range",sub:"Making sense of data sets",icon:"📊",grade:"6th"},
+      {id:"m26",name:"Probability",sub:"Likelihood of outcomes",icon:"🎲",grade:"7th",requires:"m25"},
+    ]},
+    /* ── Unit 7: Problem Solving ── */
+    {unit:"Problem Solving",nodes:[
+      {id:"m9", name:"Word Problems",sub:"Real-world math",icon:"📖",grade:"3rd"},
+    ]},
   ],
+
   science:[
-    {unit:"Forces & Motion",nodes:[{id:"s1",name:"What is Force?",sub:"Pushes and pulls",icon:"💪"},{id:"s2",name:"Gravity",sub:"Why things fall",icon:"🌍",requires:"s1"},{id:"s3",name:"Friction",sub:"Slowing things down",icon:"🛞",requires:"s1"},{id:"s4",name:"Simple Machines",sub:"Levers, pulleys, ramps",icon:"⚙️",requires:"s2"}]},
-    {unit:"Matter",nodes:[{id:"s5",name:"States of Matter",sub:"Solid, liquid, gas",icon:"💧"},{id:"s6",name:"Material Properties",sub:"Hard, soft, magnetic",icon:"🧲",requires:"s5"},{id:"s7",name:"Changes in Matter",sub:"Melting, freezing, evaporation",icon:"🔥",requires:"s5"}]},
-    {unit:"Earth & Space",nodes:[{id:"s8",name:"Solar System",sub:"Planets & the Sun",icon:"🌌"},{id:"s9",name:"Weather & Climate",sub:"Rain, wind, temperature",icon:"🌦️"},{id:"s10",name:"Ecosystems",sub:"Food chains & habitats",icon:"🌿"}]},
+    /* ── Unit 1: Forces & Motion (NGSS PS2) ── */
+    {unit:"Forces & Motion (NGSS PS2)",nodes:[
+      {id:"s1", name:"What is Force?",sub:"Pushes, pulls & Newton's Laws",icon:"💪",grade:"3rd"},
+      {id:"s2", name:"Gravity",sub:"Why things fall — NGSS 5-PS2-1",icon:"🌍",grade:"5th",requires:"s1"},
+      {id:"s3", name:"Friction",sub:"Slowing things down",icon:"🛞",grade:"4th",requires:"s1"},
+      {id:"s4", name:"Simple Machines",sub:"Levers, pulleys, ramps, wheels",icon:"⚙️",grade:"3rd",requires:"s1"},
+    ]},
+    /* ── Unit 2: Energy (NGSS PS3) ── */
+    {unit:"Energy (NGSS PS3)",nodes:[
+      {id:"s18",name:"Forms of Energy",sub:"Kinetic, potential, thermal, light",icon:"⚡",grade:"4th"},
+      {id:"s19",name:"Light & Sound Waves",sub:"How waves travel — NGSS 4-PS4",icon:"🌊",grade:"4th",requires:"s18"},
+      {id:"s20",name:"Electricity & Magnetism",sub:"Circuits, conductors, magnets",icon:"🧲",grade:"4th",requires:"s18"},
+    ]},
+    /* ── Unit 3: Matter (NGSS PS1) ── */
+    {unit:"Matter & Its Interactions (NGSS PS1)",nodes:[
+      {id:"s5", name:"States of Matter",sub:"Solid, liquid, gas — NGSS 2-PS1",icon:"💧",grade:"2nd"},
+      {id:"s6", name:"Material Properties",sub:"Hard, soft, magnetic, conductor",icon:"🧲",grade:"2nd",requires:"s5"},
+      {id:"s7", name:"Changes in Matter",sub:"Melting, freezing, evaporation",icon:"🔥",grade:"3rd",requires:"s5"},
+    ]},
+    /* ── Unit 4: Life Science (NGSS LS) ── */
+    {unit:"Life Science (NGSS LS1-LS4)",nodes:[
+      {id:"s11",name:"Cells — Building Blocks of Life",sub:"Plant vs. animal cells — NGSS MS-LS1",icon:"🔬",grade:"6th"},
+      {id:"s12",name:"Life Cycles & Reproduction",sub:"Plants, animals, insects",icon:"🌱",grade:"3rd"},
+      {id:"s13",name:"Body Systems",sub:"Skeletal, muscular, nervous systems",icon:"🦴",grade:"5th",requires:"s11"},
+      {id:"s14",name:"Digestive & Circulatory Systems",sub:"How food & blood move — NGSS MS-LS1",icon:"❤️",grade:"7th",requires:"s13"},
+      {id:"s10",name:"Ecosystems & Food Webs",sub:"Food chains, habitats, interdependence",icon:"🌿",grade:"5th"},
+    ]},
+    /* ── Unit 5: Earth Science (NGSS ESS) ── */
+    {unit:"Earth Science (NGSS ESS)",nodes:[
+      {id:"s9", name:"Weather & Climate",sub:"Rain, wind, temperature — NGSS 3-ESS2",icon:"🌦️",grade:"3rd"},
+      {id:"s15",name:"Rock Cycle & Earth's Layers",sub:"Igneous, sedimentary, metamorphic",icon:"🪨",grade:"4th"},
+      {id:"s16",name:"Earth's Atmosphere",sub:"Layers, air pressure, ozone — NGSS MS-ESS",icon:"🌐",grade:"6th",requires:"s9"},
+      {id:"s17",name:"Climate Change",sub:"Greenhouse effect, human impact",icon:"🌡️",grade:"7th",requires:"s16"},
+    ]},
+    /* ── Unit 6: Space Science (NGSS ESS1) ── */
+    {unit:"Space & The Universe (NGSS ESS1)",nodes:[
+      {id:"s8", name:"Solar System",sub:"Planets, Sun, moons & orbits",icon:"🌌",grade:"5th"},
+    ]},
   ],
+
   coding:[
-    {unit:"Foundations",nodes:[{id:"c1",name:"What is an Algorithm?",sub:"Step-by-step instructions",icon:"📋"},{id:"c2",name:"Sequences",sub:"Order of instructions",icon:"1️⃣",requires:"c1"},{id:"c3",name:"Loops",sub:"Repeating actions",icon:"🔄",requires:"c2"},{id:"c4",name:"Conditionals",sub:"IF/ELSE decisions",icon:"🔀",requires:"c3"}]},
-    {unit:"Data & Functions",nodes:[{id:"c5",name:"Variables",sub:"Storing information",icon:"📦",requires:"c4"},{id:"c6",name:"Functions",sub:"Reusable code blocks",icon:"🧩",requires:"c5"}]},
-    {unit:"Projects",nodes:[{id:"c7",name:"Mini Calculator",sub:"Build with variables",icon:"🔢",requires:"c5"},{id:"c8",name:"Guessing Game",sub:"Conditionals & loops",icon:"🎮",requires:"c4"}]},
+    /* ── Unit 1: Foundations (Code.org K-5; CS Standards K-2) ── */
+    {unit:"Foundations (Code.org K-5)",nodes:[
+      {id:"c1", name:"What is an Algorithm?",sub:"Step-by-step instructions",icon:"📋",grade:"K-2"},
+      {id:"c2", name:"Sequences",sub:"Order matters in code",icon:"1️⃣",grade:"K-2",requires:"c1"},
+      {id:"c3", name:"Loops",sub:"Repeat actions efficiently",icon:"🔄",grade:"2nd",requires:"c2"},
+      {id:"c4", name:"Conditionals (IF/ELSE)",sub:"Make decisions in code",icon:"🔀",grade:"3rd",requires:"c3"},
+    ]},
+    /* ── Unit 2: Core Programming (Code.org Grade 3-5; CS Standards 3-5) ── */
+    {unit:"Core Programming",nodes:[
+      {id:"c5", name:"Variables",sub:"Store and change information",icon:"📦",grade:"4th",requires:"c4"},
+      {id:"c6", name:"Functions",sub:"Reusable blocks of code",icon:"🧩",grade:"5th",requires:"c5"},
+      {id:"c9", name:"Lists & Arrays",sub:"Store multiple values",icon:"📝",grade:"6th",requires:"c5"},
+      {id:"c10",name:"Nested Loops & Logic",sub:"Loops inside loops",icon:"🔁",grade:"6th",requires:"c3"},
+    ]},
+    /* ── Unit 3: Projects (Scratch + Code.org CSD) ── */
+    {unit:"Creative Projects (Scratch)",nodes:[
+      {id:"c7", name:"Mini Calculator",sub:"Build with variables & operators",icon:"🔢",grade:"5th",requires:"c5"},
+      {id:"c8", name:"Guessing Game",sub:"Conditionals, loops & random",icon:"🎮",grade:"5th",requires:"c4"},
+      {id:"c11",name:"Animated Story",sub:"Events, sprites & backgrounds",icon:"🎬",grade:"4th",requires:"c3"},
+      {id:"c12",name:"Interactive Quiz",sub:"User input & scoring",icon:"❓",grade:"5th",requires:"c5"},
+    ]},
+    /* ── Unit 4: Web & Data (Code.org CSD Grade 6-8) ── */
+    {unit:"Web, Data & Advanced (Code.org CSD)",nodes:[
+      {id:"c13",name:"HTML & Web Basics",sub:"Structure web pages with tags",icon:"🌐",grade:"6th",requires:"c2"},
+      {id:"c14",name:"Algorithms & Problem Solving",sub:"Big-O thinking, efficiency",icon:"🧮",grade:"7th",requires:"c6"},
+    ]},
   ],
 };
-const TKW={m1:["multiplication","times table","multiply","product"],m2:["division","divide","quotient"],m3:["fraction","numerator","denominator"],m4:["equivalent fraction","simplify fraction"],m5:["add fraction","adding fraction"],m6:["perimeter","area","rectangle"],m7:["angle","acute","obtuse","right angle"],m8:["symmetry","reflection","mirror"],m9:["word problem","real world math"],m10:["pattern","sequence","next number"],s1:["force","push","pull","newton"],s2:["gravity","fall","weight","drop"],s3:["friction","rough surface","smooth surface"],s4:["simple machine","lever","pulley","ramp"],s5:["solid","liquid","gas","state of matter"],s6:["material property","magnetic","conductor"],s7:["melt","freeze","evaporate","boil"],s8:["planet","solar system","sun","orbit","space"],s9:["weather","rain","wind","temperature","climate"],s10:["ecosystem","food chain","habitat"],c1:["algorithm","instructions","program"],c2:["sequence","order","step by step"],c3:["loop","repeat","while loop","for loop"],c4:["if statement","else","conditional"],c5:["variable","store value","data"],c6:["function","def ","method","reusable"],c7:["calculator","arithmetic program"],c8:["game","guessing game","random number"]};
+const TKW={
+  /* Math */
+  m1:["multiplication","times table","multiply","product","times"],
+  m2:["division","divide","quotient","long division","divisor"],
+  m3:["fraction","numerator","denominator","half","thirds","quarters","parts of a whole"],
+  m4:["equivalent fraction","simplify fraction","equal fraction","same value"],
+  m5:["add fraction","adding fraction","fraction plus","sum of fraction"],
+  m6:["perimeter","area","rectangle","square area","border"],
+  m7:["angle","acute","obtuse","right angle","protractor","degrees"],
+  m8:["symmetry","reflection","mirror","line of symmetry","rotate","transformation"],
+  m9:["word problem","real world math","story problem","how many","how much"],
+  m10:["pattern","sequence","next number","rule","series"],
+  m11:["place value","ones tens hundreds","digit position","face value","thousands"],
+  m12:["ten thousands","millions","rounding","round to nearest"],
+  m13:["subtract fraction","subtracting fraction","borrow fraction","difference of fractions"],
+  m14:["decimal","tenths","hundredths","decimal point","0.5","0.25"],
+  m15:["add decimal","adding decimal","subtract decimal","decimal addition"],
+  m16:["multiply fraction","fraction times fraction","product of fractions"],
+  m17:["ratio","rate","compare quantities","for every"],
+  m18:["unit rate","per hour","miles per","price per","cost per"],
+  m19:["percent","percentage","discount","tip","sale price","out of 100"],
+  m20:["variable","expression","algebra","unknown","letter in math"],
+  m21:["equation","solve for x","one step equation","balance equation"],
+  m22:["two step equation","solve equation","multi step"],
+  m23:["triangle area","polygon area","composite shape","parallelogram"],
+  m24:["pythagorean","right triangle","hypotenuse","a squared b squared"],
+  m25:["mean","median","mode","range","average","data set","statistics"],
+  m26:["probability","chance","likelihood","outcome","dice","coin flip"],
+  m27:["negative number","integer","number line","below zero","opposite"],
+  /* Science */
+  s1:["force","push","pull","newton","net force","balanced force"],
+  s2:["gravity","fall","weight","drop","gravitational pull","orbit"],
+  s3:["friction","rough","smooth surface","resistance","grip"],
+  s4:["simple machine","lever","pulley","ramp","inclined plane","wheel axle","wedge","screw"],
+  s5:["solid","liquid","gas","state of matter","plasma"],
+  s6:["material property","magnetic","conductor","insulator","hardness","flexible"],
+  s7:["melt","freeze","evaporate","boil","condense","sublimate","change of state"],
+  s8:["planet","solar system","sun","orbit","asteroid","comet","galaxy","universe","star"],
+  s9:["weather","rain","wind","temperature","climate","cloud","hurricane","tornado","forecast"],
+  s10:["ecosystem","food chain","food web","habitat","predator","prey","biodiversity"],
+  s11:["cell","cell membrane","nucleus","organelle","plant cell","animal cell","mitochondria"],
+  s12:["life cycle","reproduction","metamorphosis","photosynthesis","pollination","seed"],
+  s13:["body system","skeletal","muscular","nervous system","bone","muscle","brain","neuron"],
+  s14:["digestive","circulatory","heart","blood","lungs","respiratory","digestion"],
+  s15:["rock cycle","igneous","sedimentary","metamorphic","erosion","geological","mineral","fossil"],
+  s16:["atmosphere","air pressure","ozone","layer","troposphere","stratosphere"],
+  s17:["climate change","global warming","greenhouse","carbon dioxide","renewable energy"],
+  s18:["energy","kinetic","potential","thermal","heat","light energy","sound energy"],
+  s19:["wave","light wave","sound wave","frequency","wavelength","vibration","reflection"],
+  s20:["electricity","magnet","circuit","conductor","battery","current","voltage","charge"],
+  /* Coding */
+  c1:["algorithm","instructions","program","step by step","procedure"],
+  c2:["sequence","order","execute","run code","line by line"],
+  c3:["loop","repeat","while loop","for loop","iteration","cycle"],
+  c4:["if statement","else","conditional","boolean","true false","decision"],
+  c5:["variable","store value","data","assign","declare"],
+  c6:["function","def ","method","reusable","parameter","return"],
+  c7:["calculator","arithmetic program","compute"],
+  c8:["guessing game","random number","user input","game loop"],
+  c9:["list","array","index","element","append","collection"],
+  c10:["nested loop","loop inside","complex loop","2d grid"],
+  c11:["html","web page","tag","heading","paragraph","css","style"],
+  c12:["quiz app","interactive","input output","score tracker"],
+  c13:["artificial intelligence","machine learning","ai","training data","model"],
+  c14:["efficiency","big-o","sorting","searching","binary search","bubble sort"],
+};
 const STRUGGLE=["don't understand","dont understand","confused","confusing","don't get","dont get","i'm lost","im lost","makes no sense","too hard","this is hard","i give up","don't know","dont know","no idea","i'm stuck","im stuck","not getting it","wrong answer","i got it wrong"];
 const GRADES=["1st","2nd","3rd","4th","5th","6th","7th","8th"];
 const INTERESTS=[{key:"space",label:"Space & Rockets",icon:"🚀"},{key:"animals",label:"Animals & Nature",icon:"🦁"},{key:"games",label:"Video Games",icon:"🎮"},{key:"building",label:"Building & Legos",icon:"🧱"},{key:"sports",label:"Sports",icon:"⚽"},{key:"cooking",label:"Cooking & Food",icon:"🍕"},{key:"art",label:"Art & Drawing",icon:"🎨"},{key:"robots",label:"Robots & Tech",icon:"🤖"}];
@@ -814,12 +1039,13 @@ function Blocks({blocks,topicIds}){
 
 function buildPrompt(profile,subject,mode,isRem,remTopic){
   const{name,grade,mastery,gaps,strengths,topicMastery={},interests=[],struggleCount=0}=profile;
-  const modeMap={mixed:"Mix of Socratic, explanation, and project ideas.",socratic:"ONLY guiding questions — never direct answers.",lecture:"Explain clearly, vivid example, comprehension check.",project:"Frame everything as hands-on experiment."};
+  const modeMap={mixed:"Mix of Socratic questions, clear explanation, and hands-on project ideas.",socratic:"ONLY guiding questions — never give direct answers. Make them discover.",lecture:"Explain clearly with a vivid real-world example, then do a comprehension check.",project:"Frame everything as a hands-on experiment or build challenge."};
   const tc=Object.entries(topicMastery).map(([id,pct])=>{const n=gN(id);return n?n.name+":"+pct+"%":null;}).filter(Boolean).join(", ");
-  const ic=interests.length?"INTERESTS: "+interests.join(", ")+" — weave into examples naturally.":"";
-  const rn=isRem&&remTopic?"\n⚠️ REMEDIATION: "+name+" is struggling with \""+remTopic+"\". Stop advancing. Use a different analogy. One simple guiding question to rebuild confidence.":"";
-  const sn=struggleCount>2?"\nNote: "+name+" has struggled "+struggleCount+" times. Be extra patient.":"";
-  return "You are Nova, an enthusiastic STEM tutor for "+name+", a "+grade+" grade student (~10 years old).\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None")+" | STRENGTHS: "+(strengths.join(", ")||"Discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet")+"\n"+ic+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"FOCUS: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Use "+name+"'s name. Connect to their interests. 4-8 sentences per idea. Guide discovery — never just give answers. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.\nRESOURCES: After teaching a topic, naturally mention that they can practice on Khan Academy, Mathnasium, Code.org, or Scratch as relevant. Start that block with 📚 Practice Resources: and briefly mention what to search for or try.";
+  const ic=interests.length?"INTERESTS: "+interests.join(", ")+" — always weave these into examples naturally.":"";
+  const rn=isRem&&remTopic?"\n⚠️ REMEDIATION MODE: "+name+" is struggling with \""+remTopic+"\". Stop advancing. Use a completely different analogy. Ask ONE simple guiding question to rebuild confidence. Praise any small progress.":"";
+  const sn=struggleCount>2?"\nNOTE: "+name+" has struggled "+struggleCount+" times recently. Be extra patient, use simpler language, shorter sentences.":"";
+  const fw="\nCURRICULUM FRAMEWORKS: You teach aligned to Khan Academy K-8, Mathnasium Method (Counting · Wholes & Parts · Proportional Thinking), NGSS Science Standards, Common Core Math, and Code.org CS Standards. Reference these frameworks naturally when suggesting practice.";
+  return "You are Nova, an enthusiastic and encouraging STEM tutor for "+name+", a "+grade+" grade student.\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None identified yet")+" | STRENGTHS: "+(strengths.join(", ")||"Still discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet — fresh start!")+"\n"+ic+fw+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"CURRENT FOCUS SUBJECT: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Always use "+name+"'s name. Connect every concept to their interests. Keep explanations to 4-8 sentences. Guide discovery — never just hand over answers. Use 🤔 Think About This!: blocks for challenges and ⭐ Fun Fact: for fascinating context.\nRESOURCES: After teaching a topic, end with a 📚 Practice Resources: block. Mention Khan Academy (with the specific grade/topic), Mathnasium for math, Code.org or Scratch for coding, NASA or Nat Geo Kids for science. Be specific — name the exact unit or activity they should try.";
 }
 
 /* ── App ── */
@@ -1047,7 +1273,7 @@ function App(){
 
   const updateTM=(ids,struggling,p)=>{const tm={...(p.topicMastery||{})};const nm=[];ids.forEach(id=>{const prev=tm[id]||0;const d=struggling?-8:12+Math.floor(Math.random()*6);tm[id]=Math.min(100,Math.max(0,prev+d));if(prev<80&&tm[id]>=80){const n=gN(id);if(n)nm.push(n.name);}});return{tm,newlyMastered:nm};};
   const recompute=tm=>{const c=s=>{const nodes=CURRICULUM[s].flatMap(u=>u.nodes);const sc=nodes.filter(n=>tm[n.id]!==undefined);if(!sc.length)return null;return Math.round(sc.reduce((a,n)=>a+(tm[n.id]||0),0)/sc.length);};return{math:c("math"),science:c("science"),coding:c("coding")};};
-  const updateGaps=useCallback((tm,gaps,strengths)=>{const MAP={"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"],"Multiplication":["m1","m2"],"Geometry":["m6","m7"],"States of Matter":["s5","s6","s7"]};const ng=[...gaps],ns=[...strengths];Object.entries(MAP).forEach(([name,ids])=>{const covered=ids.filter(id=>tm[id]!==undefined);if(!covered.length)return;const avg=covered.reduce((s,id)=>s+(tm[id]||0),0)/covered.length;if(avg<45&&!ng.includes(name)){ng.push(name);ns.splice(ns.indexOf(name),1);}if(avg>=70&&ng.includes(name)){ng.splice(ng.indexOf(name),1);if(!ns.includes(name))ns.push(name);}});return{gaps:ng,strengths:ns};},[]);
+  const updateGaps=useCallback((tm,gaps,strengths)=>{const MAP={"Fractions & Division":["m3","m4","m5","m13","m16"],"Decimals":["m14","m15"],"Place Value":["m11","m12"],"Ratios & Percents":["m17","m18","m19"],"Pre-Algebra":["m20","m21","m22","m27"],"Geometry":["m6","m7","m8","m23","m24"],"Data & Probability":["m25","m26"],"Forces & Motion":["s1","s2","s3","s4"],"Energy & Waves":["s18","s19","s20"],"States of Matter":["s5","s6","s7"],"Life Science":["s11","s12","s13","s14"],"Earth Science":["s15","s16","s17"],"Space Science":["s8"],"Ecosystems":["s10","s9"],"Logic & Loops":["c3","c4"],"Variables & Functions":["c5","c6","c9","c10"],"Web & Advanced CS":["c11","c12","c13","c14"]};const ng=[...gaps],ns=[...strengths];Object.entries(MAP).forEach(([name,ids])=>{const covered=ids.filter(id=>tm[id]!==undefined);if(!covered.length)return;const avg=covered.reduce((s,id)=>s+(tm[id]||0),0)/covered.length;if(avg<45&&!ng.includes(name)){ng.push(name);ns.splice(ns.indexOf(name),1);}if(avg>=70&&ng.includes(name)){ng.splice(ng.indexOf(name),1);if(!ns.includes(name))ns.push(name);}});return{gaps:ng,strengths:ns};},[]);
 
   const sendMessage=async(text,forceRem,remTopic)=>{
     const userText=(text||input).trim();if(!userText||isLoading)return;
@@ -1107,12 +1333,12 @@ function App(){
   const changeApiKey=()=>{localStorage.removeItem("nova_api_key");setApiKeyInput("");setScreen("apikey");};
 
   /* Quick starts */
-  const getQS=()=>{const base=[{emoji:"🔢",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"Explain gravity with a fun example!"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧠",text:"Give me a tricky math challenge!"},{emoji:"🔬",text:"Why do things float in water?"},{emoji:"🚀",text:"How do rockets escape Earth's gravity?"}];if(!profile?.interests?.length)return base;const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🐬",text:"How do dolphins use echolocation?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How do robots know what to do?"});return[...extra.slice(0,2),...base].slice(0,6);};
+  const getQS=()=>{const base=[{emoji:"🍕",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"Explain gravity with a fun example!"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧠",text:"Give me a tricky math challenge!"},{emoji:"🔬",text:"What are the states of matter?"},{emoji:"🚀",text:"How do rockets escape Earth's gravity?"},{emoji:"📊",text:"What's the difference between mean and median?"},{emoji:"🧬",text:"What do cells do in our body?"}];if(!profile?.interests?.length)return base.slice(0,6);const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🐬",text:"How do dolphins use echolocation?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How do robots know what to do?"});if(profile.interests.some(i=>i.includes("Cook")))extra.push({emoji:"🧪",text:"What chemistry happens when you cook food?"});if(profile.interests.some(i=>i.includes("Art")))extra.push({emoji:"🎨",text:"How do screens mix colors using math?"});if(profile.interests.some(i=>i.includes("Sport")))extra.push({emoji:"⚽",text:"What forces make a soccer ball curve?"});return[...extra.slice(0,2),...base].slice(0,6);};
 
   /* Tree Panel */
   function TreePanel(){
     const tm=profile?.topicMastery||{};const units=CURRICULUM[treeSubject];const sc={math:"#3b82f6",science:"#8b5cf6",coding:"#14b8a6"};
-    const getStatus=node=>{if(!isUL(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"]}[g]||[]).includes(node.id)))return"gap";return"current";};
+    const getStatus=node=>{if(!isUL(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5","m13","m16"],"Decimals":["m14","m15"],"Place Value":["m11","m12"],"Ratios & Percents":["m17","m18","m19"],"Pre-Algebra":["m20","m21","m22","m27"],"Geometry":["m6","m7","m8","m23","m24"],"Data & Probability":["m25","m26"],"Forces & Motion":["s1","s2","s3","s4"],"Energy & Waves":["s18","s19","s20"],"States of Matter":["s5","s6","s7"],"Life Science":["s11","s12","s13","s14"],"Earth Science":["s15","s16","s17"],"Logic & Loops":["c3","c4"],"Variables & Functions":["c5","c6","c9","c10"],"Web & Advanced CS":["c11","c12","c13","c14"]}[g]||[]).includes(node.id)))return"gap";return"current";};
     return(
       <div className="tree-panel">
         <div className="tree-header">
