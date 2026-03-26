@@ -613,18 +613,29 @@ function App(){
   // ── API key validation ───────────────────────────────────────────
   const validateAndSaveKey=async()=>{
     const key=apiKeyInput.trim();
-    if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){setApiKeyError("That doesn't look like a valid Anthropic API key.");return;}
+    if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){
+      setApiKeyError("That doesn't look like a valid Anthropic API key.");return;
+    }
     setApiKeyLoading(true);setApiKeyError("");
     try{
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});
+      const res=await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})
+      });
       const data=await res.json();
-      if(data.error){setApiKeyError(`API key error: ${data.error.message}`);setApiKeyLoading(false);return;}
+      if(data.error){
+        setApiKeyError("API key error: "+data.error.message);
+        setApiKeyLoading(false);return;
+      }
       localStorage.setItem("nova_api_key",key);
       setApiKey(key);
-      // Always go to auth after saving key
+      setApiKeyLoading(false);
       setScreen("auth");
-    }catch(e){setApiKeyError("Could not connect. Check your internet and try again.");}
-    setApiKeyLoading(false);
+    }catch(e){
+      setApiKeyError("Could not connect. Check your internet and try again.");
+      setApiKeyLoading(false);
+    }
   };
 
   const saveProfile=p=>{storage.set("nova_profile",JSON.stringify(p));setProfile(p);};
