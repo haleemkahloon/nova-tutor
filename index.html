@@ -22,7 +22,24 @@ html, body, #root { height:100%; margin:0; }
 body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf4 50%,#fef9c3 100%); color:var(--text); }
 .app { height:100vh; display:flex; flex-direction:column; overflow:hidden; }
 
-/* API Key screen */
+/* ── Login / Signup ── */
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f)}
+.auth-card{background:#fff;border-radius:24px;padding:40px;max-width:420px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
+.auth-owl{font-size:56px;display:block;margin-bottom:12px;animation:float 3s ease-in-out infinite}
+.auth-title{font-size:24px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.auth-title span{background:linear-gradient(90deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:24px;line-height:1.6}
+.auth-tabs{display:flex;gap:0;margin-bottom:24px;background:#f1f5f9;border-radius:10px;padding:3px}
+.auth-tab{flex:1;padding:9px;border-radius:8px;border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
+.auth-tab.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.auth-inp{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;font-family:var(--font);font-size:14px;font-weight:700;color:var(--text);outline:none;transition:border-color .15s;margin-bottom:12px}
+.auth-inp:focus{border-color:var(--blue)}
+.auth-btn{width:100%;padding:13px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(59,130,246,.4);margin-top:4px}
+.auth-btn:hover{transform:translateY(-2px)} .auth-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.auth-err{color:var(--red);font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
+.auth-ok{color:#166534;font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid var(--green)}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:#f0fdf4;border:1px solid var(--green);color:#166534;font-size:10px;font-weight:800;margin-top:8px}
+.sync-badge-warn{background:#fff7ed;border-color:var(--orange);color:#92400e}
 .apikey-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:24px; background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f); }
 .apikey-card { background:#fff; border-radius:24px; padding:40px; max-width:480px; width:100%; box-shadow:0 12px 48px rgba(0,0,0,.3); text-align:center; }
 .apikey-owl { font-size:64px; display:block; margin-bottom:14px; animation:float 3s ease-in-out infinite; }
@@ -352,7 +369,55 @@ body { font-family:var(--font); background:linear-gradient(160deg,#e0f2fe 0%,#f0
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback } = React;
 
-// ── localStorage storage shim (replaces window.storage) ──────────────
+// ── Supabase config ───────────────────────────────────────────────────
+const SUPABASE_URL = "https://ifayrtuouxlfnvtyhnjz.supabase.co";
+const SUPABASE_KEY = "sb_publishable_jDQ4waUP5brWgKyp8zUiYg_PfOp4NkJ";
+
+const sb = {
+  async getProfile(username) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}&select=*`, {
+        headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+      });
+      const data = await res.json();
+      return data?.[0] || null;
+    } catch { return null; }
+  },
+  async upsertProfile(username, passwordHash, profileData) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json", "Prefer": "resolution=merge-duplicates"
+        },
+        body: JSON.stringify({ username, password_hash: passwordHash, profile_data: profileData, updated_at: new Date().toISOString() })
+      });
+      return res.ok;
+    } catch { return false; }
+  },
+  async updateProfile(username, profileData) {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?username=eq.${encodeURIComponent(username)}`, {
+        method: "PATCH",
+        headers: {
+          "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ profile_data: profileData, updated_at: new Date().toISOString() })
+      });
+      return res.ok;
+    } catch { return false; }
+  }
+};
+
+// ── Simple password hash (SHA-256 via Web Crypto) ─────────────────────
+async function hashPassword(password) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(password));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// ── localStorage fallback ─────────────────────────────────────────────
 const storage = {
   get: (key) => { try { const v = localStorage.getItem(key); return v ? { value: v } : null; } catch { return null; } },
   set: (key, val) => { try { localStorage.setItem(key, val); return true; } catch { return false; } },
@@ -840,6 +905,12 @@ function App(){
             <button className={`tab-btn ${tab==="parent"?"active":""}`} onClick={()=>setTab("parent")}>👨‍👩‍👧 Parent</button>
             {lvl&&<div className="level-chip">Lvl {lvl.lvl} · {lvl.name}</div>}
             <div className="xp-chip">⭐ {profile.xp||0}</div>
+            {syncStatus==="saving"&&<div className="sync-badge sync-badge-warn">⏳ Saving...</div>}
+            {syncStatus==="saved"&&<div className="sync-badge">☁️ Saved</div>}
+            {syncStatus==="error"&&<div className="sync-badge sync-badge-warn">⚠️ Offline</div>}
+            <button onClick={handleLogout} style={{padding:"5px 11px",borderRadius:20,border:"2px solid rgba(255,255,255,.15)",background:"transparent",color:"#94a3b8",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",transition:"all .15s"}} onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--red)";e.currentTarget.style.color="var(--red)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,.15)";e.currentTarget.style.color="#94a3b8";}}>
+              Sign Out
+            </button>
           </>}
         </div>
       </header>
@@ -849,24 +920,49 @@ function App(){
   // ── Screens ───────────────────────────────────────────────────────
   if(screen==="loading")return <div className="app" style={{alignItems:"center",justifyContent:"center"}}><span style={{fontSize:44,animation:"float 1s ease-in-out infinite"}}>🦉</span></div>;
 
+  // ── API Key screen ────────────────────────────────────────────────
   if(screen==="apikey")return(
     <div className="app">
       <div className="apikey-wrap fade-in">
         <div className="apikey-card">
           <span className="apikey-owl">🦉</span>
           <div className="apikey-title">Nova <span>STEM Tutor</span></div>
-          <div className="apikey-sub">One-time setup: paste your Anthropic API key below. It's stored only in this browser — never sent anywhere except directly to Anthropic.</div>
+          <div className="apikey-sub">One-time setup: paste your Anthropic API key below. Stored only in this browser.</div>
           <div className="apikey-steps">
-            <div className="apikey-step"><div className="apikey-step-num">1</div><div>Go to <a className="apikey-link" href="https://console.anthropic.com" target="_blank" rel="noreferrer">console.anthropic.com</a> and sign up or log in (free)</div></div>
-            <div className="apikey-step"><div className="apikey-step-num">2</div><div>Click <strong>"API Keys"</strong> in the left sidebar, then <strong>"Create Key"</strong></div></div>
-            <div className="apikey-step"><div className="apikey-step-num">3</div><div>Copy the key (starts with <code style={{background:"#f1f5f9",padding:"1px 5px",borderRadius:4}}>sk-ant-</code>) and paste it below</div></div>
+            <div className="apikey-step"><div className="apikey-step-num">1</div><div>Go to <a className="apikey-link" href="https://console.anthropic.com" target="_blank" rel="noreferrer">console.anthropic.com</a> and sign up (free)</div></div>
+            <div className="apikey-step"><div className="apikey-step-num">2</div><div>Click <strong>"API Keys"</strong> → <strong>"Create Key"</strong></div></div>
+            <div className="apikey-step"><div className="apikey-step-num">3</div><div>Copy the key (starts with <code style={{background:"#f1f5f9",padding:"1px 5px",borderRadius:4}}>sk-ant-</code>) and paste below</div></div>
           </div>
           {apiKeyError&&<div className="apikey-err">{apiKeyError}</div>}
           <input className="apikey-inp" type="password" placeholder="sk-ant-api03-..." value={apiKeyInput} onChange={e=>setApiKeyInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&validateAndSaveKey()}/>
-          <button className="apikey-btn" onClick={validateAndSaveKey} disabled={!apiKeyInput.trim()||apiKeyLoading}>
-            {apiKeyLoading?<span className="spin">◌</span>:"Save & Start Learning 🚀"}
+          <button className="apikey-btn" onClick={validateAndSaveKey} disabled={!apiKeyInput.trim()||apiKeyLoading}>{apiKeyLoading?<span className="spin">◌</span>:"Save & Continue 🚀"}</button>
+          <div className="apikey-note">🔒 Your key is saved in your browser only. Free tier gets hundreds of lessons.</div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── Auth screen ───────────────────────────────────────────────────
+  if(screen==="auth")return(
+    <div className="app">
+      <div className="auth-wrap fade-in">
+        <div className="auth-card">
+          <span className="auth-owl">🦉</span>
+          <div className="auth-title">Nova <span>STEM Tutor</span></div>
+          <div className="auth-sub">{authMode==="login"?"Welcome back! Log in to load Ibraheem's progress from any device.":"Create an account to keep Ibraheem's progress safe in the cloud forever."}</div>
+          <div className="auth-tabs">
+            <button className={`auth-tab ${authMode==="login"?"active":""}`} onClick={()=>{setAuthMode("login");setAuthError("");}}>Log In</button>
+            <button className={`auth-tab ${authMode==="signup"?"active":""}`} onClick={()=>{setAuthMode("signup");setAuthError("");}}>Sign Up</button>
+          </div>
+          {authError&&<div className="auth-err">{authError}</div>}
+          <input className="auth-inp" type="text" placeholder="Username (e.g. ibraheem)" value={authUsername} onChange={e=>setAuthUsername(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          <input className="auth-inp" type="password" placeholder="Password" value={authPassword} onChange={e=>setAuthPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          <button className="auth-btn" onClick={handleAuth} disabled={authLoading||!authUsername.trim()||!authPassword.trim()}>
+            {authLoading?<span className="spin">◌</span>:authMode==="login"?"Log In & Load Progress →":"Create Account & Start →"}
           </button>
-          <div className="apikey-note">🔒 Your key is saved in your browser's local storage only. It never leaves your device except to call the Anthropic API directly. Free tier: ~$5 of API credit gets hundreds of lessons.</div>
+          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>
+            ☁️ Progress is saved to the cloud automatically — accessible from any device, any browser, forever.
+          </div>
         </div>
       </div>
     </div>
