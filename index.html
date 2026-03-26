@@ -948,19 +948,39 @@ function App(){
         <div className="auth-card">
           <span className="auth-owl">🦉</span>
           <div className="auth-title">Nova <span>STEM Tutor</span></div>
-          <div className="auth-sub">{authMode==="login"?"Welcome back! Log in to load Ibraheem's progress from any device.":"Create an account to keep Ibraheem's progress safe in the cloud forever."}</div>
+          <div className="auth-sub">
+            {authMode==="login"
+              ?"Welcome back! Log in to load progress from any device."
+              :"Create an account to keep progress safe in the cloud."}
+          </div>
           <div className="auth-tabs">
-            <button className={`auth-tab ${authMode==="login"?"active":""}`} onClick={()=>{setAuthMode("login");setAuthError("");}}>Log In</button>
-            <button className={`auth-tab ${authMode==="signup"?"active":""}`} onClick={()=>{setAuthMode("signup");setAuthError("");}}>Sign Up</button>
+            <button className={"auth-tab"+(authMode==="login"?" active":"")}
+              onClick={()=>{setAuthMode("login");setAuthError("");}}>Log In</button>
+            <button className={"auth-tab"+(authMode==="signup"?" active":"")}
+              onClick={()=>{setAuthMode("signup");setAuthError("");}}>Sign Up</button>
           </div>
           {authError&&<div className="auth-err">{authError}</div>}
-          <input className="auth-inp" type="text" placeholder="Username (e.g. ibraheem)" value={authUsername} onChange={e=>setAuthUsername(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
-          <input className="auth-inp" type="password" placeholder="Password" value={authPassword} onChange={e=>setAuthPassword(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
-          <button className="auth-btn" onClick={handleAuth} disabled={authLoading||!authUsername.trim()||!authPassword.trim()}>
-            {authLoading?<span className="spin">◌</span>:authMode==="login"?"Log In & Load Progress →":"Create Account & Start →"}
+          <input className="auth-inp" type="text"
+            placeholder="Username (e.g. ibraheem)"
+            value={authUsername}
+            onChange={e=>setAuthUsername(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          <input className="auth-inp" type="password"
+            placeholder="Password (min 4 characters)"
+            value={authPassword}
+            onChange={e=>setAuthPassword(e.target.value)}
+            onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
+          <button className="auth-btn"
+            onClick={handleAuth}
+            disabled={authLoading||!authUsername.trim()||!authPassword.trim()}>
+            {authLoading
+              ?<span className="spin">◌</span>
+              :authMode==="login"
+                ?"Log In & Load Progress →"
+                :"Create Account & Start →"}
           </button>
           <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>
-            ☁️ Progress is saved to the cloud automatically — accessible from any device, any browser, forever.
+            ☁️ Progress saves to the cloud automatically — works on any device.
           </div>
         </div>
       </div>
