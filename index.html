@@ -831,8 +831,40 @@ function App(){
   /* Parent Hub Dashboard Pages */
   function ParentChildDashboard({childUser}){
     const cp=childProfiles[childUser];
-    if(!cp)return<div className="empty-state"><div className="empty-icon">⏳</div><div className="empty-text">Loading {childUser}'s profile...</div></div>;
-    const{mastery,gaps,strengths,xp,sessions,topicMastery={},struggleCount=0,name,grade,sessionLog=[],interests=[]}=cp;
+
+    // Not loaded yet
+    if(!cp)return(
+      <div className="empty-state">
+        <div className="empty-icon">⏳</div>
+        <div className="empty-text">Loading {childUser}'s profile...</div>
+      </div>
+    );
+
+    // Account exists but onboarding not completed
+    if(!cp.setupComplete||!cp.mastery)return(
+      <div className="empty-state">
+        <div className="empty-icon">🎓</div>
+        <div className="empty-text">
+          <strong>{childUser}</strong> hasn't completed their setup yet.<br/>
+          <span style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>
+            Ask them to open the app, log in as a Student, and complete the quick diagnostic quiz.
+            Their progress will appear here once they're done.
+          </span>
+        </div>
+      </div>
+    );
+
+    const mastery=cp.mastery||{math:0,science:0,coding:0};
+    const gaps=cp.gaps||[];
+    const strengths=cp.strengths||[];
+    const xp=cp.xp||0;
+    const sessions=cp.sessions||0;
+    const topicMastery=cp.topicMastery||{};
+    const struggleCount=cp.struggleCount||0;
+    const name=cp.name||childUser;
+    const grade=cp.grade||"";
+    const sessionLog=cp.sessionLog||[];
+    const interests=cp.interests||[];
     const masteredCount=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;
     const lvl=getLevel(xp||0);const nxt=getNextLevel(xp||0);
     if(parentDashPage==="overview")return(<>
@@ -853,7 +885,7 @@ function App(){
       </div>}
       <div className="sec-title">Subject Mastery</div>
       <div className="dash-card">{[{label:"Math",key:"math",color:"#3b82f6"},{label:"Science",key:"science",color:"#8b5cf6"},{label:"Coding",key:"coding",color:"#14b8a6"}].map(s=>(
-        <div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:mastery[s.key]+"%",background:s.color}}/></div><div className="dash-mastery-pct" style={{color:mc(mastery[s.key])}}>{mastery[s.key]}%</div></div>
+        <div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:(mastery[s.key]||0)+"%",background:s.color}}/></div><div className="dash-mastery-pct" style={{color:mc(mastery[s.key]||0)}}>{mastery[s.key]||0}%</div></div>
       ))}</div>
       {interests.length>0&&<><div className="sec-title">Interests</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{interests.map((int,i)=><span key={i} style={{padding:"4px 12px",borderRadius:"20px",background:"#eff6ff",color:"var(--blue)",fontSize:12,fontWeight:700,border:"1px solid #bfdbfe"}}>{int}</span>)}</div></div></>}
       <div className="sec-title">Focus Areas & Strengths</div>
