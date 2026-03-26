@@ -1405,10 +1405,18 @@ function App(){
       }
       try{
         const row=await sb.getProfile(user);
-        if(row&&row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setScreen("tutor");return;}
+        if(row&&row.profile_data&&row.profile_data.setupComplete){
+          setProfile(row.profile_data);
+          ls.set("nova_profile",JSON.stringify(row.profile_data));
+          setScreen("tutor");return;
+        }
       }catch(e){console.log(e);}
+      // Only use localStorage cache if it belongs to THIS user
       const saved=ls.get("nova_profile");
-      if(saved&&saved.value){const p=JSON.parse(saved.value);if(p.setupComplete){setProfile(p);setScreen("tutor");return;}}
+      if(saved&&saved.value){
+        const p=JSON.parse(saved.value);
+        if(p.setupComplete&&p.username===user){setProfile(p);setScreen("tutor");return;}
+      }
       setScreen("onboard");
     })();
   },[]);
@@ -1430,11 +1438,12 @@ function App(){
   },[screen,parentData]);
 
   const saveProfile=useCallback((p)=>{
-    setProfile(p);ls.set("nova_profile",JSON.stringify(p));
+    const user=localStorage.getItem("nova_user");
+    const profileWithUser={...p,username:user||p.username};
+    setProfile(profileWithUser);ls.set("nova_profile",JSON.stringify(profileWithUser));
     if(saveTimer.current)clearTimeout(saveTimer.current);setSyncStatus("saving");
     saveTimer.current=setTimeout(async()=>{
-      const user=localStorage.getItem("nova_user");
-      if(user){const ok=await sb.updateProfile(user,p);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}else setSyncStatus("idle");
+      if(user){const ok=await sb.updateProfile(user,profileWithUser);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}else setSyncStatus("idle");
     },1500);
   },[]);
 
@@ -1490,8 +1499,9 @@ function App(){
           if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}
           if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
           localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
+          localStorage.removeItem("nova_profile"); // clear any previous user's cached profile
           setAccountType("student");
-          if(row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setAuthLoading(false);setScreen("tutor");}
+          if(row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify({...row.profile_data,username:u}));setAuthLoading(false);setScreen("tutor");}
           else{setAuthLoading(false);setScreen("onboard");}
         }
       }
@@ -1500,8 +1510,12 @@ function App(){
 
   const handleLogout=()=>{
     localStorage.removeItem("nova_user");localStorage.removeItem("nova_account_type");
+    localStorage.removeItem("nova_profile");
     setProfile(null);setMessages([]);setApiHistory([]);setParentData(null);setSelectedChild(null);setChildProfiles({});
     setAccountType(null);setAuthUser("");setAuthPass("");setAuthFullName("");setAuthErr("");setAuthMode("login");setAuthType("student");
+    setLearnSubject(null);setLearnTopic(null);setLearnPhase("subjects");
+    setQuizQs([]);setQuizIdx(0);setQuizSel(null);setQuizAnswered(false);setQuizScore(0);setQuizExplain("");
+    stopSpeaking();
     setScreen("auth");
   };
 
