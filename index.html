@@ -23,11 +23,11 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 @keyframes toastIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDownToast{from{opacity:0;transform:translateX(-50%) translateY(-14px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.2)}50%{box-shadow:0 0 0 6px rgba(249,115,22,0)}}
+@keyframes gameReady{0%,100%{box-shadow:0 0 0 0 rgba(251,191,36,.4)}50%{box-shadow:0 0 0 8px rgba(251,191,36,0)}}
 .fade-in{animation:fadeIn .35s ease forwards}
 .slide-up{animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) forwards}
 .pop{animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
 .spin{animation:spin 1s linear infinite;display:inline-block}
-
 /* API Key */
 .apikey-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f)}
 .apikey-card{background:#fff;border-radius:24px;padding:40px;max-width:480px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
@@ -46,8 +46,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .apikey-note{font-size:11px;color:var(--muted);font-weight:600;margin-top:12px;line-height:1.6}
 .apikey-link{color:var(--blue);text-decoration:none;font-weight:800}
 .err-box{color:var(--red);font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca}
-.ok-box{color:#166534;font-size:12px;font-weight:700;margin-bottom:10px;padding:8px 12px;background:#f0fdf4;border-radius:8px;border:1px solid var(--green)}
-
 /* Auth */
 .auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#0f172a,#1a2744,#1e3a5f)}
 .auth-card{background:#fff;border-radius:24px;padding:40px;max-width:440px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.3);text-align:center}
@@ -68,7 +66,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .auth-btn:hover{transform:translateY(-2px)} .auth-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .sync-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:#f0fdf4;border:1px solid var(--green);color:#166534;font-size:10px;font-weight:800}
 .sync-warn{background:#fff7ed;border-color:var(--orange);color:#92400e}
-
 /* Header */
 .header{background:var(--navy);padding:0 20px;height:64px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(26,39,68,.3);flex-shrink:0}
 .mascot{font-size:32px;animation:float 3s ease-in-out infinite}
@@ -83,7 +80,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .level-chip{display:flex;align-items:center;gap:5px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);border-radius:20px;padding:5px 11px;color:#a78bfa;font-size:12px;font-weight:800}
 .signout-btn{padding:5px 11px;border-radius:20px;border:2px solid rgba(255,255,255,.15);background:transparent;color:#94a3b8;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;transition:all .15s}
 .signout-btn:hover{border-color:var(--red);color:var(--red)}
-
 /* Main */
 .main{flex:1;display:flex;overflow:hidden}
 .sidebar{width:196px;flex-shrink:0;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;padding:12px 10px;gap:11px}
@@ -105,7 +101,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .struggle-indicator{padding:8px 10px;border-radius:10px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border:2px solid var(--orange);font-size:10px;font-weight:800;color:#92400e;display:flex;align-items:center;gap:6px;animation:pulseGlow 2s ease-in-out infinite}
 .struggle-bar{height:4px;background:rgba(249,115,22,.2);border-radius:4px;margin-top:5px;overflow:hidden}
 .struggle-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--yellow),var(--orange));transition:width .4s}
-
 /* Chat */
 .chat-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .chat-area{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
@@ -162,7 +157,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .status-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
 .status-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800}
 .chip-subject{background:var(--navy);color:#fff} .chip-mode{background:#f1f5f9;color:var(--muted)} .chip-struggling{background:#fff7ed;color:var(--orange);border:1px solid var(--orange)}
-
 /* Tree */
 .tree-panel{width:252px;flex-shrink:0;background:rgba(255,255,255,.8);backdrop-filter:blur(8px);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .tree-header{padding:12px 12px 9px;border-bottom:1px solid var(--border)}
@@ -190,12 +184,11 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .tree-node-fill{height:100%;border-radius:3px;transition:width .5s}
 .tree-node-resources{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
 .tree-resource-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:5px;font-size:8px;font-weight:800;text-decoration:none;transition:all .15s}
-.tree-resource-badge:hover{opacity:.8;transform:scale(1.05)}
+.tree-resource-badge:hover{opacity:.8}
 .tree-node-pct{font-size:9px;font-weight:800;flex-shrink:0;margin-top:2px}
 .tree-legend{padding:8px 11px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:3px;font-size:9px;font-weight:700;color:var(--muted)}
 .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
 /* Wizard */
 .wizard-wrap{flex:1;display:flex;overflow:hidden}
 .wizard-sidebar{width:220px;flex-shrink:0;background:var(--navy);padding:28px 20px;display:flex;flex-direction:column}
@@ -276,41 +269,18 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .pin-key:hover{border-color:var(--blue);background:#eff6ff}
 .pin-key.del{font-size:13px;color:var(--red);border-color:transparent}
 .pin-err{color:var(--red);font-size:11px;font-weight:700;margin-top:6px}
-
-/* ── Parent Hub ── */
-.parent-hub{flex:1;display:flex;overflow:hidden}
-.parent-hub-sidebar{width:220px;flex-shrink:0;background:var(--navy);display:flex;flex-direction:column;overflow:hidden}
-.parent-hub-header{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
-.parent-hub-name{font-size:14px;font-weight:900;color:#fff;margin-bottom:2px}
-.parent-hub-role{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b}
-.children-list{flex:1;overflow-y:auto;padding:12px 12px 0}
-.children-list-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px}
-.child-btn{width:100%;padding:10px 12px;border-radius:10px;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:9px;color:#94a3b8;transition:all .15s;margin-bottom:4px;text-align:left}
-.child-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.child-btn.active{background:linear-gradient(135deg,rgba(59,130,246,.3),rgba(20,184,166,.2));color:#fff;border:1px solid rgba(59,130,246,.3)}
-.child-avatar{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.child-info{flex:1;min-width:0}
-.child-name{font-size:12px;font-weight:800;line-height:1.2}
-.child-grade{font-size:10px;font-weight:600;opacity:.7}
-.add-child-btn{width:100%;padding:9px 12px;border-radius:10px;border:2px dashed rgba(255,255,255,.15);background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:#64748b;transition:all .15s;display:flex;align-items:center;gap:7px;margin-top:8px}
-.add-child-btn:hover{border-color:var(--blue);color:var(--blue)}
-.parent-hub-nav{padding:12px}
-.parent-nav-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px}
-.parent-nav-btn{width:100%;padding:8px 10px;border-radius:9px;border:none;background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;color:#94a3b8;transition:all .15s;margin-bottom:3px;text-align:left}
-.parent-nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.parent-nav-btn.active{background:var(--blue);color:#fff}
-.parent-hub-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto}
-.parent-hub-content{flex:1;overflow-y:auto;padding:24px 28px}
-.parent-hub-content::-webkit-scrollbar{width:5px} .parent-hub-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
-
-/* Add child modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal-card{background:#fff;border-radius:20px;padding:32px;max-width:420px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.2)}
-.modal-title{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
-.modal-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:20px;line-height:1.6}
-.modal-actions{display:flex;gap:10px;margin-top:16px}
-
-/* Dashboard shared */
+/* Dashboard */
+.dash-layout{flex:1;display:flex;overflow:hidden}
+.dash-nav{width:180px;flex-shrink:0;background:var(--navy);padding:16px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.dash-nav-title{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px;margin-top:8px}
+.dash-nav-btn{width:100%;padding:9px 12px;border-radius:9px;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;color:#94a3b8;transition:all .15s;text-align:left}
+.dash-nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.dash-nav-btn.active{background:var(--blue);color:#fff}
+.dash-nav-bottom{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.dash-nav-lock{width:100%;padding:9px 12px;border-radius:9px;border:2px solid rgba(255,255,255,.1);background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:#94a3b8;transition:all .15s;display:flex;align-items:center;gap:7px}
+.dash-nav-lock:hover{border-color:var(--red);color:var(--red)}
+.dash-content{flex:1;overflow-y:auto;padding:24px 28px}
+.dash-content::-webkit-scrollbar{width:5px} .dash-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
 .dash-page-title{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:4px}
 .dash-page-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:22px}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
@@ -376,8 +346,45 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .alert-title{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
 .alert-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(249,115,22,.15);font-size:11px;font-weight:700;color:#92400e}
 .alert-item:last-child{border-bottom:none}
+/* Parent Hub */
+.parent-hub{flex:1;display:flex;overflow:hidden}
+.parent-hub-sidebar{width:220px;flex-shrink:0;background:var(--navy);display:flex;flex-direction:column;overflow:hidden}
+.parent-hub-header{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.parent-hub-name{font-size:14px;font-weight:900;color:#fff;margin-bottom:2px}
+.parent-hub-role{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+.children-list{flex:1;overflow-y:auto;padding:12px 12px 0}
+.children-list-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px}
+.child-btn{width:100%;padding:10px 12px;border-radius:10px;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:9px;color:#94a3b8;transition:all .15s;margin-bottom:4px;text-align:left}
+.child-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.child-btn.active{background:linear-gradient(135deg,rgba(59,130,246,.3),rgba(20,184,166,.2));color:#fff;border:1px solid rgba(59,130,246,.3)}
+.child-avatar{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.child-info{flex:1;min-width:0}
+.child-name{font-size:12px;font-weight:800;line-height:1.2}
+.child-grade{font-size:10px;font-weight:600;opacity:.7}
+.add-child-btn{width:100%;padding:9px 12px;border-radius:10px;border:2px dashed rgba(255,255,255,.15);background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:#64748b;transition:all .15s;display:flex;align-items:center;gap:7px;margin-top:8px}
+.add-child-btn:hover{border-color:var(--blue);color:var(--blue)}
+.parent-hub-nav{padding:12px}
+.parent-nav-lbl{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#475569;margin-bottom:8px}
+.parent-nav-btn{width:100%;padding:8px 10px;border-radius:9px;border:none;background:transparent;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;color:#94a3b8;transition:all .15s;margin-bottom:3px;text-align:left}
+.parent-nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.parent-nav-btn.active{background:var(--blue);color:#fff}
+.parent-hub-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto}
+.parent-hub-content{flex:1;overflow-y:auto;padding:24px 28px}
+.parent-hub-content::-webkit-scrollbar{width:5px} .parent-hub-content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-card{background:#fff;border-radius:20px;padding:32px;max-width:420px;width:100%;box-shadow:0 12px 48px rgba(0,0,0,.2)}
+.modal-title{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:20px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;margin-top:16px}
 .no-child-state{flex:1;display:flex;align-items:center;justify-content:center;padding:40px}
 .no-child-card{background:#fff;border-radius:20px;padding:40px;max-width:420px;width:100%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+/* Game Break */
+.game-break-screen{flex:1;display:flex;flex-direction:column;background:linear-gradient(160deg,#0f172a,#1a2744);overflow:hidden}
+.game-break-header{padding:12px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.game-picker{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:480px;width:100%}
+.game-card-pick{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.1);border-radius:18px;padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s}
+.game-card-pick:hover{background:rgba(59,130,246,.2);border-color:var(--blue);transform:translateY(-4px);box-shadow:0 8px 24px rgba(59,130,246,.3)}
 </style>
 </head>
 <body>
@@ -390,47 +397,25 @@ const SB_URL="https://ifayrtuouxlfnvtyhnjz.supabase.co";
 const SB_KEY="sb_publishable_jDQ4waUP5brWgKyp8zUiYg_PfOp4NkJ";
 const sbH={"apikey":SB_KEY,"Authorization":"Bearer "+SB_KEY,"Content-Type":"application/json"};
 const sb={
-  getProfile:async(u)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbH});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
+  getProfile:async u=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbH});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
   upsertProfile:async(u,h,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles",{method:"POST",headers:{...sbH,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}},
   updateProfile:async(u,p)=>{try{const r=await fetch(SB_URL+"/rest/v1/profiles?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbH,body:JSON.stringify({profile_data:p,updated_at:new Date().toISOString()})});return r.ok;}catch{return false;}},
-  getParent:async(u)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbH});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
+  getParent:async u=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts?username=eq."+encodeURIComponent(u)+"&select=*",{headers:sbH});const d=await r.json();return d&&d[0]?d[0]:null;}catch{return null;}},
   upsertParent:async(u,h,name,children)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts",{method:"POST",headers:{...sbH,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,full_name:name,children:children||[]})});return r.ok;}catch{return false;}},
   updateParent:async(u,data)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbH,body:JSON.stringify(data)});return r.ok;}catch{return false;}}
 };
 async function hashPassword(pw){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pw));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
-const ls={get:(k)=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},del:(k)=>{try{localStorage.removeItem(k);}catch{}}};
+const ls={get:k=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},del:k=>{try{localStorage.removeItem(k);}catch{}}};
 
-/* ── External Resources per topic ── */
-const RESOURCES={
-  m1:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/multiplication-in-third-grade",color:"#16a34a",bg:"#f0fdf4"},{label:"Times Tables Rock Stars",url:"https://ttrockstars.com",color:"#7c3aed",bg:"#f5f3ff"}],
-  m2:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/arithmetic/arith-review-multiply-divide",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/divide-by-1-digit-numbers",color:"#0369a1",bg:"#eff6ff"}],
-  m3:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/fractions-topic",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
-  m4:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/equivalent-fractions",color:"#0369a1",bg:"#eff6ff"}],
-  m5:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
-  m6:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-area-and-perimeter",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4/perimeter",color:"#0369a1",bg:"#eff6ff"}],
-  m7:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-angle",color:"#16a34a",bg:"#f0fdf4"}],
-  m8:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-transformations",color:"#16a34a",bg:"#f0fdf4"}],
-  m9:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
-  m10:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/pre-algebra/pre-algebra-arith-prop",color:"#16a34a",bg:"#f0fdf4"}],
-  s1:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
-  s2:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws/gravity-newtonian/a/what-is-gravity",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
-  s3:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"}],
-  s4:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/work-and-energy",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
-  s5:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
-  s6:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry",color:"#16a34a",bg:"#f0fdf4"}],
-  s7:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"}],
-  s8:[{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/space",color:"#f59e0b",bg:"#fffbeb"}],
-  s9:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/cosmology-and-astronomy",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature/article/weather",color:"#f59e0b",bg:"#fffbeb"}],
-  s10:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/biology/ecology",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature",color:"#f59e0b",bg:"#fffbeb"}],
-  c1:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
-  c2:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c3:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c4:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c5:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
-  c6:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
-  c7:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
-  c8:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
-};
+/* ── Game animation hook ── */
+function useAnimFrame(cb,running){
+  useEffect(()=>{
+    if(!running)return;
+    let id;const loop=t=>{cb(t);id=requestAnimationFrame(loop);};
+    id=requestAnimationFrame(loop);
+    return()=>cancelAnimationFrame(id);
+  },[running,cb]);
+}
 
 /* ── Games ── */
 const GAME_LIST=[
@@ -440,100 +425,79 @@ const GAME_LIST=[
   {id:"frog",name:"Frog Jump",icon:"🐸",sub:"Cross the road safely!"},
 ];
 
-function useAnimFrame(cb,running){
-  useEffect(()=>{
-    if(!running)return;
-    let id;
-    const loop=t=>{cb(t);id=requestAnimationFrame(loop);};
-    id=requestAnimationFrame(loop);
-    return()=>cancelAnimationFrame(id);
-  },[running,cb]);
-}
-
-function FootballGame({onBack}){
-  const W=480,H=360,BALL_START={x:240,y:310},POST_X=240,POST_TOP=20,POST_W=160;
+function FootballGame(){
+  const W=480,H=360,BS={x:240,y:310},PX=240,PT=20,PW=160;
   const cvs=useRef(null);
-  const state=useRef({phase:"aim",angle:90,angleDir:1,power:0,powerDir:1,ball:{...BALL_START},vel:{x:0,y:0},score:0,attempts:5,result:null,resultTimer:0,celebrating:false,confetti:null});
-  const[,fu]=useState(0);const running=useRef(true);
-  const drawConfetti=(ctx,particles)=>{particles.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.color;ctx.globalAlpha=p.life;ctx.fillRect(-4,-4,8,8);ctx.restore();});ctx.globalAlpha=1;};
+  const st=useRef({phase:"aim",angle:90,aD:1,power:0,pD:1,ball:{...BS},vel:{x:0,y:0},score:0,attempts:5,result:null,rT:0,celebrating:false,confetti:null});
+  const[,fu]=useState(0);const run=useRef(true);
+  const dc=(ctx,particles)=>{particles.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.color;ctx.globalAlpha=p.life;ctx.fillRect(-4,-4,8,8);ctx.restore();});ctx.globalAlpha=1;};
   const draw=useCallback(()=>{
-    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=state.current;
-    ctx.fillStyle="#1e3a5f";ctx.fillRect(0,0,W,H);
-    ctx.fillStyle="#0f2540";ctx.fillRect(0,0,W,55);
+    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=st.current;
+    ctx.fillStyle="#1e3a5f";ctx.fillRect(0,0,W,H);ctx.fillStyle="#0f2540";ctx.fillRect(0,0,W,55);
     const cc=["#ef4444","#3b82f6","#fbbf24","#22c55e","#8b5cf6","#f97316"];
-    for(let i=0;i<28;i++){const cx2=10+i*17,cy=30+(i%3)*8,col=cc[i%cc.length];
+    for(let i=0;i<28;i++){const cx=10+i*17,cy=30+(i%3)*8,col=cc[i%cc.length];
       const aa=s.celebrating?Math.sin(Date.now()/120+i)*0.8:0.3;
-      ctx.fillStyle=col;ctx.beginPath();ctx.arc(cx2,cy-10,4,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=col;ctx.beginPath();ctx.arc(cx,cy-10,4,0,Math.PI*2);ctx.fill();
       ctx.strokeStyle=col;ctx.lineWidth=2;
-      ctx.beginPath();ctx.moveTo(cx2,cy-6);ctx.lineTo(cx2,cy+6);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(cx2,cy-2);ctx.lineTo(cx2-6*Math.cos(aa),cy-6-6*Math.sin(aa));ctx.stroke();
-      ctx.beginPath();ctx.moveTo(cx2,cy-2);ctx.lineTo(cx2+6*Math.cos(aa),cy-6-6*Math.sin(aa));ctx.stroke();}
+      ctx.beginPath();ctx.moveTo(cx,cy-6);ctx.lineTo(cx,cy+6);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy-2);ctx.lineTo(cx-6*Math.cos(aa),cy-6-6*Math.sin(aa));ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy-2);ctx.lineTo(cx+6*Math.cos(aa),cy-6-6*Math.sin(aa));ctx.stroke();}
     ctx.fillStyle="#166534";ctx.fillRect(0,56,W,H-56);
     ctx.strokeStyle="rgba(255,255,255,.15)";ctx.lineWidth=2;
     for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,56);ctx.lineTo(x,H);ctx.stroke();}
     ctx.strokeStyle="#fbbf24";ctx.lineWidth=7;ctx.lineCap="round";
-    ctx.beginPath();ctx.moveTo(POST_X,56+130);ctx.lineTo(POST_X,POST_TOP+40);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(POST_X-POST_W/2,POST_TOP+40);ctx.lineTo(POST_X+POST_W/2,POST_TOP+40);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(POST_X-POST_W/2,POST_TOP+40);ctx.lineTo(POST_X-POST_W/2,POST_TOP);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(POST_X+POST_W/2,POST_TOP+40);ctx.lineTo(POST_X+POST_W/2,POST_TOP);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(PX,56+130);ctx.lineTo(PX,PT+40);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(PX-PW/2,PT+40);ctx.lineTo(PX+PW/2,PT+40);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(PX-PW/2,PT+40);ctx.lineTo(PX-PW/2,PT);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(PX+PW/2,PT+40);ctx.lineTo(PX+PW/2,PT);ctx.stroke();
     if(s.phase==="aim"){
-      ctx.strokeStyle="rgba(59,130,246,.2)";ctx.lineWidth=2;
-      ctx.beginPath();ctx.arc(s.ball.x,s.ball.y,65,Math.PI,0,false);ctx.stroke();
+      ctx.strokeStyle="rgba(59,130,246,.2)";ctx.lineWidth=2;ctx.beginPath();ctx.arc(s.ball.x,s.ball.y,65,Math.PI,0,false);ctx.stroke();
       const rad=(s.angle*Math.PI)/180,len=72;
       ctx.strokeStyle="#3b82f6";ctx.lineWidth=3;ctx.setLineDash([6,4]);
       ctx.beginPath();ctx.moveTo(s.ball.x,s.ball.y);ctx.lineTo(s.ball.x+Math.cos(rad)*len,s.ball.y-Math.sin(rad)*len);ctx.stroke();ctx.setLineDash([]);
-      const ax=s.ball.x+Math.cos(rad)*len,ay=s.ball.y-Math.sin(rad)*len;
-      ctx.fillStyle="#3b82f6";ctx.beginPath();ctx.arc(ax,ay,5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle="#3b82f6";ctx.beginPath();ctx.arc(s.ball.x+Math.cos(rad)*len,s.ball.y-Math.sin(rad)*len,5,0,Math.PI*2);ctx.fill();
       ctx.fillStyle="#fff";ctx.font="bold 13px Nunito";ctx.textAlign="center";ctx.fillText(Math.round(s.angle)+"°",s.ball.x,s.ball.y-82);}
     if(s.phase==="power"){
-      ctx.fillStyle="rgba(0,0,0,.6)";ctx.fillRect(s.ball.x-44,s.ball.y-82,88,18);
-      ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.strokeRect(s.ball.x-44,s.ball.y-82,88,18);
-      const col=s.power>70?"#ef4444":s.power>40?"#fbbf24":"#22c55e";
-      ctx.fillStyle=col;ctx.fillRect(s.ball.x-43,s.ball.y-81,(88*s.power/100)-2,16);
+      ctx.fillStyle="rgba(0,0,0,.6)";ctx.fillRect(s.ball.x-44,s.ball.y-82,88,18);ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.strokeRect(s.ball.x-44,s.ball.y-82,88,18);
+      const col=s.power>70?"#ef4444":s.power>40?"#fbbf24":"#22c55e";ctx.fillStyle=col;ctx.fillRect(s.ball.x-43,s.ball.y-81,(88*s.power/100)-2,16);
       ctx.fillStyle="#fff";ctx.font="bold 11px Nunito";ctx.textAlign="center";ctx.fillText("POWER — click to kick!",s.ball.x,s.ball.y-88);}
-    const bx=s.ball.x,by=s.ball.y,ang2=s.phase==="flying"?Math.atan2(-s.vel.y,s.vel.x):-Math.PI/4;
-    ctx.save();ctx.translate(bx,by);ctx.rotate(ang2);
+    const bx=s.ball.x,by=s.ball.y,ang=s.phase==="flying"?Math.atan2(-s.vel.y,s.vel.x):-Math.PI/4;
+    ctx.save();ctx.translate(bx,by);ctx.rotate(ang);
     const fg=ctx.createRadialGradient(-3,-3,1,0,0,14);fg.addColorStop(0,"#a16207");fg.addColorStop(1,"#78350f");
     ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(0,0,16,10,0,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle="#fff";ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.moveTo(-2,-10);ctx.lineTo(-2,10);ctx.stroke();
+    ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-2,-10);ctx.lineTo(-2,10);ctx.stroke();
     for(let i=-6;i<=6;i+=3){ctx.beginPath();ctx.moveTo(i,-10);ctx.lineTo(i,10);ctx.stroke();}
     ctx.restore();
-    if(s.confetti)drawConfetti(ctx,s.confetti);
-    if(s.result){
-      if(s.result.includes("GOAL")){ctx.font="bold 44px Nunito";ctx.textAlign="center";ctx.fillStyle="#fbbf24";ctx.shadowColor="#f97316";ctx.shadowBlur=20;ctx.fillText("FIELD GOAL! 🏈",W/2,H/2-10);ctx.font="bold 18px Nunito";ctx.fillStyle="#fff";ctx.shadowBlur=0;ctx.fillText("The crowd goes wild! 🎉",W/2,H/2+20);}
-      else{ctx.font="bold 36px Nunito";ctx.textAlign="center";ctx.fillStyle="#ef4444";ctx.fillText(s.result,W/2,H/2);}}
-    ctx.shadowBlur=0;ctx.fillStyle="#fff";ctx.font="bold 13px Nunito";ctx.textAlign="left";
-    ctx.fillText("Goals: "+s.score,12,72);ctx.fillText("Kicks left: "+s.attempts,12,90);
+    if(s.confetti)dc(ctx,s.confetti);
+    if(s.result){if(s.result.includes("GOAL")){ctx.font="bold 44px Nunito";ctx.textAlign="center";ctx.fillStyle="#fbbf24";ctx.shadowColor="#f97316";ctx.shadowBlur=20;ctx.fillText("FIELD GOAL! 🏈",W/2,H/2-10);ctx.font="bold 18px Nunito";ctx.fillStyle="#fff";ctx.shadowBlur=0;ctx.fillText("The crowd goes wild! 🎉",W/2,H/2+20);}else{ctx.font="bold 36px Nunito";ctx.textAlign="center";ctx.fillStyle="#ef4444";ctx.fillText(s.result,W/2,H/2);}}
+    ctx.shadowBlur=0;ctx.fillStyle="#fff";ctx.font="bold 13px Nunito";ctx.textAlign="left";ctx.fillText("Goals: "+s.score,12,72);ctx.fillText("Kicks: "+s.attempts,12,90);
     ctx.fillStyle="#94a3b8";ctx.font="12px Nunito";ctx.textAlign="center";
-    if(s.phase==="aim")ctx.fillText("Click to lock angle",W/2,H-8);
-    if(s.phase==="power")ctx.fillText("Click to kick!",W/2,H-8);
+    if(s.phase==="aim")ctx.fillText("Click to lock angle",W/2,H-8);if(s.phase==="power")ctx.fillText("Click to kick!",W/2,H-8);
   },[]);
   useAnimFrame(useCallback(()=>{
-    const s=state.current;
-    if(s.phase==="aim"){s.angle+=s.angleDir*1.2;if(s.angle>=175)s.angleDir=-1;if(s.angle<=5)s.angleDir=1;}
-    if(s.phase==="power"){s.power+=s.powerDir*2;if(s.power>=100||s.power<=0)s.powerDir*=-1;}
+    const s=st.current;
+    if(s.phase==="aim"){s.angle+=s.aD*1.2;if(s.angle>=175)s.aD=-1;if(s.angle<=5)s.aD=1;}
+    if(s.phase==="power"){s.power+=s.pD*2;if(s.power>=100||s.power<=0)s.pD*=-1;}
     if(s.phase==="flying"){
       s.ball.x+=s.vel.x;s.ball.y+=s.vel.y;s.vel.y+=0.16;
-      if(s.ball.y<POST_TOP+40&&s.ball.y>POST_TOP-10&&s.ball.x>POST_X-POST_W/2&&s.ball.x<POST_X+POST_W/2){
-        s.result="GOAL!";s.score++;s.phase="result";s.resultTimer=110;s.celebrating=true;
-        s.confetti=Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H*0.6,vx:(Math.random()-.5)*4,vy:-Math.random()*4-1,rot:Math.random()*Math.PI*2,rotV:(Math.random()-.5)*0.2,color:["#fbbf24","#ef4444","#22c55e","#3b82f6","#8b5cf6","#f97316"][Math.floor(Math.random()*6)],life:1}));}
-      if(s.ball.y>H-46||s.ball.x<0||s.ball.x>W||s.ball.y<0){s.result="No Good! 😬";s.phase="result";s.resultTimer=60;}}
+      if(s.ball.y<PT+40&&s.ball.y>PT-10&&s.ball.x>PX-PW/2&&s.ball.x<PX+PW/2){
+        s.result="GOAL!";s.score++;s.phase="result";s.rT=110;s.celebrating=true;
+        s.confetti=Array.from({length:60},()=>({x:Math.random()*W,y:Math.random()*H*.6,vx:(Math.random()-.5)*4,vy:-Math.random()*4-1,rot:Math.random()*Math.PI*2,rotV:(Math.random()-.5)*.2,color:["#fbbf24","#ef4444","#22c55e","#3b82f6","#8b5cf6","#f97316"][Math.floor(Math.random()*6)],life:1}));}
+      if(s.ball.y>H-46||s.ball.x<0||s.ball.x>W||s.ball.y<0){s.result="No Good! 😬";s.phase="result";s.rT=60;}}
     if(s.phase==="result"){
-      if(s.confetti){s.confetti.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.rot+=p.rotV;p.life-=0.008;});s.confetti=s.confetti.filter(p=>p.life>0);}
-      s.resultTimer--;
-      if(s.resultTimer<=0){s.ball={...BALL_START};s.vel={x:0,y:0};s.result=null;s.attempts--;s.celebrating=false;s.confetti=null;s.phase=s.attempts>0?"aim":"done";s.angle=90;s.angleDir=1;s.power=0;s.powerDir=1;}}
+      if(s.confetti){s.confetti.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.1;p.rot+=p.rotV;p.life-=.008;});s.confetti=s.confetti.filter(p=>p.life>0);}
+      s.rT--;if(s.rT<=0){s.ball={...BS};s.vel={x:0,y:0};s.result=null;s.attempts--;s.celebrating=false;s.confetti=null;s.phase=s.attempts>0?"aim":"done";s.angle=90;s.aD=1;s.power=0;s.pD=1;}}
     draw();fu(n=>n+1);
-  },[draw]),running.current&&state.current.phase!=="done");
-  useEffect(()=>{draw();return()=>{running.current=false;};},[draw]);
-  const handleClick=()=>{const s=state.current;if(s.phase==="aim")s.phase="power";else if(s.phase==="power"){const rad=(s.angle*Math.PI)/180,spd=5+s.power*0.10;s.vel={x:Math.cos(rad)*spd,y:-Math.sin(rad)*spd};s.phase="flying";}};
-  const reset=()=>{state.current={phase:"aim",angle:90,angleDir:1,power:0,powerDir:1,ball:{...BALL_START},vel:{x:0,y:0},score:0,attempts:5,result:null,resultTimer:0,celebrating:false,confetti:null};running.current=true;fu(n=>n+1);};
+  },[draw]),run.current&&st.current.phase!=="done");
+  useEffect(()=>{draw();return()=>{run.current=false;};},[draw]);
+  const handleClick=()=>{const s=st.current;if(s.phase==="aim")s.phase="power";else if(s.phase==="power"){const rad=(s.angle*Math.PI)/180,spd=5+s.power*.10;s.vel={x:Math.cos(rad)*spd,y:-Math.sin(rad)*spd};s.phase="flying";}};
+  const reset=()=>{st.current={phase:"aim",angle:90,aD:1,power:0,pD:1,ball:{...BS},vel:{x:0,y:0},score:0,attempts:5,result:null,rT:0,celebrating:false,confetti:null};run.current=true;fu(n=>n+1);};
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
     <div style={{position:"relative",borderRadius:14,overflow:"hidden",border:"2px solid rgba(255,255,255,.1)",cursor:"pointer"}} onClick={handleClick}>
       <canvas ref={cvs} width={W} height={H}/>
-      {state.current.phase==="done"&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
+      {st.current.phase==="done"&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
         <div style={{fontSize:36,fontWeight:900,color:"#fff",marginBottom:8}}>🏈 Game Over!</div>
-        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Goals: {state.current.score} / 5</div>
+        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Goals: {st.current.score} / 5</div>
         <button onClick={e=>{e.stopPropagation();reset();}} style={{padding:"12px 28px",borderRadius:14,border:"none",background:"linear-gradient(135deg,#3b82f6,#14b8a6)",color:"#fff",fontFamily:"Nunito,sans-serif",fontSize:14,fontWeight:900,cursor:"pointer"}}>Play Again</button>
       </div>}
     </div>
@@ -541,140 +505,138 @@ function FootballGame({onBack}){
   </div>);
 }
 
-function ArrowGame({onBack}){
+function ArrowGame(){
   const W=480,H=340;const cvs=useRef(null);
-  const state=useRef({targets:[],arrows:[],score:0,misses:0,maxMisses:3,charging:false,charge:0,aimY:H/2,done:false});
-  const[,fu]=useState(0);const running=useRef(true);const frameRef=useRef(0);
-  const spawnTarget=()=>{const s=state.current;if(s.targets.length<3)s.targets.push({x:W+20,y:40+Math.random()*(H-80),r:20+Math.random()*14,spd:1.5+Math.random()*2,hit:false,hitTimer:0});};
+  const st=useRef({targets:[],arrows:[],score:0,misses:0,maxMisses:3,charging:false,charge:0,aimY:H/2,done:false});
+  const[,fu]=useState(0);const run=useRef(true);const fr=useRef(0);
+  const spawn=()=>{const s=st.current;if(s.targets.length<3)s.targets.push({x:W+20,y:40+Math.random()*(H-80),r:20+Math.random()*14,spd:1.5+Math.random()*2,hit:false,hT:0});};
   const draw=useCallback(()=>{
-    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=state.current;
+    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=st.current;
     ctx.fillStyle="#1e3a5f";ctx.fillRect(0,0,W,H);ctx.fillStyle="#166534";
     for(let i=0;i<8;i++){const tx=(i*67)%W;ctx.beginPath();ctx.moveTo(tx,H);ctx.lineTo(tx+20,H-60);ctx.lineTo(tx+40,H);ctx.fill();}
-    s.targets.forEach(t=>{if(t.hit){ctx.globalAlpha=t.hitTimer/20;ctx.fillStyle="#fbbf24";ctx.font="bold 22px Nunito";ctx.textAlign="center";ctx.fillText("💥",t.x,t.y);ctx.globalAlpha=1;return;}
+    s.targets.forEach(t=>{if(t.hit){ctx.globalAlpha=t.hT/20;ctx.fillStyle="#fbbf24";ctx.font="bold 22px Nunito";ctx.textAlign="center";ctx.fillText("💥",t.x,t.y);ctx.globalAlpha=1;return;}
       [t.r,t.r*.7,t.r*.4].forEach((r,i)=>{ctx.beginPath();ctx.arc(t.x,t.y,r,0,Math.PI*2);ctx.fillStyle=["#ef4444","#fbbf24","#22c55e"][i];ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=1;ctx.stroke();});});
     s.arrows.forEach(a=>{ctx.save();ctx.translate(a.x,a.y);ctx.rotate(Math.atan2(a.vy,a.vx));ctx.fillStyle="#92400e";ctx.fillRect(-15,-2,30,4);ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.moveTo(15,-4);ctx.lineTo(22,0);ctx.lineTo(15,4);ctx.fill();ctx.fillStyle="#fff";ctx.fillRect(-16,-3,6,6);ctx.restore();});
     const ay=s.aimY;ctx.strokeStyle="#92400e";ctx.lineWidth=4;ctx.lineCap="round";ctx.beginPath();ctx.arc(20,ay,40,-Math.PI/2.5,Math.PI/2.5);ctx.stroke();ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(20,ay-28);ctx.lineTo(20,ay+28);ctx.stroke();
     if(s.charging){ctx.fillStyle="#3b82f6";ctx.fillRect(10,ay+45,60,10);ctx.fillStyle=s.charge>66?"#22c55e":"#3b82f6";ctx.fillRect(10,ay+45,s.charge*.6,10);ctx.strokeStyle="#fff";ctx.lineWidth=1;ctx.strokeRect(10,ay+45,60,10);}
     ctx.strokeStyle="rgba(255,255,255,.15)";ctx.lineWidth=1;ctx.setLineDash([4,6]);ctx.beginPath();ctx.moveTo(40,ay);ctx.lineTo(W,ay);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle="#fff";ctx.font="bold 13px Nunito";ctx.textAlign="left";ctx.fillText("Score: "+s.score,12,22);ctx.fillStyle="#ef4444";ctx.fillText("❤️".repeat(s.maxMisses-s.misses),12,40);
-    ctx.fillStyle="#94a3b8";ctx.font="12px Nunito";ctx.textAlign="center";ctx.fillText("Move mouse to aim · Hold click to charge · Release to fire",W/2,H-8);
+    ctx.fillStyle="#94a3b8";ctx.font="12px Nunito";ctx.textAlign="center";ctx.fillText("Move mouse · Hold click · Release to fire",W/2,H-8);
   },[]);
   useAnimFrame(useCallback(()=>{
-    const s=state.current;if(s.done)return;frameRef.current++;if(frameRef.current%90===0)spawnTarget();
+    const s=st.current;if(s.done)return;fr.current++;if(fr.current%90===0)spawn();
     s.targets.forEach(t=>{if(!t.hit)t.x-=t.spd;});
-    s.targets=s.targets.filter(t=>{if(!t.hit&&t.x<-t.r){s.misses++;if(s.misses>=s.maxMisses)s.done=true;return false;}if(t.hit){t.hitTimer--;return t.hitTimer>0;}return true;});
-    s.arrows.forEach(a=>{a.x+=a.vx;a.y+=a.vy;a.vy+=0.05;});
-    s.arrows=s.arrows.filter(a=>{if(a.x>W||a.y>H||a.y<0)return false;let hit=false;s.targets.forEach(t=>{if(!t.hit&&Math.hypot(a.x-t.x,a.y-t.y)<t.r){t.hit=true;t.hitTimer=20;s.score++;hit=true;}});return !hit;});
+    s.targets=s.targets.filter(t=>{if(!t.hit&&t.x<-t.r){s.misses++;if(s.misses>=s.maxMisses)s.done=true;return false;}if(t.hit){t.hT--;return t.hT>0;}return true;});
+    s.arrows.forEach(a=>{a.x+=a.vx;a.y+=a.vy;a.vy+=.05;});
+    s.arrows=s.arrows.filter(a=>{if(a.x>W||a.y>H||a.y<0)return false;let hit=false;s.targets.forEach(t=>{if(!t.hit&&Math.hypot(a.x-t.x,a.y-t.y)<t.r){t.hit=true;t.hT=20;s.score++;hit=true;}});return!hit;});
     if(s.charging)s.charge=Math.min(100,s.charge+2);
     draw();fu(n=>n+1);
-  },[draw]),running.current&&!state.current.done);
-  useEffect(()=>{draw();spawnTarget();return()=>{running.current=false;};},[draw]);
-  const handleMouseMove=e=>{const r=cvs.current.getBoundingClientRect();state.current.aimY=Math.max(20,Math.min(H-20,e.clientY-r.top));};
-  const handleMouseDown=()=>{state.current.charging=true;state.current.charge=0;};
-  const handleMouseUp=()=>{const s=state.current;if(!s.charging)return;s.charging=false;const spd=4+s.charge*0.08;s.arrows.push({x:40,y:s.aimY,vx:spd,vy:-0.3});s.charge=0;};
-  const reset=()=>{state.current={targets:[],arrows:[],score:0,misses:0,maxMisses:3,charging:false,charge:0,aimY:H/2,done:false};frameRef.current=0;running.current=true;spawnTarget();fu(n=>n+1);};
+  },[draw]),run.current&&!st.current.done);
+  useEffect(()=>{draw();spawn();return()=>{run.current=false;};},[draw]);
+  const mm=e=>{const r=cvs.current.getBoundingClientRect();st.current.aimY=Math.max(20,Math.min(H-20,e.clientY-r.top));};
+  const md=()=>{st.current.charging=true;st.current.charge=0;};
+  const mu=()=>{const s=st.current;if(!s.charging)return;s.charging=false;const spd=4+s.charge*.08;s.arrows.push({x:40,y:s.aimY,vx:spd,vy:-.3});s.charge=0;};
+  const reset=()=>{st.current={targets:[],arrows:[],score:0,misses:0,maxMisses:3,charging:false,charge:0,aimY:H/2,done:false};fr.current=0;run.current=true;spawn();fu(n=>n+1);};
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
-    <div style={{position:"relative",borderRadius:14,overflow:"hidden",border:"2px solid rgba(255,255,255,.1)"}} onMouseMove={handleMouseMove} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp}>
+    <div style={{position:"relative",borderRadius:14,overflow:"hidden",border:"2px solid rgba(255,255,255,.1)"}} onMouseMove={mm} onMouseDown={md} onMouseUp={mu}>
       <canvas ref={cvs} width={W} height={H}/>
-      {state.current.done&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
+      {st.current.done&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
         <div style={{fontSize:36,fontWeight:900,color:"#fff",marginBottom:8}}>🏹 Game Over!</div>
-        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Targets hit: {state.current.score}</div>
+        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Targets hit: {st.current.score}</div>
         <button onClick={e=>{e.stopPropagation();reset();}} style={{padding:"12px 28px",borderRadius:14,border:"none",background:"linear-gradient(135deg,#3b82f6,#14b8a6)",color:"#fff",fontFamily:"Nunito,sans-serif",fontSize:14,fontWeight:900,cursor:"pointer"}}>Play Again</button>
       </div>}
     </div>
-    <div style={{fontSize:11,color:"#64748b",fontWeight:600}}>Move mouse to aim · Hold click to charge · Release to fire</div>
+    <div style={{fontSize:11,color:"#64748b",fontWeight:600}}>Move mouse · Hold click to charge · Release to fire</div>
   </div>);
 }
 
-function RocketGame({onBack}){
+function RocketGame(){
   const W=480,H=340;const cvs=useRef(null);
-  const state=useRef({rocket:{x:80,y:H/2},asteroids:[],score:0,alive:true,frame:0,speed:2});
-  const[,fu]=useState(0);const running=useRef(true);const keys=useRef({ArrowUp:false,ArrowDown:false});
+  const st=useRef({rocket:{x:80,y:H/2},asteroids:[],score:0,alive:true,frame:0,speed:2});
+  const[,fu]=useState(0);const run=useRef(true);const keys=useRef({ArrowUp:false,ArrowDown:false});
   const draw=useCallback(()=>{
-    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=state.current;
+    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=st.current;
     ctx.fillStyle="#020617";ctx.fillRect(0,0,W,H);ctx.fillStyle="rgba(255,255,255,.5)";
-    for(let i=0;i<40;i++){const sx=((i*127+s.frame*(i%3+1)*.5)%W),sy=(i*83)%H;ctx.beginPath();ctx.arc(sx,sy,1,0,Math.PI*2);ctx.fill();}
+    for(let i=0;i<40;i++){ctx.beginPath();ctx.arc((i*127+s.frame*(i%3+1)*.5)%W,(i*83)%H,1,0,Math.PI*2);ctx.fill();}
     s.asteroids.forEach(a=>{ctx.fillStyle="#57534e";ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,Math.PI*2);ctx.fill();ctx.fillStyle="#78716c";ctx.beginPath();ctx.arc(a.x-a.r*.3,a.y-a.r*.3,a.r*.3,0,Math.PI*2);ctx.fill();});
     const rx=s.rocket.x,ry=s.rocket.y;
     ctx.fillStyle="#f97316";ctx.beginPath();ctx.moveTo(rx-18,ry-5);ctx.lineTo(rx-30-Math.random()*10,ry);ctx.lineTo(rx-18,ry+5);ctx.fill();
-    ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.moveTo(rx-18,ry-2);ctx.lineTo(rx-24,ry);ctx.lineTo(rx-18,ry+2);ctx.fill();
     ctx.fillStyle="#e2e8f0";ctx.beginPath();ctx.ellipse(rx,ry,22,10,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#3b82f6";ctx.beginPath();ctx.ellipse(rx+10,ry,12,9,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#bae6fd";ctx.beginPath();ctx.arc(rx+8,ry,5,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#fff";ctx.font="bold 14px Nunito";ctx.textAlign="left";ctx.fillText("Score: "+s.score,12,22);
-    ctx.fillStyle="#94a3b8";ctx.font="12px Nunito";ctx.textAlign="center";ctx.fillText("↑↓ Arrow keys or move mouse to dodge!",W/2,H-8);
+    ctx.fillStyle="#94a3b8";ctx.font="12px Nunito";ctx.textAlign="center";ctx.fillText("↑↓ Arrow keys or mouse to dodge!",W/2,H-8);
   },[]);
   useAnimFrame(useCallback(()=>{
-    const s=state.current;if(!s.alive)return;s.frame++;s.score=Math.floor(s.frame/30);s.speed=2+s.score*0.02;
+    const s=st.current;if(!s.alive)return;s.frame++;s.score=Math.floor(s.frame/30);s.speed=2+s.score*.02;
     if(keys.current.ArrowUp)s.rocket.y=Math.max(20,s.rocket.y-4);if(keys.current.ArrowDown)s.rocket.y=Math.min(H-20,s.rocket.y+4);
     if(s.frame%50===0)s.asteroids.push({x:W+20,y:20+Math.random()*(H-40),r:12+Math.random()*18,spd:s.speed+Math.random()});
     s.asteroids.forEach(a=>a.x-=a.spd);s.asteroids=s.asteroids.filter(a=>a.x>-40);
     s.asteroids.forEach(a=>{if(Math.hypot(s.rocket.x-a.x,s.rocket.y-a.y)<a.r+8)s.alive=false;});
     draw();fu(n=>n+1);
-  },[draw]),running.current&&state.current.alive);
+  },[draw]),run.current&&st.current.alive);
   useEffect(()=>{
     draw();
     const kd=e=>keys.current[e.key]=true,ku=e=>keys.current[e.key]=false;
     window.addEventListener("keydown",kd);window.addEventListener("keyup",ku);
-    return()=>{running.current=false;window.removeEventListener("keydown",kd);window.removeEventListener("keyup",ku);};
+    return()=>{run.current=false;window.removeEventListener("keydown",kd);window.removeEventListener("keyup",ku);};
   },[draw]);
-  const handleMouseMove=e=>{const r=cvs.current.getBoundingClientRect();state.current.rocket.y=Math.max(20,Math.min(H-20,e.clientY-r.top));};
-  const reset=()=>{state.current={rocket:{x:80,y:H/2},asteroids:[],score:0,alive:true,frame:0,speed:2};running.current=true;fu(n=>n+1);};
+  const mm=e=>{const r=cvs.current.getBoundingClientRect();st.current.rocket.y=Math.max(20,Math.min(H-20,e.clientY-r.top));};
+  const reset=()=>{st.current={rocket:{x:80,y:H/2},asteroids:[],score:0,alive:true,frame:0,speed:2};run.current=true;fu(n=>n+1);};
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
-    <div style={{position:"relative",borderRadius:14,overflow:"hidden",border:"2px solid rgba(255,255,255,.1)"}} onMouseMove={handleMouseMove}>
+    <div style={{position:"relative",borderRadius:14,overflow:"hidden",border:"2px solid rgba(255,255,255,.1)"}} onMouseMove={mm}>
       <canvas ref={cvs} width={W} height={H}/>
-      {!state.current.alive&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
+      {!st.current.alive&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
         <div style={{fontSize:36,fontWeight:900,color:"#fff",marginBottom:8}}>🚀 Crashed!</div>
-        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Survived: {state.current.score}s</div>
+        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Survived: {st.current.score}s</div>
         <button onClick={e=>{e.stopPropagation();reset();}} style={{padding:"12px 28px",borderRadius:14,border:"none",background:"linear-gradient(135deg,#3b82f6,#14b8a6)",color:"#fff",fontFamily:"Nunito,sans-serif",fontSize:14,fontWeight:900,cursor:"pointer"}}>Play Again</button>
       </div>}
     </div>
-    <div style={{fontSize:11,color:"#64748b",fontWeight:600}}>Move mouse or ↑↓ arrow keys to dodge asteroids!</div>
+    <div style={{fontSize:11,color:"#64748b",fontWeight:600}}>Move mouse or ↑↓ arrow keys to dodge!</div>
   </div>);
 }
 
-function FrogGame({onBack}){
-  const W=480,H=340,ROWS=5,CELL=H/(ROWS+2);
-  const cvs=useRef(null);const[,fu]=useState(0);const running=useRef(true);
-  const initState=()=>({frog:{col:4,row:ROWS+1},cars:Array.from({length:ROWS},(_,i)=>({x:i%2===0?-50:W+50,dir:i%2===0?1:-1,spd:1.2+i*0.4,w:50+Math.floor(Math.random()*30),color:["#ef4444","#f97316","#3b82f6","#8b5cf6","#22c55e"][i]})),score:0,lives:3,done:false,crossings:0,jumpAnim:0});
-  const state=useRef(initState());
+function FrogGame(){
+  const W=480,H=340,ROWS=5,CELL=H/(ROWS+2);const cvs=useRef(null);const[,fu]=useState(0);const run=useRef(true);
+  const init=()=>({frog:{col:4,row:ROWS+1},cars:Array.from({length:ROWS},(_,i)=>({x:i%2===0?-50:W+50,dir:i%2===0?1:-1,spd:1.2+i*.4,w:50+Math.floor(Math.random()*30),color:["#ef4444","#f97316","#3b82f6","#8b5cf6","#22c55e"][i]})),score:0,lives:3,done:false,crossings:0,jumpAnim:0});
+  const st=useRef(init());
   const draw=useCallback(()=>{
-    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=state.current;
+    const c=cvs.current;if(!c)return;const ctx=c.getContext("2d");const s=st.current;
     ctx.fillStyle="#166534";ctx.fillRect(0,0,W,CELL);
     for(let r=1;r<=ROWS;r++){ctx.fillStyle=r%2===0?"#374151":"#1f2937";ctx.fillRect(0,r*CELL,W,CELL);if(r%2===0){ctx.fillStyle="#fbbf24";for(let x=0;x<W;x+=60)ctx.fillRect(x,r*CELL+CELL/2-2,30,4);}}
     ctx.fillStyle="#166534";ctx.fillRect(0,(ROWS+1)*CELL,W,CELL);
     s.cars.forEach((car,i)=>{const row=i+1;ctx.fillStyle=car.color;ctx.beginPath();ctx.roundRect(car.x-car.w/2,row*CELL+4,car.w,CELL-8,6);ctx.fill();ctx.fillStyle="#bae6fd";ctx.fillRect(car.x-car.w/2+6,row*CELL+8,car.w/3,CELL/3);ctx.fillRect(car.x+car.w/6,row*CELL+8,car.w/3,CELL/3);ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.arc(car.dir>0?car.x+car.w/2:car.x-car.w/2,row*CELL+CELL-8,4,0,Math.PI*2);ctx.fill();});
     const fx=s.frog.col*(W/9)+(W/18),fy=s.frog.row*CELL+CELL/2,bounce=Math.sin(s.jumpAnim)*4;
     ctx.fillStyle="#22c55e";ctx.beginPath();ctx.ellipse(fx,fy-bounce,14,12,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle="#166534";ctx.beginPath();ctx.ellipse(fx-5,fy-10-bounce,5,4,-0.3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(fx+5,fy-10-bounce,5,4,0.3,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#166534";ctx.beginPath();ctx.ellipse(fx-5,fy-10-bounce,5,4,-.3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(fx+5,fy-10-bounce,5,4,.3,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.arc(fx-5,fy-10-bounce,3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(fx+5,fy-10-bounce,3,0,Math.PI*2);ctx.fill();
     ctx.fillStyle="#fff";ctx.font="bold 13px Nunito";ctx.textAlign="left";ctx.fillText("Score: "+s.score,12,22);ctx.fillStyle="#22c55e";ctx.fillText("🐸".repeat(s.lives),12,40);
     ctx.fillStyle="#94a3b8";ctx.font="12px Nunito";ctx.textAlign="center";ctx.fillText("Arrow keys or WASD to move",W/2,H-4);
   },[]);
   useAnimFrame(useCallback(()=>{
-    const s=state.current;if(s.done)return;
+    const s=st.current;if(s.done)return;
     s.cars.forEach(car=>{car.x+=car.dir*car.spd;if(car.dir>0&&car.x>W+car.w)car.x=-car.w;if(car.dir<0&&car.x<-car.w)car.x=W+car.w;});
-    if(s.jumpAnim>0)s.jumpAnim=Math.max(0,s.jumpAnim-0.3);
+    if(s.jumpAnim>0)s.jumpAnim=Math.max(0,s.jumpAnim-.3);
     if(s.frog.row>=1&&s.frog.row<=ROWS){const car=s.cars[s.frog.row-1];const fx=s.frog.col*(W/9)+(W/18);if(Math.abs(fx-car.x)<car.w/2+10){s.lives--;if(s.lives<=0)s.done=true;else s.frog={col:4,row:ROWS+1};}}
     if(s.frog.row===0){s.score+=10;s.crossings++;s.frog={col:4,row:ROWS+1};s.cars.forEach(c=>c.spd*=1.05);}
     draw();fu(n=>n+1);
-  },[draw]),running.current&&!state.current.done);
+  },[draw]),run.current&&!st.current.done);
   useEffect(()=>{
     draw();
-    const kd=e=>{const s=state.current;if(!s||s.done)return;if(e.key==="ArrowUp"||e.key==="w"){s.frog.row=Math.max(0,s.frog.row-1);s.jumpAnim=Math.PI;}if(e.key==="ArrowDown"||e.key==="s"){s.frog.row=Math.min(ROWS+1,s.frog.row+1);s.jumpAnim=Math.PI;}if(e.key==="ArrowLeft"||e.key==="a")s.frog.col=Math.max(0,s.frog.col-1);if(e.key==="ArrowRight"||e.key==="d")s.frog.col=Math.min(8,s.frog.col+1);e.preventDefault();};
-    window.addEventListener("keydown",kd);return()=>{running.current=false;window.removeEventListener("keydown",kd);};
+    const kd=e=>{const s=st.current;if(!s||s.done)return;if(e.key==="ArrowUp"||e.key==="w"){s.frog.row=Math.max(0,s.frog.row-1);s.jumpAnim=Math.PI;}if(e.key==="ArrowDown"||e.key==="s"){s.frog.row=Math.min(ROWS+1,s.frog.row+1);s.jumpAnim=Math.PI;}if(e.key==="ArrowLeft"||e.key==="a")s.frog.col=Math.max(0,s.frog.col-1);if(e.key==="ArrowRight"||e.key==="d")s.frog.col=Math.min(8,s.frog.col+1);e.preventDefault();};
+    window.addEventListener("keydown",kd);return()=>{run.current=false;window.removeEventListener("keydown",kd);};
   },[draw]);
-  const reset=()=>{state.current=initState();running.current=true;fu(n=>n+1);};
+  const reset=()=>{st.current=init();run.current=true;fu(n=>n+1);};
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
     <div style={{position:"relative",borderRadius:14,overflow:"hidden",border:"2px solid rgba(255,255,255,.1)"}}>
       <canvas ref={cvs} width={W} height={H}/>
-      {state.current.done&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
+      {st.current.done&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.85)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",borderRadius:14}}>
         <div style={{fontSize:36,fontWeight:900,color:"#fff",marginBottom:8}}>🐸 Splat!</div>
-        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Score: {state.current.score} · Crossings: {state.current.crossings}</div>
+        <div style={{fontSize:18,fontWeight:800,color:"#fbbf24",marginBottom:24}}>Score: {st.current.score} · Crossings: {st.current.crossings}</div>
         <button onClick={e=>{e.stopPropagation();reset();}} style={{padding:"12px 28px",borderRadius:14,border:"none",background:"linear-gradient(135deg,#3b82f6,#14b8a6)",color:"#fff",fontFamily:"Nunito,sans-serif",fontSize:14,fontWeight:900,cursor:"pointer"}}>Play Again</button>
       </div>}
     </div>
-    <div style={{fontSize:11,color:"#64748b",fontWeight:600}}>Arrow keys or WASD to move the frog!</div>
+    <div style={{fontSize:11,color:"#64748b",fontWeight:600}}>Arrow keys or WASD to move!</div>
   </div>);
 }
 
@@ -685,39 +647,35 @@ function GameBreakScreen({onReturn}){
   useEffect(()=>{
     if(!activeGame)return;
     setTimeLeft(120);
-    timerRef.current=setInterval(()=>{setTimeLeft(t=>{if(t<=1){clearInterval(timerRef.current);onReturn();return 0;}return t-1;});},1000);
+    timerRef.current=setInterval(()=>setTimeLeft(t=>{if(t<=1){clearInterval(timerRef.current);onReturn();return 0;}return t-1;}),1000);
     return()=>clearInterval(timerRef.current);
   },[activeGame,onReturn]);
   const pct=(timeLeft/120)*100;
-  const timerColor=pct>50?"#22c55e":pct>25?"#fbbf24":"#ef4444";
-  const GAME_COMPS={football:FootballGame,arrow:ArrowGame,rocket:RocketGame,frog:FrogGame};
-  const GameComp=activeGame?GAME_COMPS[activeGame]:null;
+  const tCol=pct>50?"#22c55e":pct>25?"#fbbf24":"#ef4444";
+  const COMPS={football:FootballGame,arrow:ArrowGame,rocket:RocketGame,frog:FrogGame};
+  const GameComp=activeGame?COMPS[activeGame]:null;
   return(
-    <div style={{flex:1,display:"flex",flexDirection:"column",background:"linear-gradient(160deg,#0f172a,#1a2744)",overflow:"hidden"}}>
-      {/* Game header */}
-      <div style={{padding:"12px 20px",display:"flex",alignItems:"center",gap:12,borderBottom:"1px solid rgba(255,255,255,.08)",flexShrink:0}}>
+    <div className="game-break-screen">
+      <div className="game-break-header">
         <div style={{fontSize:22}}>🎮</div>
         <div style={{fontSize:16,fontWeight:900,color:"#fff"}}>Game Break <span style={{background:"linear-gradient(90deg,#fbbf24,#f97316)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>Time!</span></div>
         {activeGame&&<>
           <div style={{flex:1,maxWidth:180}}>
             <div style={{fontSize:9,fontWeight:800,color:"#64748b",letterSpacing:1,textTransform:"uppercase",marginBottom:3}}>⏱ {timeLeft}s left</div>
-            <div style={{height:7,background:"rgba(255,255,255,.1)",borderRadius:7,overflow:"hidden"}}><div style={{height:"100%",borderRadius:7,background:timerColor,width:pct+"%",transition:"width .5s linear,background .5s"}}/></div>
+            <div style={{height:7,background:"rgba(255,255,255,.1)",borderRadius:7,overflow:"hidden"}}><div style={{height:"100%",borderRadius:7,background:tCol,width:pct+"%",transition:"width .5s linear,background .5s"}}/></div>
           </div>
           <button onClick={()=>{clearInterval(timerRef.current);onReturn();}} style={{padding:"6px 14px",borderRadius:20,border:"2px solid rgba(255,255,255,.2)",background:"transparent",color:"#94a3b8",fontFamily:"Nunito,sans-serif",fontSize:12,fontWeight:800,cursor:"pointer"}}>← Back to Nova</button>
         </>}
         {!activeGame&&<button onClick={onReturn} style={{marginLeft:"auto",padding:"6px 14px",borderRadius:20,border:"2px solid rgba(255,255,255,.2)",background:"transparent",color:"#94a3b8",fontFamily:"Nunito,sans-serif",fontSize:12,fontWeight:800,cursor:"pointer"}}>← Back to Nova</button>}
       </div>
-      {/* Content */}
       {!activeGame?(
-        <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24}}>
+        <div className="game-picker">
           <div style={{fontSize:52,marginBottom:12,animation:"float 3s ease-in-out infinite"}}>🎮</div>
           <div style={{fontSize:26,fontWeight:900,color:"#fff",marginBottom:8}}>You earned a break!</div>
-          <div style={{fontSize:14,color:"#94a3b8",fontWeight:600,marginBottom:28}}>Pick a game — you have 2 minutes. Have fun! 🚀</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,maxWidth:480,width:"100%"}}>
+          <div style={{fontSize:14,color:"#94a3b8",fontWeight:600,marginBottom:28}}>Pick a game — you have 2 minutes!</div>
+          <div className="game-grid">
             {GAME_LIST.map(g=>(
-              <div key={g.id} onClick={()=>setActiveGame(g.id)} style={{background:"rgba(255,255,255,.07)",border:"2px solid rgba(255,255,255,.1)",borderRadius:18,padding:"22px 16px",textAlign:"center",cursor:"pointer",transition:"all .2s"}}
-                onMouseEnter={e=>{e.currentTarget.style.background="rgba(59,130,246,.2)";e.currentTarget.style.borderColor="#3b82f6";e.currentTarget.style.transform="translateY(-4px)";}}
-                onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.07)";e.currentTarget.style.borderColor="rgba(255,255,255,.1)";e.currentTarget.style.transform="none";}}>
+              <div key={g.id} className="game-card-pick" onClick={()=>setActiveGame(g.id)}>
                 <div style={{fontSize:40,marginBottom:8}}>{g.icon}</div>
                 <div style={{fontSize:14,fontWeight:900,color:"#fff",marginBottom:4}}>{g.name}</div>
                 <div style={{fontSize:11,color:"#94a3b8",fontWeight:600}}>{g.sub}</div>
@@ -733,6 +691,38 @@ function GameBreakScreen({onReturn}){
     </div>
   );
 }
+
+/* ── Resources ── */
+const RESOURCES={
+  m1:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/multiplication-in-third-grade",color:"#16a34a",bg:"#f0fdf4"},{label:"Times Tables Rock Stars",url:"https://ttrockstars.com",color:"#7c3aed",bg:"#f5f3ff"}],
+  m2:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/arithmetic/arith-review-multiply-divide",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
+  m3:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-third-grade-math/fractions-topic",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
+  m4:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
+  m5:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/fractions-topic-2",color:"#16a34a",bg:"#f0fdf4"},{label:"Mathnasium",url:"https://www.mathnasium.com",color:"#dc2626",bg:"#fef2f2"}],
+  m6:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-area-and-perimeter",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
+  m7:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo/basic-geo-angle",color:"#16a34a",bg:"#f0fdf4"}],
+  m8:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/basic-geo",color:"#16a34a",bg:"#f0fdf4"}],
+  m9:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/cc-fourth-grade-math",color:"#16a34a",bg:"#f0fdf4"},{label:"IXL",url:"https://www.ixl.com/math/grade-4",color:"#0369a1",bg:"#eff6ff"}],
+  m10:[{label:"Khan Academy",url:"https://www.khanacademy.org/math/pre-algebra",color:"#16a34a",bg:"#f0fdf4"}],
+  s1:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
+  s2:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"},{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"}],
+  s3:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics/forces-newtons-laws",color:"#16a34a",bg:"#f0fdf4"}],
+  s4:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/physics",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
+  s5:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/science",color:"#f59e0b",bg:"#fffbeb"}],
+  s6:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry",color:"#16a34a",bg:"#f0fdf4"}],
+  s7:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/chemistry/states-of-matter-and-intermolecular-forces",color:"#16a34a",bg:"#f0fdf4"}],
+  s8:[{label:"NASA Kids",url:"https://www.nasa.gov/kidsclub/index.html",color:"#1d4ed8",bg:"#eff6ff"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/space",color:"#f59e0b",bg:"#fffbeb"}],
+  s9:[{label:"Khan Academy",url:"https://www.khanacademy.org/science",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature/article/weather",color:"#f59e0b",bg:"#fffbeb"}],
+  s10:[{label:"Khan Academy",url:"https://www.khanacademy.org/science/biology/ecology",color:"#16a34a",bg:"#f0fdf4"},{label:"Nat Geo Kids",url:"https://kids.nationalgeographic.com/nature",color:"#f59e0b",bg:"#fffbeb"}],
+  c1:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
+  c2:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c3:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
+  c4:[{label:"Code.org",url:"https://studio.code.org/courses",color:"#ea580c",bg:"#fff7ed"},{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c5:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"},{label:"Scratch",url:"https://scratch.mit.edu",color:"#f59e0b",bg:"#fffbeb"}],
+  c6:[{label:"Khan Academy",url:"https://www.khanacademy.org/computing/intro-to-python-fundamentals",color:"#16a34a",bg:"#f0fdf4"}],
+  c7:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
+  c8:[{label:"Scratch",url:"https://scratch.mit.edu/projects/editor",color:"#f59e0b",bg:"#fffbeb"},{label:"Code.org",url:"https://studio.code.org",color:"#ea580c",bg:"#fff7ed"}],
+};
 
 /* ── Data ── */
 const CURRICULUM={
@@ -790,7 +780,7 @@ function parseBlocks(text){
     if(cb!==null){cb.push(line);i++;continue;}
     if(line.includes("🤔")||line.toLowerCase().includes("think about this")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("📚")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"challenge",content:c});i++;continue;}
     if(line.includes("⭐")||line.toLowerCase().includes("fun fact")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("📚")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"funfact",content:c});i++;continue;}
-    if(line.includes("📚")||line.toLowerCase().includes("practice this")||line.toLowerCase().includes("khan academy")||line.toLowerCase().includes("try this on")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"resource",content:c});i++;continue;}
+    if(line.includes("📚")||line.toLowerCase().includes("khan academy")||line.toLowerCase().includes("practice this")){let c=line;while(i+1<lines.length&&lines[i+1].trim()&&!lines[i+1].startsWith("🤔")&&!lines[i+1].startsWith("⭐")&&!lines[i+1].startsWith("```")){i++;c+="\n"+lines[i];}blocks.push({type:"resource",content:c});i++;continue;}
     if(line.trim()){if(blocks.length&&blocks[blocks.length-1].type==="text")blocks[blocks.length-1].content+="\n"+line;else blocks.push({type:"text",content:line});}i++;
   }
   return blocks;
@@ -819,11 +809,12 @@ function buildPrompt(profile,subject,mode,isRem,remTopic){
   const ic=interests.length?"INTERESTS: "+interests.join(", ")+" — weave into examples naturally.":"";
   const rn=isRem&&remTopic?"\n⚠️ REMEDIATION: "+name+" is struggling with \""+remTopic+"\". Stop advancing. Use a different analogy. One simple guiding question to rebuild confidence.":"";
   const sn=struggleCount>2?"\nNote: "+name+" has struggled "+struggleCount+" times. Be extra patient.":"";
-  return "You are Nova, an enthusiastic STEM tutor for "+name+", a "+grade+" grade student (~10 years old).\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None")+" | STRENGTHS: "+(strengths.join(", ")||"Discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet")+"\n"+ic+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"FOCUS: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Use "+name+"'s name. Connect to his interests. 4-8 sentences per idea. Guide discovery — never just give answers. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.\nRESOURCES: After teaching a topic, naturally mention that they can practice on Khan Academy, Mathnasium, Code.org, or Scratch as relevant. Start that block with 📚 Practice Resources: and briefly mention what to search for or try.";
+  return"You are Nova, an enthusiastic STEM tutor for "+name+", a "+grade+" grade student (~10 years old).\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None")+" | STRENGTHS: "+(strengths.join(", ")||"Discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet")+"\n"+ic+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"FOCUS: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Use "+name+"'s name. Connect to his interests. 4-8 sentences per idea. Guide discovery. Use 🤔 Think About This!: and ⭐ Fun Fact: blocks.\nRESOURCES: After teaching a topic, naturally suggest Khan Academy, Mathnasium, Code.org, or Scratch. Start that block with 📚 Practice Resources:";
 }
 
-/* ── App ── */
+/* ══ APP ══ */
 function App(){
+  /* ── All state and refs — declared first, nothing else above this ── */
   const[apiKeyInput,setApiKeyInput]=useState("");
   const[apiKeyError,setApiKeyError]=useState("");
   const[apiKeyLoading,setApiKeyLoading]=useState(false);
@@ -874,88 +865,52 @@ function App(){
   const[pinSaved,setPinSaved]=useState(false);
   const[importStatus,setImportStatus]=useState(null);
   const[importData,setImportData]=useState(null);
-  const importRef=useRef(null);
   const[showGameBreak,setShowGameBreak]=useState(false);
   const[gameBreakReady,setGameBreakReady]=useState(false);
-  const[sessionStartTime]=useState(()=>Date.now());
   const[lastBreakTime,setLastBreakTime]=useState(()=>Date.now());
+  /* ── All refs ── */
+  const importRef=useRef(null);
+  const chatRef=useRef(null);
+  const taRef=useRef(null);
+  const saveTimer=useRef(null);
   const gameBreakTimerRef=useRef(null);
 
-  // 15-minute game break timer
-  useEffect(()=>{
-    if(screen!=="tutor")return;
-    gameBreakTimerRef.current=setInterval(()=>{
-      const elapsed=(Date.now()-lastBreakTime)/1000/60;
-      if(elapsed>=15)setGameBreakReady(true);
-    },10000);
-    return()=>clearInterval(gameBreakTimerRef.current);
-  },[screen,lastBreakTime]);
-
-  /* Boot */
+  /* ── Effects ── */
   useEffect(()=>{
     (async()=>{
-      const key=localStorage.getItem("nova_api_key");
-      if(!key){setScreen("apikey");return;}
-      const user=localStorage.getItem("nova_user");
-      const type=localStorage.getItem("nova_account_type");
+      const key=localStorage.getItem("nova_api_key");if(!key){setScreen("apikey");return;}
+      const user=localStorage.getItem("nova_user");const type=localStorage.getItem("nova_account_type");
       if(!user||!type){setScreen("auth");return;}
       setAccountType(type);
-      if(type==="parent"){
-        try{
-          const row=await sb.getParent(user);
-          if(row){setParentData(row);setScreen("parent-hub");return;}
-        }catch(e){console.log(e);}
-        setScreen("auth");return;
-      }
-      try{
-        const row=await sb.getProfile(user);
-        if(row&&row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setScreen("tutor");return;}
-      }catch(e){console.log(e);}
-      const saved=ls.get("nova_profile");
-      if(saved&&saved.value){const p=JSON.parse(saved.value);if(p.setupComplete){setProfile(p);setScreen("tutor");return;}}
+      if(type==="parent"){try{const row=await sb.getParent(user);if(row){setParentData(row);setScreen("parent-hub");return;}}catch(e){console.log(e);}setScreen("auth");return;}
+      try{const row=await sb.getProfile(user);if(row&&row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setScreen("tutor");return;}}catch(e){console.log(e);}
+      const saved=ls.get("nova_profile");if(saved&&saved.value){const p=JSON.parse(saved.value);if(p.setupComplete){setProfile(p);setScreen("tutor");return;}}
       setScreen("onboard");
     })();
   },[]);
-
   useEffect(()=>{if(chatRef.current)chatRef.current.scrollTop=chatRef.current.scrollHeight;},[messages]);
+  useEffect(()=>{if(!profile)return;if(screen==="tutor"&&accountType==="student"){gameBreakTimerRef.current=setInterval(()=>{const elapsed=(Date.now()-lastBreakTime)/1000/60;if(elapsed>=15)setGameBreakReady(true);},15000);return()=>clearInterval(gameBreakTimerRef.current);}},[screen,lastBreakTime,profile,accountType]);
+  useEffect(()=>{if(!profile||accountType!=="student")return;if(screen==="parent-pin"||screen==="parent-dash")return;},[screen]);
 
-  /* Load child profiles for parent */
+  /* ── Load child profiles for parent ── */
   useEffect(()=>{
     if(screen==="parent-hub"&&parentData&&parentData.children&&parentData.children.length>0){
-      (async()=>{
-        const loaded={};
-        for(const childUser of parentData.children){
-          try{const row=await sb.getProfile(childUser);if(row&&row.profile_data)loaded[childUser]=row.profile_data;}catch{}
-        }
-        setChildProfiles(loaded);
-        if(parentData.children.length>0&&!selectedChild)setSelectedChild(parentData.children[0]);
-      })();
+      (async()=>{const loaded={};for(const cu of parentData.children){try{const row=await sb.getProfile(cu);if(row&&row.profile_data)loaded[cu]=row.profile_data;}catch{}}setChildProfiles(loaded);if(parentData.children.length>0&&!selectedChild)setSelectedChild(parentData.children[0]);})();
     }
   },[screen,parentData]);
 
-  const saveProfile=useCallback((p)=>{
+  const saveProfile=useCallback(p=>{
     setProfile(p);ls.set("nova_profile",JSON.stringify(p));
     if(saveTimer.current)clearTimeout(saveTimer.current);setSyncStatus("saving");
-    saveTimer.current=setTimeout(async()=>{
-      const user=localStorage.getItem("nova_user");
-      if(user){const ok=await sb.updateProfile(user,p);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}else setSyncStatus("idle");
-    },1500);
+    saveTimer.current=setTimeout(async()=>{const user=localStorage.getItem("nova_user");if(user){const ok=await sb.updateProfile(user,p);setSyncStatus(ok?"saved":"error");setTimeout(()=>setSyncStatus("idle"),3000);}else setSyncStatus("idle");},1500);
   },[]);
 
-  /* API Key */
   const validateKey=async()=>{
-    const key=apiKeyInput.trim();
-    if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){setApiKeyError("Doesn't look like a valid Anthropic key.");return;}
+    const key=apiKeyInput.trim();if(!key.startsWith("sk-ant-")&&!key.startsWith("sk-")){setApiKeyError("Doesn't look like a valid Anthropic key.");return;}
     setApiKeyLoading(true);setApiKeyError("");
-    try{
-      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});
-      const d=await r.json();
-      if(d.error){setApiKeyError("Key error: "+d.error.message);setApiKeyLoading(false);return;}
-      localStorage.setItem("nova_api_key",key);setApiKeyLoading(false);setScreen("auth");
-    }catch(e){setApiKeyError("Could not connect.");setApiKeyLoading(false);}
+    try{const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});const d=await r.json();if(d.error){setApiKeyError("Key error: "+d.error.message);setApiKeyLoading(false);return;}localStorage.setItem("nova_api_key",key);setApiKeyLoading(false);setScreen("auth");}catch(e){setApiKeyError("Could not connect.");setApiKeyLoading(false);}
   };
 
-  /* Auth */
   const handleAuth=async()=>{
     const u=authUser.trim().toLowerCase();const p=authPass.trim();
     if(!u||!p){setAuthErr("Please enter a username and password.");return;}
@@ -966,76 +921,21 @@ function App(){
     try{
       const hash=await hashPassword(p);
       if(authType==="parent"){
-        if(authMode==="signup"){
-          const existing=await sb.getParent(u);
-          if(existing){setAuthErr("Username taken.");setAuthLoading(false);return;}
-          const ok=await sb.upsertParent(u,hash,authFullName.trim(),[]);
-          if(!ok){setAuthErr("Could not create account.");setAuthLoading(false);return;}
-          const row=await sb.getParent(u);
-          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","parent");
-          setAccountType("parent");setParentData(row);setAuthLoading(false);setScreen("parent-hub");
-        }else{
-          const row=await sb.getParent(u);
-          if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}
-          if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
-          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","parent");
-          setAccountType("parent");setParentData(row);setAuthLoading(false);setScreen("parent-hub");
-        }
+        if(authMode==="signup"){const existing=await sb.getParent(u);if(existing){setAuthErr("Username taken.");setAuthLoading(false);return;}const ok=await sb.upsertParent(u,hash,authFullName.trim(),[]);if(!ok){setAuthErr("Could not create account.");setAuthLoading(false);return;}const row=await sb.getParent(u);localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","parent");setAccountType("parent");setParentData(row);setAuthLoading(false);setScreen("parent-hub");}
+        else{const row=await sb.getParent(u);if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","parent");setAccountType("parent");setParentData(row);setAuthLoading(false);setScreen("parent-hub");}
       }else{
-        if(authMode==="signup"){
-          const existing=await sb.getProfile(u);
-          if(existing){setAuthErr("Username taken.");setAuthLoading(false);return;}
-          const ok=await sb.upsertProfile(u,hash,{});
-          if(!ok){setAuthErr("Could not create account.");setAuthLoading(false);return;}
-          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
-          setAccountType("student");setAuthLoading(false);setScreen("onboard");
-        }else{
-          const row=await sb.getProfile(u);
-          if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}
-          if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
-          localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
-          setAccountType("student");
-          if(row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setAuthLoading(false);setScreen("tutor");}
-          else{setAuthLoading(false);setScreen("onboard");}
-        }
+        if(authMode==="signup"){const existing=await sb.getProfile(u);if(existing){setAuthErr("Username taken.");setAuthLoading(false);return;}const ok=await sb.upsertProfile(u,hash,{});if(!ok){setAuthErr("Could not create account.");setAuthLoading(false);return;}localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");setAccountType("student");setAuthLoading(false);setScreen("onboard");}
+        else{const row=await sb.getProfile(u);if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");setAccountType("student");if(row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify(row.profile_data));setAuthLoading(false);setScreen("tutor");}else{setAuthLoading(false);setScreen("onboard");}}
       }
     }catch(e){setAuthErr("Error: "+e.message);setAuthLoading(false);}
   };
 
-  const handleLogout=()=>{
-    localStorage.removeItem("nova_user");localStorage.removeItem("nova_account_type");
-    setProfile(null);setMessages([]);setApiHistory([]);setParentData(null);setSelectedChild(null);setChildProfiles({});
-    setAccountType(null);setAuthUser("");setAuthPass("");setAuthFullName("");setAuthErr("");setAuthMode("login");setAuthType("student");
-    setScreen("auth");
-  };
+  const handleLogout=()=>{localStorage.removeItem("nova_user");localStorage.removeItem("nova_account_type");setProfile(null);setMessages([]);setApiHistory([]);setParentData(null);setSelectedChild(null);setChildProfiles({});setAccountType(null);setAuthUser("");setAuthPass("");setAuthFullName("");setAuthErr("");setAuthMode("login");setAuthType("student");setShowGameBreak(false);setGameBreakReady(false);setScreen("auth");};
 
-  /* Add child to parent account */
-  const handleAddChild=async()=>{
-    const childUser=addChildUsername.trim().toLowerCase();
-    if(!childUser){setAddChildErr("Enter a username.");return;}
-    setAddChildLoading(true);setAddChildErr("");
-    const row=await sb.getProfile(childUser);
-    if(!row){setAddChildErr("No student account found with that username.");setAddChildLoading(false);return;}
-    if(parentData.children&&parentData.children.includes(childUser)){setAddChildErr("This child is already linked.");setAddChildLoading(false);return;}
-    const newChildren=[...(parentData.children||[]),childUser];
-    await sb.updateParent(localStorage.getItem("nova_user"),{children:newChildren});
-    const updatedParent={...parentData,children:newChildren};
-    setParentData(updatedParent);
-    if(row.profile_data)setChildProfiles(prev=>({...prev,[childUser]:row.profile_data}));
-    setSelectedChild(childUser);
-    setAddChildUsername("");setAddChildLoading(false);setShowAddChild(false);
-  };
+  const handleAddChild=async()=>{const cu=addChildUsername.trim().toLowerCase();if(!cu){setAddChildErr("Enter a username.");return;}setAddChildLoading(true);setAddChildErr("");const row=await sb.getProfile(cu);if(!row){setAddChildErr("No student account found.");setAddChildLoading(false);return;}if(parentData.children&&parentData.children.includes(cu)){setAddChildErr("Already linked.");setAddChildLoading(false);return;}const nc=[...(parentData.children||[]),cu];await sb.updateParent(localStorage.getItem("nova_user"),{children:nc});const up={...parentData,children:nc};setParentData(up);if(row.profile_data)setChildProfiles(prev=>({...prev,[cu]:row.profile_data}));setSelectedChild(cu);setAddChildUsername("");setAddChildLoading(false);setShowAddChild(false);};
+  const handleRemoveChild=async cu=>{const nc=(parentData.children||[]).filter(c=>c!==cu);await sb.updateParent(localStorage.getItem("nova_user"),{children:nc});setParentData({...parentData,children:nc});const cp={...childProfiles};delete cp[cu];setChildProfiles(cp);if(selectedChild===cu)setSelectedChild(nc[0]||null);};
 
-  const handleRemoveChild=async(childUser)=>{
-    const newChildren=(parentData.children||[]).filter(c=>c!==childUser);
-    await sb.updateParent(localStorage.getItem("nova_user"),{children:newChildren});
-    setParentData({...parentData,children:newChildren});
-    const cp={...childProfiles};delete cp[childUser];setChildProfiles(cp);
-    if(selectedChild===childUser)setSelectedChild(newChildren[0]||null);
-  };
-
-  /* Toasts */
-  const showXP=(amt,xp)=>{const pl=getLevel(xp-amt);const nl=getLevel(xp);if(nl.lvl>pl.lvl){setLevelToast("🎉 Level Up! "+nl.name);setTimeout(()=>setLevelToast(null),4000);}else{setXpToast("+"+amt+" XP! ⭐");setTimeout(()=>setXpToast(null),2000);}};
+  const showXPFn=(amt,xp)=>{const pl=getLevel(xp-amt);const nl=getLevel(xp);if(nl.lvl>pl.lvl){setLevelToast("🎉 Level Up! "+nl.name);setTimeout(()=>setLevelToast(null),4000);}else{setXpToast("+"+amt+" XP! ⭐");setTimeout(()=>setXpToast(null),2000);}};
   const showMastered=n=>{setMasteredToast("🏆 Mastered: "+n+"!");setTimeout(()=>setMasteredToast(null),3000);};
   const showGap=t=>{setGapToast("🎯 Remediating: "+t);setTimeout(()=>setGapToast(null),3000);};
 
@@ -1047,12 +947,10 @@ function App(){
     const userText=(text||input).trim();if(!userText||isLoading)return;
     setInput("");if(taRef.current)taRef.current.style.height="20px";
     const struggling=dS(userText)||forceRem;const detT=dT(userText);
-    if(struggling){setConsecutiveStruggle(c=>c+1);setIsStruggling(true);if(detT.length>0){setStruggleTopics(detT);const n=gN(detT[0]);if(n)showGap(n.name);}}
-    else{setConsecutiveStruggle(0);if(!forceRem)setIsStruggling(false);}
+    if(struggling){setConsecutiveStruggle(c=>c+1);setIsStruggling(true);if(detT.length>0){setStruggleTopics(detT);const n=gN(detT[0]);if(n)showGap(n.name);}}else{setConsecutiveStruggle(0);if(!forceRem)setIsStruggling(false);}
     const um={role:"user",content:userText};const nh=[...apiHistory,um];setApiHistory(nh);
     setMessages(prev=>[...prev,{type:"user",content:userText,struggling,topics:detT}]);
-    const aid=Date.now();setIsLoading(true);
-    setMessages(prev=>[...prev,{type:"nova",id:aid,blocks:[],loading:true,isRem:struggling,topics:[]}]);
+    const aid=Date.now();setIsLoading(true);setMessages(prev=>[...prev,{type:"nova",id:aid,blocks:[],loading:true,isRem:struggling,topics:[]}]);
     const rl=remTopic||(detT.length>0?(gN(detT[0])?.name||null):null);
     try{
       const key=localStorage.getItem("nova_api_key");
@@ -1067,452 +965,71 @@ function App(){
       const xg=struggling?5:10+Math.floor(Math.random()*8);
       up.struggleCount=(up.struggleCount||0)+(struggling?1:0);up.xp=(up.xp||0)+xg;up.sessions=(up.sessions||0)+1;up.lastSession=new Date().toISOString();
       if((up.sessions||0)%5===0){const log=up.sessionLog||[];up.sessionLog=[{id:Date.now(),date:new Date().toISOString(),topics:allT.map(id=>gN(id)?.name).filter(Boolean),xpGained:xg,hadStruggle:struggling,mastery:{...up.mastery}},...log].slice(0,30);}
-      saveProfile(up);if(!struggling)showXP(xg,up.xp);
+      saveProfile(up);if(!struggling)showXPFn(xg,up.xp);
     }catch(err){setMessages(prev=>prev.map(m=>m.id===aid?{...m,blocks:[{type:"text",content:"Oops! "+err.message}],loading:false}:m));}
     setIsLoading(false);
   };
   const handleKey=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();}};
 
-  /* Diagnostic */
   const handleAnswer=idx=>{if(answered)return;setSelected(idx);setAnswered(true);const q=QS[qIndex];setDiagScores(prev=>({...prev,[q.subject]:[...prev[q.subject],idx===q.correct?1:0]}));};
   const handleNext=()=>{
     if(qIndex<QS.length-1){setQIndex(i=>i+1);setSelected(null);setAnswered(false);return;}
     const final={...diagScores};const q=QS[qIndex];final[q.subject]=[...final[q.subject],selected===q.correct?1:0];
     const math=s2m(final.math.filter(Boolean).length,2),science=s2m(final.science.filter(Boolean).length,2),coding=s2m(final.coding.filter(Boolean).length,2);
-    const gaps=[],strengths=[];
-    if(math<60)gaps.push("Fractions & Division");else strengths.push("Math Operations");
-    if(science<60)gaps.push("Forces & Matter");else strengths.push("Science Concepts");
-    if(coding<60)gaps.push("Logic & Loops");else strengths.push("Coding Thinking");
-    const tm={};
-    if(math>=50){tm["m1"]=math;tm["m2"]=Math.max(0,math-10);}
-    if(science>=50){tm["s1"]=science;tm["s5"]=Math.max(0,science-10);}
-    if(coding>=50){tm["c1"]=coding;tm["c2"]=Math.max(0,coding-10);}
+    const gaps=[],strengths=[];if(math<60)gaps.push("Fractions & Division");else strengths.push("Math Operations");if(science<60)gaps.push("Forces & Matter");else strengths.push("Science Concepts");if(coding<60)gaps.push("Logic & Loops");else strengths.push("Coding Thinking");
+    const tm={};if(math>=50){tm["m1"]=math;tm["m2"]=Math.max(0,math-10);}if(science>=50){tm["s1"]=science;tm["s5"]=Math.max(0,science-10);}if(coding>=50){tm["c1"]=coding;tm["c2"]=Math.max(0,coding-10);}
     const il=selInterests.map(k=>INTERESTS.find(i=>i.key===k)?.label).filter(Boolean);
     const p={name:nameVal,grade:gradeVal,setupComplete:true,mastery:{math,science,coding},gaps,strengths,xp:50,streak:1,sessions:0,struggleCount:0,lastSession:new Date().toISOString(),topicMastery:tm,sessionLog:[],interests:il};
     saveProfile(p);setWizardStep(3);
   };
 
-  /* Export / Import */
   const exportProfile=()=>{const blob=new Blob([JSON.stringify({...profile,exportedAt:new Date().toISOString()},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="nova-profile-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(url);};
   const handleImportFile=e=>{const file=e.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{try{const parsed=JSON.parse(ev.target.result);if(!parsed.name||!parsed.mastery)throw new Error("Invalid");setImportData(parsed);setImportStatus("confirm");}catch{setImportStatus("error");}};reader.readAsText(file);e.target.value="";};
   const confirmImport=()=>{if(!importData)return;saveProfile(importData);setImportStatus("success");setImportData(null);setTimeout(()=>setImportStatus(null),4000);};
   const saveNewPin=()=>{if(newPin.length!==4||newPin!==confirmPin)return;localStorage.setItem("nova_pin",newPin);setStoredPin(newPin);setNewPin("");setConfirmPin("");setPinSaved(true);setTimeout(()=>setPinSaved(false),3000);};
   const changeApiKey=()=>{localStorage.removeItem("nova_api_key");setApiKeyInput("");setScreen("apikey");};
+  const resetProfile=()=>{ls.del("nova_profile");setProfile(null);setMessages([]);setApiHistory([]);setDiagScores({math:[],science:[],coding:[]});setQIndex(0);setSelected(null);setAnswered(false);setWizardStep(0);setIsStruggling(false);setConsecutiveStruggle(0);setStruggleTopics([]);setShowGameBreak(false);setGameBreakReady(false);setScreen("onboard");};
 
-  /* Quick starts */
   const getQS=()=>{const base=[{emoji:"🔢",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"Explain gravity with a fun example!"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧠",text:"Give me a tricky math challenge!"},{emoji:"🔬",text:"Why do things float in water?"},{emoji:"🚀",text:"How do rockets escape Earth's gravity?"}];if(!profile?.interests?.length)return base;const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🐬",text:"How do dolphins use echolocation?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How do robots know what to do?"});return[...extra.slice(0,2),...base].slice(0,6);};
 
-  /* Tree Panel */
   function TreePanel(){
     const tm=profile?.topicMastery||{};const units=CURRICULUM[treeSubject];const sc={math:"#3b82f6",science:"#8b5cf6",coding:"#14b8a6"};
     const getStatus=node=>{if(!isUL(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5"],"Forces & Matter":["s1","s2","s3"],"Logic & Loops":["c3","c4"]}[g]||[]).includes(node.id)))return"gap";return"current";};
-    return(
-      <div className="tree-panel">
-        <div className="tree-header">
-          <div className="tree-title">📚 Curriculum Tree</div>
-          <div className="tree-tabs">{SUBJ.map(s=><button key={s.key} className={"tree-tab "+s.key+(treeSubject===s.key?" active":"")} onClick={()=>setTreeSubject(s.key)}>{s.icon}</button>)}</div>
-        </div>
-        <div className="tree-body">
-          {units.map((unit,ui)=>(
-            <div key={ui} className="tree-unit">
-              <div className="tree-unit-label">{unit.unit}</div>
-              {unit.nodes.map(node=>{const status=getStatus(node);const pct=tm[node.id]||0;const color=sc[treeSubject];const nodeRes=RESOURCES[node.id]||[];return(
-                <div key={node.id} className={"tree-node "+status} onClick={()=>isUL(node,tm)&&sendMessage("Let's learn about: "+node.name+". "+node.sub)}>
-                  <div className="tree-node-icon">{node.icon}</div>
-                  <div className="tree-node-text">
-                    <div className="tree-node-name">{node.name}</div>
-                    <div className="tree-node-sub">{node.sub}</div>
-                    {status!=="locked"&&pct>0&&<div className="tree-node-bar"><div className="tree-node-fill" style={{width:pct+"%",background:pct>=80?"#22c55e":pct>=40?"#fbbf24":color}}/></div>}
-                    {nodeRes.length>0&&<div className="tree-node-resources">{nodeRes.map((r,ri)=><a key={ri} className="tree-resource-badge" href={r.url} target="_blank" rel="noreferrer" style={{background:r.bg,color:r.color,border:"1px solid "+r.color}} onClick={e=>e.stopPropagation()}>{r.label}</a>)}</div>}
-                  </div>
-                  {status==="locked"?<span style={{fontSize:11}}>🔒</span>:status==="struggling-node"?<span style={{fontSize:11}}>⚠️</span>:pct>0?<div className="tree-node-pct" style={{color:mc(pct)}}>{pct}%</div>:null}
-                </div>
-              );})}
-            </div>
-          ))}
-        </div>
-        <div className="tree-legend">
-          <div className="legend-item"><div className="legend-dot" style={{background:"#22c55e"}}/>Mastered</div>
-          <div className="legend-item"><div className="legend-dot" style={{background:"#fbbf24"}}/>Progress</div>
-          <div className="legend-item"><div className="legend-dot" style={{background:"#f97316"}}/>Gap</div>
-          <div className="legend-item"><div className="legend-dot" style={{background:"#ef4444"}}/>Struggling</div>
-          <div className="legend-item"><div className="legend-dot" style={{background:"#e2e8f0"}}/>Locked</div>
-        </div>
-      </div>
-    );
+    return(<div className="tree-panel">
+      <div className="tree-header"><div className="tree-title">📚 Curriculum Tree</div><div className="tree-tabs">{SUBJ.map(s=><button key={s.key} className={"tree-tab "+s.key+(treeSubject===s.key?" active":"")} onClick={()=>setTreeSubject(s.key)}>{s.icon}</button>)}</div></div>
+      <div className="tree-body">{units.map((unit,ui)=>(<div key={ui} className="tree-unit"><div className="tree-unit-label">{unit.unit}</div>{unit.nodes.map(node=>{const status=getStatus(node);const pct=tm[node.id]||0;const color=sc[treeSubject];const nodeRes=RESOURCES[node.id]||[];return(<div key={node.id} className={"tree-node "+status} onClick={()=>isUL(node,tm)&&sendMessage("Let's learn about: "+node.name+". "+node.sub)}><div className="tree-node-icon">{node.icon}</div><div className="tree-node-text"><div className="tree-node-name">{node.name}</div><div className="tree-node-sub">{node.sub}</div>{status!=="locked"&&pct>0&&<div className="tree-node-bar"><div className="tree-node-fill" style={{width:pct+"%",background:pct>=80?"#22c55e":pct>=40?"#fbbf24":color}}/></div>}{nodeRes.length>0&&<div className="tree-node-resources">{nodeRes.map((r,ri)=><a key={ri} className="tree-resource-badge" href={r.url} target="_blank" rel="noreferrer" style={{background:r.bg,color:r.color,border:"1px solid "+r.color}} onClick={e=>e.stopPropagation()}>{r.label}</a>)}</div>}</div>{status==="locked"?<span style={{fontSize:11}}>🔒</span>:status==="struggling-node"?<span style={{fontSize:11}}>⚠️</span>:pct>0?<div className="tree-node-pct" style={{color:mc(pct)}}>{pct}%</div>:null}</div>);})}</div>))}</div>
+      <div className="tree-legend"><div className="legend-item"><div className="legend-dot" style={{background:"#22c55e"}}/>Mastered</div><div className="legend-item"><div className="legend-dot" style={{background:"#fbbf24"}}/>Progress</div><div className="legend-item"><div className="legend-dot" style={{background:"#f97316"}}/>Gap</div><div className="legend-item"><div className="legend-dot" style={{background:"#ef4444"}}/>Struggling</div><div className="legend-item"><div className="legend-dot" style={{background:"#e2e8f0"}}/>Locked</div></div>
+    </div>);
   }
 
-  /* Parent Hub Dashboard Pages */
   function ParentChildDashboard({childUser}){
     const cp=childProfiles[childUser];
-
-    // Not loaded yet
-    if(!cp)return(
-      <div className="empty-state">
-        <div className="empty-icon">⏳</div>
-        <div className="empty-text">Loading {childUser}'s profile...</div>
-      </div>
-    );
-
-    // Account exists but onboarding not completed
-    if(!cp.setupComplete||!cp.mastery)return(
-      <div className="empty-state">
-        <div className="empty-icon">🎓</div>
-        <div className="empty-text">
-          <strong>{childUser}</strong> hasn't completed their setup yet.<br/>
-          <span style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>
-            Ask them to open the app, log in as a Student, and complete the quick diagnostic quiz.
-            Their progress will appear here once they're done.
-          </span>
-        </div>
-      </div>
-    );
-
-    const mastery=cp.mastery||{math:0,science:0,coding:0};
-    const gaps=cp.gaps||[];
-    const strengths=cp.strengths||[];
-    const xp=cp.xp||0;
-    const sessions=cp.sessions||0;
-    const topicMastery=cp.topicMastery||{};
-    const struggleCount=cp.struggleCount||0;
-    const name=cp.name||childUser;
-    const grade=cp.grade||"";
-    const sessionLog=cp.sessionLog||[];
-    const interests=cp.interests||[];
-    const masteredCount=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;
-    const lvl=getLevel(xp||0);const nxt=getNextLevel(xp||0);
+    if(!cp)return<div className="empty-state"><div className="empty-icon">⏳</div><div className="empty-text">Loading {childUser}'s profile...</div></div>;
+    if(!cp.setupComplete||!cp.mastery)return<div className="empty-state"><div className="empty-icon">🎓</div><div className="empty-text"><strong>{childUser}</strong> hasn't completed setup yet.<br/><span style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Ask them to log in and complete the diagnostic quiz.</span></div></div>;
+    const mastery=cp.mastery||{math:0,science:0,coding:0};const gaps=cp.gaps||[];const strengths=cp.strengths||[];const xp=cp.xp||0;const sessions=cp.sessions||0;const topicMastery=cp.topicMastery||{};const struggleCount=cp.struggleCount||0;const name=cp.name||childUser;const grade=cp.grade||"";const sessionLog=cp.sessionLog||[];const interests=cp.interests||[];
+    const masteredCount=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;const lvl=getLevel(xp);const nxt=getNextLevel(xp);
     if(parentDashPage==="overview")return(<>
-      <div className="dash-page-title">{name}'s Overview</div>
-      <div className="dash-page-sub">{grade} grade · Last session: {cp.lastSession?new Date(cp.lastSession).toLocaleDateString():"Not yet"}</div>
-      <div className="stat-grid">
-        <div className="stat-card"><div className="stat-icon">📅</div><div className="stat-val">{sessions||0}</div><div className="stat-lbl">Messages</div></div>
-        <div className="stat-card"><div className="stat-icon">🏆</div><div className="stat-val">{masteredCount}/{tot}</div><div className="stat-lbl">Mastered</div></div>
-        <div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{xp||50}</div><div className="stat-lbl">XP · Lvl {lvl.lvl}</div></div>
-        <div className="stat-card"><div className="stat-icon">⚠️</div><div className="stat-val">{struggleCount||0}</div><div className="stat-lbl">Struggles</div></div>
-      </div>
-      {nxt&&<div className="dash-card" style={{marginBottom:16,background:"linear-gradient(135deg,#f5f3ff,#ede9fe)"}}>
-        <div style={{fontSize:11,fontWeight:800,color:"var(--purple)",marginBottom:6}}>🎮 LEVEL — {lvl.name}</div>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <div style={{flex:1,height:10,background:"rgba(139,92,246,.15)",borderRadius:6,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,background:"linear-gradient(90deg,var(--purple),var(--pink))",width:Math.min(100,((xp-lvl.min)/(nxt.min-lvl.min))*100)+"%"}}/></div>
-          <div style={{fontSize:11,fontWeight:800,color:"var(--purple)"}}>{xp}/{nxt.min} → {nxt.name}</div>
-        </div>
-      </div>}
-      <div className="sec-title">Subject Mastery</div>
-      <div className="dash-card">{[{label:"Math",key:"math",color:"#3b82f6"},{label:"Science",key:"science",color:"#8b5cf6"},{label:"Coding",key:"coding",color:"#14b8a6"}].map(s=>(
-        <div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:(mastery[s.key]||0)+"%",background:s.color}}/></div><div className="dash-mastery-pct" style={{color:mc(mastery[s.key]||0)}}>{mastery[s.key]||0}%</div></div>
-      ))}</div>
+      <div className="dash-page-title">{name}'s Overview</div><div className="dash-page-sub">{grade} grade · Last session: {cp.lastSession?new Date(cp.lastSession).toLocaleDateString():"Not yet"}</div>
+      <div className="stat-grid"><div className="stat-card"><div className="stat-icon">📅</div><div className="stat-val">{sessions}</div><div className="stat-lbl">Messages</div></div><div className="stat-card"><div className="stat-icon">🏆</div><div className="stat-val">{masteredCount}/{tot}</div><div className="stat-lbl">Mastered</div></div><div className="stat-card"><div className="stat-icon">⭐</div><div className="stat-val">{xp}</div><div className="stat-lbl">XP · Lvl {lvl.lvl}</div></div><div className="stat-card"><div className="stat-icon">⚠️</div><div className="stat-val">{struggleCount}</div><div className="stat-lbl">Struggles</div></div></div>
+      {nxt&&<div className="dash-card" style={{marginBottom:16,background:"linear-gradient(135deg,#f5f3ff,#ede9fe)"}}><div style={{fontSize:11,fontWeight:800,color:"var(--purple)",marginBottom:6}}>🎮 LEVEL — {lvl.name}</div><div style={{display:"flex",alignItems:"center",gap:12}}><div style={{flex:1,height:10,background:"rgba(139,92,246,.15)",borderRadius:6,overflow:"hidden"}}><div style={{height:"100%",borderRadius:6,background:"linear-gradient(90deg,var(--purple),var(--pink))",width:Math.min(100,((xp-lvl.min)/(nxt.min-lvl.min))*100)+"%"}}/></div><div style={{fontSize:11,fontWeight:800,color:"var(--purple)"}}>{xp}/{nxt.min} → {nxt.name}</div></div></div>}
+      <div className="sec-title">Subject Mastery</div><div className="dash-card">{[{label:"Math",key:"math",color:"#3b82f6"},{label:"Science",key:"science",color:"#8b5cf6"},{label:"Coding",key:"coding",color:"#14b8a6"}].map(s=>(<div key={s.key} className="dash-mastery-row"><div className="dash-mastery-lbl">{s.label}</div><div className="dash-mastery-bar"><div className="dash-mastery-fill" style={{width:(mastery[s.key]||0)+"%",background:s.color}}/></div><div className="dash-mastery-pct" style={{color:mc(mastery[s.key]||0)}}>{mastery[s.key]||0}%</div></div>))}</div>
       {interests.length>0&&<><div className="sec-title">Interests</div><div className="dash-card"><div style={{display:"flex",flexWrap:"wrap",gap:6}}>{interests.map((int,i)=><span key={i} style={{padding:"4px 12px",borderRadius:"20px",background:"#eff6ff",color:"var(--blue)",fontSize:12,fontWeight:700,border:"1px solid #bfdbfe"}}>{int}</span>)}</div></div></>}
-      <div className="sec-title">Focus Areas & Strengths</div>
-      <div className="dash-card">
-        {gaps.map((g,i)=><div key={i} className="gap-row"><span className="badge-needs">Gap</span>{g}</div>)}
-        {strengths.map((s,i)=><div key={i} className="gap-row"><span className="badge-ok">Strong</span>{s}</div>)}
-      </div>
+      <div className="sec-title">Focus Areas & Strengths</div><div className="dash-card">{gaps.map((g,i)=><div key={i} className="gap-row"><span className="badge-needs">Gap</span>{g}</div>)}{strengths.map((s,i)=><div key={i} className="gap-row"><span className="badge-ok">Strong</span>{s}</div>)}</div>
     </>);
-    if(parentDashPage==="heatmap"){const h=v=>{if(v>=80)return 4;if(v>=60)return 3;if(v>=40)return 2;if(v>0)return 1;return 0;};return(<>
-      <div className="dash-page-title">🗺️ {name}'s Mastery Heatmap</div>
-      <div className="dash-page-sub">Topic-level mastery across the full curriculum</div>
-      {Object.entries({math:CURRICULUM.math,science:CURRICULUM.science,coding:CURRICULUM.coding}).map(([subj,units])=>(
-        <div key={subj} style={{marginBottom:20}}>
-          <div className="sec-title">{SUBJ.find(s=>s.key===subj)?.icon} {SUBJ.find(s=>s.key===subj)?.label}</div>
-          <div className="heatmap-grid">{units.flatMap(u=>u.nodes).map(node=>{const pct=topicMastery[node.id]||0;return(<div key={node.id} className={"heat-cell heat-"+h(pct)} title={node.name+": "+pct+"%"}><div className="heat-icon">{node.icon}</div><div className="heat-name">{node.name}</div><div className="heat-pct" style={{color:pct>0?mc(pct):"var(--muted)"}}>{pct>0?pct+"%":"—"}</div></div>);})}</div>
-        </div>
-      ))}
-    </>);}
-    if(parentDashPage==="log"){return(<>
-      <div className="dash-page-title">📋 {name}'s Session Log</div>
-      <div className="dash-page-sub">Recent learning activity</div>
-      {sessionLog.length===0?<div className="empty-state"><div className="empty-icon">📭</div><div className="empty-text">No sessions yet.</div></div>
-        :sessionLog.map((s,i)=>{const{month,day,time}=fD(s.date);return(<div key={i} className="session-card"><div className="session-date-col"><div className="session-month">{month}</div><div className="session-day">{day}</div></div><div className="session-body"><div className="session-title">Session at {time}</div><div className="session-meta">Math {s.mastery?.math}% · Science {s.mastery?.science}% · Coding {s.mastery?.coding}%{s.hadStruggle?" · ⚠️ Struggled":""}</div><div className="session-topics">{(s.topics||[]).map((t,j)=><span key={j} className="session-topic-tag">{t}</span>)}{s.hadStruggle&&<span className="session-topic-tag gap-tag">Remediation</span>}</div></div><div className="session-xp">+{s.xpGained} XP</div></div>);})}
-    </>);}
-    if(parentDashPage==="settings")return(<>
-      <div className="dash-page-title">⚙️ Settings</div>
-      <div className="dash-page-sub">Manage children and account</div>
-      <div className="dash-card">
-        <div className="settings-title">👶 Linked Children</div>
-        <div className="settings-sub">Remove a child from your dashboard (their account and progress are not deleted).</div>
-        {(parentData?.children||[]).map((cu,i)=>{const cp2=childProfiles[cu];return(<div key={i} className="gap-row"><span className="badge-ok">{cp2?.name||cu}</span>{cp2?.grade||""}<button onClick={()=>handleRemoveChild(cu)} style={{marginLeft:"auto",padding:"4px 10px",borderRadius:7,border:"2px solid var(--red)",background:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--red)"}}>Remove</button></div>);})}
-        <button onClick={()=>setShowAddChild(true)} style={{marginTop:12,padding:"9px 18px",borderRadius:9,border:"2px solid var(--blue)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--blue)"}}>+ Add Another Child</button>
-      </div>
-      <div className="dash-card">
-        <div className="settings-title">🔑 API Key</div>
-        <div className="settings-sub">Change the Anthropic API key.</div>
-        <button onClick={changeApiKey} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Change API Key</button>
-      </div>
+    if(parentDashPage==="heatmap"){const h=v=>{if(v>=80)return 4;if(v>=60)return 3;if(v>=40)return 2;if(v>0)return 1;return 0;};return(<><div className="dash-page-title">🗺️ {name}'s Mastery Heatmap</div><div className="dash-page-sub">Topic-level mastery</div>{Object.entries({math:CURRICULUM.math,science:CURRICULUM.science,coding:CURRICULUM.coding}).map(([subj,units])=>(<div key={subj} style={{marginBottom:20}}><div className="sec-title">{SUBJ.find(s=>s.key===subj)?.icon} {SUBJ.find(s=>s.key===subj)?.label}</div><div className="heatmap-grid">{units.flatMap(u=>u.nodes).map(node=>{const pct=topicMastery[node.id]||0;return(<div key={node.id} className={"heat-cell heat-"+h(pct)} title={node.name+": "+pct+"%"}><div className="heat-icon">{node.icon}</div><div className="heat-name">{node.name}</div><div className="heat-pct" style={{color:pct>0?mc(pct):"var(--muted)"}}>{pct>0?pct+"%":"—"}</div></div>);})}</div></div>))}</>);}
+    if(parentDashPage==="log")return(<><div className="dash-page-title">📋 {name}'s Session Log</div><div className="dash-page-sub">Recent activity</div>{sessionLog.length===0?<div className="empty-state"><div className="empty-icon">📭</div><div className="empty-text">No sessions yet.</div></div>:sessionLog.map((s,i)=>{const{month,day,time}=fD(s.date);return(<div key={i} className="session-card"><div className="session-date-col"><div className="session-month">{month}</div><div className="session-day">{day}</div></div><div className="session-body"><div className="session-title">Session at {time}</div><div className="session-meta">Math {s.mastery?.math}% · Science {s.mastery?.science}% · Coding {s.mastery?.coding}%{s.hadStruggle?" · ⚠️ Struggled":""}</div><div className="session-topics">{(s.topics||[]).map((t,j)=><span key={j} className="session-topic-tag">{t}</span>)}{s.hadStruggle&&<span className="session-topic-tag gap-tag">Remediation</span>}</div></div><div className="session-xp">+{s.xpGained} XP</div></div>);})}</>);
+    if(parentDashPage==="settings")return(<><div className="dash-page-title">⚙️ Settings</div><div className="dash-page-sub">Manage children and account</div>
+      <div className="dash-card"><div className="settings-title">👶 Linked Children</div><div className="settings-sub">Remove a child from your dashboard.</div>{(parentData?.children||[]).map((cu,i)=>{const cp2=childProfiles[cu];return(<div key={i} className="gap-row"><span className="badge-ok">{cp2?.name||cu}</span>{cp2?.grade||""}<button onClick={()=>handleRemoveChild(cu)} style={{marginLeft:"auto",padding:"4px 10px",borderRadius:7,border:"2px solid var(--red)",background:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--red)"}}>Remove</button></div>);})}
+      <button onClick={()=>setShowAddChild(true)} style={{marginTop:12,padding:"9px 18px",borderRadius:9,border:"2px solid var(--blue)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--blue)"}}>+ Add Another Child</button></div>
+      <div className="dash-card"><div className="settings-title">🔑 API Key</div><div className="settings-sub">Change the Anthropic API key.</div><button onClick={changeApiKey} style={{padding:"9px 18px",borderRadius:9,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Change API Key</button></div>
     </>);
     return null;
   }
 
-  /* Header */
-  function Header(){
-    const lvl=profile?getLevel(profile.xp||0):null;
-    const isParent=accountType==="parent";
-    return(
-      <header className="header">
-        <div className="mascot">🦉</div>
-        <div><div className="header-title">Nova <span>STEM Tutor</span></div><div className="header-sub">{isParent?(parentData?.full_name||"Parent")+" · Parent Account":"Ibraheem's Personal Tutor"}</div></div>
-        <div className="header-right">
-          {!isParent&&profile&&<>
-            {lvl&&<div className="level-chip">Lvl {lvl.lvl} · {lvl.name}</div>}
-            <div className="xp-chip">⭐ {profile.xp||0}</div>
-            {syncStatus==="saving"&&<div className={"sync-badge sync-warn"}>⏳ Saving...</div>}
-            {syncStatus==="saved"&&<div className="sync-badge">☁️ Saved</div>}
-            {syncStatus==="error"&&<div className={"sync-badge sync-warn"}>⚠️ Offline</div>}
-          </>}
-          <button className="signout-btn" onClick={handleLogout}>Sign Out</button>
-        </div>
-      </header>
-    );
-  }
-
-  /* ── Screens ── */
-  if(screen==="loading")return<div className="app" style={{alignItems:"center",justifyContent:"center"}}><span style={{fontSize:44,animation:"float 1s ease-in-out infinite"}}>🦉</span></div>;
-
-  if(screen==="apikey")return(
-    <div className="app">
-      <div className="apikey-wrap fade-in">
-        <div className="apikey-card">
-          <span className="apikey-owl">🦉</span>
-          <div className="apikey-title">Nova <span>STEM Tutor</span></div>
-          <div className="apikey-sub">One-time setup: paste your Anthropic API key below.</div>
-          <div className="apikey-steps">
-            <div className="apikey-step"><div className="apikey-step-num">1</div><div>Go to <a className="apikey-link" href="https://console.anthropic.com" target="_blank" rel="noreferrer">console.anthropic.com</a> and sign up (free)</div></div>
-            <div className="apikey-step"><div className="apikey-step-num">2</div><div>Click <strong>API Keys</strong> then <strong>Create Key</strong></div></div>
-            <div className="apikey-step"><div className="apikey-step-num">3</div><div>Copy the key starting with <code style={{background:"#f1f5f9",padding:"1px 5px",borderRadius:4}}>sk-ant-</code> and paste below</div></div>
-          </div>
-          {apiKeyError&&<div className="err-box">{apiKeyError}</div>}
-          <input className="apikey-inp" type="password" placeholder="sk-ant-api03-..." value={apiKeyInput} onChange={e=>setApiKeyInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&validateKey()}/>
-          <button className="apikey-btn" onClick={validateKey} disabled={!apiKeyInput.trim()||apiKeyLoading}>{apiKeyLoading?<span className="spin">◌</span>:"Save & Continue 🚀"}</button>
-          <div className="apikey-note">🔒 Stored only in your browser. Free tier gets hundreds of lessons.</div>
-        </div>
-      </div>
-    </div>
-  );
-
-  if(screen==="auth")return(
-    <div className="app">
-      <div className="auth-wrap fade-in">
-        <div className="auth-card">
-          <span className="auth-owl">🦉</span>
-          <div className="auth-title">Nova <span>STEM Tutor</span></div>
-          <div className="auth-sub">Who is signing in?</div>
-          <div className="auth-tabs">
-            <button className={"auth-tab"+(authMode==="login"?" active":"")} onClick={()=>{setAuthMode("login");setAuthErr("");}}>Log In</button>
-            <button className={"auth-tab"+(authMode==="signup"?" active":"")} onClick={()=>{setAuthMode("signup");setAuthErr("");}}>Sign Up</button>
-          </div>
-          <div className="auth-type-row">
-            <button className={"auth-type-btn"+(authType==="student"?" active":"")} onClick={()=>setAuthType("student")}><span className="auth-type-icon">🎓</span><span>I'm a Student</span></button>
-            <button className={"auth-type-btn"+(authType==="parent"?" active":"")} onClick={()=>setAuthType("parent")}><span className="auth-type-icon">👨‍👩‍👧</span><span>I'm a Parent</span></button>
-          </div>
-          {authErr&&<div className="err-box">{authErr}</div>}
-          {authMode==="signup"&&authType==="parent"&&<input className="auth-inp" type="text" placeholder="Your full name (e.g. Haleem Masood)" value={authFullName} onChange={e=>setAuthFullName(e.target.value)}/>}
-          <input className="auth-inp" type="text" placeholder={authType==="parent"?"Parent username (e.g. haleem)":"Student username (e.g. ibraheem)"} value={authUser} onChange={e=>setAuthUser(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
-          <input className="auth-inp" type="password" placeholder="Password (min 4 characters)" value={authPass} onChange={e=>setAuthPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAuth()}/>
-          <button className="auth-btn" onClick={handleAuth} disabled={authLoading||!authUser.trim()||!authPass.trim()}>
-            {authLoading?<span className="spin">◌</span>:authMode==="login"?"Log In →":"Create Account →"}
-          </button>
-          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:14,lineHeight:1.6}}>
-            {authType==="parent"?"👨‍👩‍👧 Parent accounts can monitor all children from one dashboard.":"🎓 Student accounts get a personalized Nova tutor experience."}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  /* Parent Hub */
-  if(screen==="parent-hub")return(
-    <div className="app">
-      <Header/>
-      {showAddChild&&(
-        <div className="modal-overlay">
-          <div className="modal-card pop">
-            <div className="modal-title">➕ Add a Child</div>
-            <div className="modal-sub">Enter the student username your child used when they signed up. Their profile will appear in your dashboard immediately.</div>
-            {addChildErr&&<div className="err-box">{addChildErr}</div>}
-            <div className="field-lbl">Student username</div>
-            <input className="field-inp" style={{marginBottom:0}} placeholder="e.g. ibraheem" value={addChildUsername} onChange={e=>setAddChildUsername(e.target.value)} onKeyDown={e=>e.key==="Enter"&&handleAddChild()}/>
-            <div className="modal-actions">
-              <button className="btn-secondary" onClick={()=>{setShowAddChild(false);setAddChildErr("");setAddChildUsername("");}}>Cancel</button>
-              <button className="btn-primary" onClick={handleAddChild} disabled={addChildLoading||!addChildUsername.trim()}>{addChildLoading?<span className="spin">◌</span>:"Add Child"}</button>
-            </div>
-          </div>
-        </div>
-      )}
-      <div className="parent-hub">
-        <div className="parent-hub-sidebar">
-          <div className="parent-hub-header">
-            <div className="parent-hub-name">{parentData?.full_name||"Parent"}</div>
-            <div className="parent-hub-role">Parent Account</div>
-          </div>
-          <div className="children-list">
-            <div className="children-list-lbl">My Children</div>
-            {(parentData?.children||[]).length===0&&<div style={{fontSize:11,color:"#475569",fontWeight:600,lineHeight:1.6,marginBottom:8}}>No children linked yet. Add a child below.</div>}
-            {(parentData?.children||[]).map((childUser,i)=>{
-              const cp=childProfiles[childUser];
-              return(<button key={i} className={"child-btn"+(selectedChild===childUser?" active":"")} onClick={()=>setSelectedChild(childUser)}>
-                <div className="child-avatar" style={{background:CHILD_COLORS[i%CHILD_COLORS.length]}}>{CHILD_EMOJIS[i%CHILD_EMOJIS.length]}</div>
-                <div className="child-info"><div className="child-name">{cp?.name||childUser}</div><div className="child-grade">{cp?.grade||""} · {cp?.xp||0} XP</div></div>
-              </button>);
-            })}
-            <button className="add-child-btn" onClick={()=>setShowAddChild(true)}>+ Add Child</button>
-          </div>
-          <div className="parent-hub-nav">
-            <div className="parent-nav-lbl">Dashboard</div>
-            {[{key:"overview",icon:"📊",label:"Overview"},{key:"heatmap",icon:"🗺️",label:"Heatmap"},{key:"log",icon:"📋",label:"Session Log"},{key:"settings",icon:"⚙️",label:"Settings"}].map(p=>(
-              <button key={p.key} className={"parent-nav-btn"+(parentDashPage===p.key?" active":"")} onClick={()=>setParentDashPage(p.key)}>{p.icon} {p.label}</button>
-            ))}
-          </div>
-          <div className="parent-hub-bottom">
-            <button className="parent-nav-btn" style={{width:"100%",border:"2px solid rgba(255,255,255,.1)",borderRadius:9}} onClick={handleLogout}>🔒 Sign Out</button>
-          </div>
-        </div>
-        <div className="parent-hub-content fade-in">
-          {!selectedChild||!(parentData?.children||[]).length?(
-            <div className="no-child-state">
-              <div className="no-child-card">
-                <div style={{fontSize:48,marginBottom:12}}>👶</div>
-                <div style={{fontSize:20,fontWeight:900,color:"var(--navy)",marginBottom:8}}>No children linked yet</div>
-                <div style={{fontSize:13,color:"var(--muted)",fontWeight:600,lineHeight:1.7,marginBottom:20}}>Click <strong>"Add Child"</strong> in the sidebar and enter your child's student username to link their account to your dashboard.</div>
-                <button className="big-btn" onClick={()=>setShowAddChild(true)}>+ Add My First Child</button>
-              </div>
-            </div>
-          ):<ParentChildDashboard childUser={selectedChild}/>}
-        </div>
-      </div>
-    </div>
-  );
-
-  if(screen==="onboard"){
-    const steps=["About You","Interests","Quick Quiz","Results"];
-    const q=wizardStep===2?QS[qIndex]:null;
-    return(
-      <div className="app">
-        <div className="wizard-wrap fade-in">
-          <div className="wizard-sidebar">
-            <div className="wizard-logo"><div className="wizard-logo-owl">🦉</div><div className="wizard-logo-text">Nova <span>Tutor</span></div></div>
-            {steps.map((label,i)=>(<div key={i}><div className={"wizard-step-item"+(wizardStep===i?" active":"")+(wizardStep>i?" done":"")}><div className="wizard-step-num">{wizardStep>i?"✓":i+1}</div><div className="wizard-step-lbl">{label}</div></div>{i<steps.length-1&&<div className={"wizard-connector"+(wizardStep>i?" done":"")}/>}</div>))}
-          </div>
-          <div className="wizard-main">
-            {wizardStep===0&&(<div className="wizard-card slide-up">
-              <div className="wizard-badge">Step 1 of 4 · About You</div>
-              <div className="wizard-title">Let's set up your profile! 👋</div>
-              <div className="wizard-sub">Nova uses this to personalize every lesson.</div>
-              <div className="field-lbl">Your name</div>
-              <input className="field-inp" value={nameVal} onChange={e=>setNameVal(e.target.value)} placeholder="Enter name..."/>
-              <div className="field-lbl">Current grade</div>
-              <div className="grade-row">{GRADES.map(g=><button key={g} className={"grade-pill"+(gradeVal===g?" active":"")} onClick={()=>setGradeVal(g)}>{g}</button>)}</div>
-              <div className="wizard-nav"><button className="btn-primary" onClick={()=>setWizardStep(1)} disabled={!nameVal.trim()}>Next: Choose Interests →</button></div>
-            </div>)}
-            {wizardStep===1&&(<div className="wizard-card slide-up">
-              <div className="wizard-badge">Step 2 of 4 · Interests</div>
-              <div className="wizard-title">What do you love? ❤️</div>
-              <div className="wizard-sub">Nova weaves these into examples to make learning fun.</div>
-              <div className="interest-grid">{INTERESTS.map(int=>(<button key={int.key} className={"interest-btn"+(selInterests.includes(int.key)?" active":"")} onClick={()=>setSelInterests(prev=>prev.includes(int.key)?prev.filter(k=>k!==int.key):[...prev,int.key])}><span className="interest-icon">{int.icon}</span>{int.label}{selInterests.includes(int.key)&&<span style={{marginLeft:"auto",fontSize:14}}>✓</span>}</button>))}</div>
-              <div className="wizard-nav"><button className="btn-secondary" onClick={()=>setWizardStep(0)}>← Back</button><button className="btn-primary" onClick={()=>setWizardStep(2)}>Next: Quick Quiz →</button></div>
-            </div>)}
-            {wizardStep===2&&q&&(<div className="diag-card slide-up" style={{maxWidth:520,width:"100%"}}>
-              <div className="diag-prog-lbl"><span>Question {qIndex+1} of {QS.length}</span><span style={{color:"var(--blue)"}}>{Math.round(qIndex/QS.length*100)}%</span></div>
-              <div className="diag-bar"><div className="diag-bar-fill" style={{width:(qIndex/QS.length*100)+"%"}}/></div>
-              <div className={"subj-badge "+q.badge}>{q.icon} {q.subjectLabel}</div>
-              <div className="diag-q">{q.q}</div><div className="diag-hint">💡 {q.hint}</div>
-              <div className="ans-grid">{q.options.map((opt,i)=>{let cls="ans-btn";if(answered){if(i===q.correct)cls+=" correct";else if(i===selected)cls+=" wrong";}return<button key={i} className={cls} onClick={()=>handleAnswer(i)} disabled={answered}><span style={{fontWeight:900,marginRight:5,color:"var(--muted)"}}>{["A","B","C","D"][i]}.</span>{opt}</button>;})}</div>
-              {answered&&<div className={"feedback pop "+(selected===q.correct?"fb-ok":"fb-no")}>{selected===q.correct?"✅ Correct! "+q.explanation:"❌ Not quite. "+q.explanation}</div>}
-              {answered&&<button className="next-btn pop" onClick={handleNext}>{qIndex<QS.length-1?"Next →":"See Results! 🎉"}</button>}
-            </div>)}
-            {wizardStep===3&&profile&&(<div className="results-card slide-up" style={{maxWidth:500,width:"100%"}}>
-              <div style={{fontSize:36,textAlign:"center",marginBottom:10}}>🎉🌟🎊</div>
-              <div style={{fontSize:24,fontWeight:900,color:"var(--navy)",textAlign:"center",marginBottom:6}}>All set, {profile.name}!</div>
-              <div style={{fontSize:13,color:"var(--muted)",fontWeight:600,textAlign:"center",marginBottom:20,lineHeight:1.6}}>Nova knows your starting point:</div>
-              <div className="mastery-grid">{[{label:"Math",key:"math",icon:"🔢",color:"#3b82f6"},{label:"Science",key:"science",icon:"⚛️",color:"#8b5cf6"},{label:"Coding",key:"coding",icon:"💻",color:"#14b8a6"}].map(s=>(<div key={s.key} className="m-card"><div className="m-icon">{s.icon}</div><div className="m-lbl">{s.label}</div><div className="m-score" style={{color:mc(profile.mastery[s.key])}}>{profile.mastery[s.key]}%</div><div style={{fontSize:9,fontWeight:700,color:mc(profile.mastery[s.key]),marginTop:2}}>{ml(profile.mastery[s.key])}</div><div className="m-bar"><div className="m-bar-fill" style={{width:profile.mastery[s.key]+"%",background:s.color}}/></div></div>))}</div>
-              {profile.gaps.length>0&&<div className="box-gap"><div className="box-gap-title">🎯 Nova will focus on</div>{profile.gaps.map((g,i)=><div key={i} className="box-gap-item">→ {g}</div>)}</div>}
-              {profile.strengths.length>0&&<div className="box-str"><div className="box-str-title">💪 Strengths</div>{profile.strengths.map((s,i)=><div key={i} className="box-str-item">✓ {s}</div>)}</div>}
-              <button className="big-btn" onClick={()=>setScreen("tutor")}>Start Learning with Nova! 🚀</button>
-            </div>)}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  /* Tutor */
-  if(showGameBreak)return(
-    <div className="app">
-      <Header/>
-      <GameBreakScreen onReturn={()=>setShowGameBreak(false)}/>
-    </div>
-  );
-
-  return(
-    <div className="app">
-      <Header/>
-      {xpToast&&<div className="xp-toast">{xpToast}</div>}
-      {levelToast&&<div className="level-toast">{levelToast}</div>}
-      {masteredToast&&<div className="mastered-toast">{masteredToast}</div>}
-      {gapToast&&<div className="gap-toast">{gapToast}</div>}
-      <div className="main">
-        <div className="sidebar">
-          <div>
-            <div className="sidebar-label">Mastery</div>
-            {SUBJ.map(s=>(<div key={s.key} className="mastery-row"><div className="mastery-row-top"><span>{s.icon} {s.label}</span><span style={{color:mc(profile?.mastery?.[s.key]||0)}}>{profile?.mastery?.[s.key]||0}%</span></div><div className="mastery-bar"><div className="mastery-fill" style={{width:(profile?.mastery?.[s.key]||0)+"%",background:s.color}}/></div></div>))}
-          </div>
-          {isStruggling&&<div className="struggle-indicator"><span>⚠️</span><div><div>Remediating</div><div className="struggle-bar"><div className="struggle-fill" style={{width:Math.min(consecutiveStruggle*33,100)+"%"}}/></div></div></div>}
-          <div>
-            <div className="sidebar-label">Focus Subject</div>
-            {SUBJ.map(s=><button key={s.key} className={"subject-btn "+s.key+(subject===s.key?" active":"")} onClick={()=>setSubject(prev=>prev===s.key?null:s.key)}><span>{s.icon}</span>{s.label}</button>)}
-          </div>
-          <div>
-            <div className="sidebar-label">Teaching Mode</div>
-            {MODES.map(m=><button key={m.key} className={"mode-btn"+(mode===m.key?" active":"")} onClick={()=>setMode(m.key)}>{m.label}</button>)}
-          </div>
-          {(profile?.gaps||[]).length>0&&<div><div className="sidebar-label">🎯 Gaps (click to fix)</div>{profile.gaps.map((g,i)=><div key={i} className="gap-pill" onClick={()=>sendMessage("I need help with: "+g,true,g)}>→ {g} 🎯</div>)}</div>}
-          {(profile?.strengths||[]).length>0&&<div><div className="sidebar-label">💪 Strengths</div>{profile.strengths.map((s,i)=><div key={i} className="strength-pill">✓ {s}</div>)}</div>}
-          {/* Game Break Button */}
-          <div style={{marginTop:"auto",paddingTop:8}}>
-            {gameBreakReady?(
-              <button onClick={()=>{setShowGameBreak(true);setGameBreakReady(false);setLastBreakTime(Date.now());}}
-                style={{width:"100%",padding:"10px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"Nunito,sans-serif",fontSize:12,fontWeight:900,cursor:"pointer",animation:"pulseGlow 2s infinite",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
-                🎮 Game Break Ready!
-              </button>
-            ):(
-              <div style={{padding:"8px 10px",borderRadius:10,background:"rgba(255,255,255,.05)",border:"1px solid rgba(255,255,255,.08)",fontSize:10,fontWeight:700,color:"#475569",textAlign:"center"}}>
-                🎮 Game break in {Math.max(0,15-Math.round((Date.now()-lastBreakTime)/1000/60))} min
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="chat-wrap">
-          <div className="chat-area" ref={chatRef}>
-            {messages.length===0?(
-              <div className="welcome">
-                <span className="welcome-emoji">🦉</span>
-                <div className="welcome-title">Hey <em>{profile?.name}</em>! 👋</div>
-                <div className="welcome-sub">Math {profile?.mastery?.math}% · Science {profile?.mastery?.science}% · Coding {profile?.mastery?.coding}%<br/>{(profile?.gaps||[]).length>0&&"Focusing on: "+profile.gaps.join(", ")}</div>
-                {profile?.interests?.length>0&&<div className="welcome-interests">{profile.interests.slice(0,4).map((int,i)=><span key={i} className="welcome-interest-tag">{int}</span>)}</div>}
-                <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:14}}>Pick something to explore, or type anything below 👇</div>
-                <div className="qs-grid">{getQS().map((q,i)=><button key={i} className="qs-btn" onClick={()=>sendMessage(q.text)}><span className="qs-emoji">{q.emoji}</span><span>{q.text}</span></button>)}</div>
-              </div>
-            ):messages.map((msg,i)=>{
-              if(msg.type==="user")return(<div key={i} className="msg user"><div className="avatar av-user">😊</div><div><div className="bubble bubble-user">{msg.content}</div>{msg.topics&&msg.topics.length>0&&<div style={{marginTop:4,display:"flex",justifyContent:"flex-end",flexWrap:"wrap"}}>{msg.topics.slice(0,3).map(tid=>{const node=gN(tid);return node?<span key={tid} className={"topic-tag "+sOI(tid)}>{node.icon}{node.name}</span>:null;})}</div>}</div></div>);
-              return(<div key={i} className="msg"><div className="avatar av-nova">🦉</div>{msg.loading?<div className="typing"><div className="tdot"/><div className="tdot"/><div className="tdot"/></div>:<div className={"bubble "+(msg.isRem?"bubble-remediation":"bubble-nova")}>{msg.isRem&&<div className="remediation-badge">🎯 REMEDIATION MODE</div>}<Blocks blocks={msg.blocks} topicIds={msg.topics||[]}/></div>}</div>);
-            })}
-          </div>
-          <div className="input-area">
-            <div className="status-row">
-              {subject&&<span className="status-chip chip-subject">{SUBJ.find(s=>s.key===subject)?.icon} {SUBJ.find(s=>s.key===subject)?.label}</span>}
-              {mode!=="mixed"&&<span className="status-chip chip-mode">{MODES.find(m=>m.key===mode)?.label}</span>}
-              {isStruggling&&<span className="status-chip chip-struggling">⚠️ Remediation Active</span>}
-            </div>
-            <div className={"input-box"+(isStruggling?" struggling":"")}>
-              <textarea ref={taRef} className="chat-input" placeholder={"Ask Nova anything, "+(profile?.name||"")+"! 🌟"} value={input} onChange={e=>{setInput(e.target.value);e.target.style.height="20px";e.target.style.height=Math.min(e.target.scrollHeight,90)+"px";}} onKeyDown={handleKey} rows={1} disabled={isLoading}/>
-              <button className="send-btn" onClick={()=>sendMessage()} disabled={isLoading||!input.trim()}>{isLoading?<span className="spin" style={{fontSize:13}}>◌</span>:"✈️"}</button>
-            </div>
-          </div>
-        </div>
-        <TreePanel/>
-      </div>
-    </div>
-  );
-}
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
-</script>
-</body>
-</html>
+  function DashSettings(){
+    return(<><div className="dash-page-title">⚙️ Settings</div><div className="dash-page-sub">Manage profile, PIN, and portability</div>
+      <div className="dash-card" style={{marginBottom:16}}>
+        <div className="settings-title">💾 Profile Portability</div><div className="settings-sub">Export saves everything. Import restores on any device.</div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",borderRadius:11,background:"#f0fdf4",border:"2px solid var(--green)",marginBottom:10}}><div><div style={{fontSize:13,fontWeight:800,color:"#166534"}}>📤 Export Profile</div><div style={{fontSize:11,fontWeight:600,color:"#15803d",marginTop:2}}>Downloads a .json backup</div></div><button onClick={exportProfile} style={{padding:"9px 18px",borderRadius:9,border:"none",background:"var(--green)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>Export ↓</button></div>
+        <div style={{padding:"12px 14px",borderRadius:11,background:"#eff6ff",border:"2px solid var(--blue)"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:importStatus?10:0}}><div><div style={{fontSize:13,fontWeight:800,color:"#1e40af"}}>📥 Import Profile</div><div style={{fontSize:11,fontWeight:600,color:"#1d4ed8",marginTop:2}}>Restore from exported file</div></div><button onClick={()=>importRef.current&&importRef.current.click()} style={{padding:"9px 18px",borderRadius:9,border:"
