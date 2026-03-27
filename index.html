@@ -631,6 +631,23 @@ const sb={
   upsertParent:async(u,h,name,children)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts",{method:"POST",headers:{...sbH,"Prefer":"resolution=merge-duplicates"},body:JSON.stringify({username:u,password_hash:h,full_name:name,children:children||[]})});return r.ok;}catch{return false;}},
   updateParent:async(u,data)=>{try{const r=await fetch(SB_URL+"/rest/v1/parent_accounts?username=eq."+encodeURIComponent(u),{method:"PATCH",headers:sbH,body:JSON.stringify(data)});return r.ok;}catch{return false;}}
 };
+/* ── Cross-device sync helpers ── store extra data inside profile_data */
+const syncSave=async(u,key,value)=>{
+  try{
+    const row=await sb.getProfile(u);
+    if(!row)return false;
+    const pd={...(row.profile_data||{}),[key]:value};
+    return sb.updateProfile(u,pd);
+  }catch{return false;}
+};
+const syncSaveParent=async(u,key,value)=>{
+  try{
+    const row=await sb.getParent(u);
+    if(!row)return false;
+    const updates={[key]:value,updated_at:new Date().toISOString()};
+    return sb.updateParent(u,updates);
+  }catch{return false;}
+};
 async function hashPassword(pw){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(pw));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
 const ls={get:(k)=>{try{const v=localStorage.getItem(k);return v?{value:v}:null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,v);}catch{}},del:(k)=>{try{localStorage.removeItem(k);}catch{}}};
 
@@ -1783,10 +1800,24 @@ function App(){
   /* Boot */
   useEffect(()=>{
     (async()=>{
-      const key=localStorage.getItem("nova_api_key");
-      if(!key){setScreen("apikey");return;}
       const user=localStorage.getItem("nova_user");
       const type=localStorage.getItem("nova_account_type");
+      let key=localStorage.getItem("nova_api_key");
+
+      // If user is known but API key is missing — try pulling from Supabase first
+      if(user&&!key){
+        try{
+          if(type==="parent"){
+            const row=await sb.getParent(user);
+            if(row?.api_key){localStorage.setItem("nova_api_key",row.api_key);key=row.api_key;}
+          } else if(type==="student"){
+            const row=await sb.getProfile(user);
+            if(row?.profile_data?._apiKey){localStorage.setItem("nova_api_key",row.profile_data._apiKey);key=row.profile_data._apiKey;}
+          }
+        }catch{}
+      }
+
+      if(!key){setScreen("apikey");return;}
       if(!user||!type){setScreen("auth");return;}
       setAccountType(type);
       if(type==="parent"){
@@ -1799,8 +1830,12 @@ function App(){
       try{
         const row=await sb.getProfile(user);
         if(row&&row.profile_data&&row.profile_data.setupComplete){
-          setProfile(row.profile_data);
-          ls.set("nova_profile",JSON.stringify(row.profile_data));
+          const pd=row.profile_data;
+          // Restore writing data from Supabase to localStorage on this device
+          if(pd._studentNotes)localStorage.setItem("nova_notes_"+user,JSON.stringify(pd._studentNotes));
+          if(pd._writingHistory)localStorage.setItem("nova_writing_"+user,JSON.stringify(pd._writingHistory));
+          setProfile(pd);
+          ls.set("nova_profile",JSON.stringify(pd));
           setScreen("tutor");return;
         }
       }catch(e){console.log(e);}
@@ -1856,7 +1891,18 @@ function App(){
       const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:10,messages:[{role:"user",content:"hi"}]})});
       const d=await r.json();
       if(d.error){setApiKeyError("Key error: "+d.error.message);setApiKeyLoading(false);return;}
-      localStorage.setItem("nova_api_key",key);setApiKeyLoading(false);setScreen("auth");
+      localStorage.setItem("nova_api_key",key);
+      // Sync API key to Supabase so it works on other devices
+      const loggedUser=localStorage.getItem("nova_user");
+      const loggedType=localStorage.getItem("nova_account_type");
+      if(loggedUser){
+        if(loggedType==="parent"){
+          syncSaveParent(loggedUser,"api_key",key);
+        } else {
+          syncSave(loggedUser,"_apiKey",key);
+        }
+      }
+      setApiKeyLoading(false);setScreen(loggedUser?"tutor":"auth");
     }catch(e){setApiKeyError("Could not connect.");setApiKeyLoading(false);}
   };
 
@@ -1895,13 +1941,28 @@ function App(){
           localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
           setAccountType("student");setAuthLoading(false);setScreen("onboard");
         }else{
+          // Student login
           const row=await sb.getProfile(u);
-          if(!row){setAuthErr("Username not found.");setAuthLoading(false);return;}
+          if(!row){setAuthErr("Username not found. Please check your username or sign up.");setAuthLoading(false);return;}
           if(row.password_hash!==hash){setAuthErr("Incorrect password.");setAuthLoading(false);return;}
           localStorage.setItem("nova_user",u);localStorage.setItem("nova_account_type","student");
-          localStorage.removeItem("nova_profile"); // clear any previous user's cached profile
+          localStorage.removeItem("nova_profile");
           setAccountType("student");
-          if(row.profile_data&&row.profile_data.setupComplete){setProfile(row.profile_data);ls.set("nova_profile",JSON.stringify({...row.profile_data,username:u}));setAuthLoading(false);setScreen("tutor");}
+          const pd=row.profile_data||{};
+          // Pull API key from Supabase if not on this device
+          if(pd._apiKey&&!localStorage.getItem("nova_api_key")){
+            localStorage.setItem("nova_api_key",pd._apiKey);
+          }
+          // Pull writing notes from Supabase
+          if(pd._studentNotes){
+            const u2=u;
+            localStorage.setItem("nova_notes_"+u2,JSON.stringify(pd._studentNotes));
+          }
+          // Pull writing history from Supabase
+          if(pd._writingHistory){
+            localStorage.setItem("nova_writing_"+u,JSON.stringify(pd._writingHistory));
+          }
+          if(pd.setupComplete){setProfile(pd);ls.set("nova_profile",JSON.stringify({...pd,username:u}));setAuthLoading(false);setScreen("tutor");}
           else{setAuthLoading(false);setScreen("onboard");}
         }
       }
@@ -3178,6 +3239,8 @@ Write the essay now:`;
     const updated=[note,...studentNotes].slice(0,50);
     setStudentNotes(updated);
     localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));
+    // Sync to Supabase for cross-device access
+    if(u)syncSave(u,"_studentNotes",updated);
   };
 
   const updateStudentNote=(id,changes)=>{
@@ -3185,6 +3248,8 @@ Write the essay now:`;
     const updated=studentNotes.map(n=>n.id===id?{...n,...changes,updatedAt:new Date().toISOString()}:n);
     setStudentNotes(updated);
     localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));
+    // Sync to Supabase
+    if(u)syncSave(u,"_studentNotes",updated);
   };
 
   const saveEssayToNotes=()=>{
@@ -3356,6 +3421,8 @@ Rules:
     const updated={...writingHistory,[lessonId]:entry};
     setWritingHistory(updated);
     localStorage.setItem("nova_writing_"+u,JSON.stringify(updated));
+    // Sync to Supabase for cross-device access
+    if(u)syncSave(u,"_writingHistory",updated);
     // Also save to profile for daily reports
     const up={...profile,writingHistory:updated,lastWritingSession:new Date().toISOString()};
     saveProfile(up);
