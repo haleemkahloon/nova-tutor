@@ -1547,6 +1547,8 @@ function App(){
   const scanTextRef=useRef("");
   const[scanTitle,setScanTitle]=useState("");
   const[scanLoading,setScanLoading]=useState(false);
+  const[scanImageLoading,setScanImageLoading]=useState(false); // OCR loading state
+  const[scanImagePreview,setScanImagePreview]=useState(null); // base64 preview
   const[scanIssues,setScanIssues]=useState([]); // array of issue objects
   const[scanChoices,setScanChoices]=useState({}); // {issueIdx: chosenOptionIdx}
   const[studentNotes,setStudentNotes]=useState(()=>{
@@ -2692,6 +2694,60 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
     localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));
   };
 
+  /* ── Extract text from image using Claude vision ── */
+  const scanImageForText=async(file)=>{
+    if(!file)return;
+    setScanImageLoading(true);
+    setScanImagePreview(null);
+    // Read file as base64
+    const reader=new FileReader();
+    reader.onload=async(ev)=>{
+      const dataUrl=ev.target.result;
+      const base64=dataUrl.split(",")[1];
+      const mediaType=file.type||"image/jpeg";
+      // Show preview
+      setScanImagePreview(dataUrl);
+      try{
+        const key=localStorage.getItem("nova_api_key");
+        const prompt=`This is a photo of a student's handwritten or printed essay/writing assignment.
+
+Please extract ALL the text you can see in the image, exactly as written. 
+- Preserve paragraph breaks with blank lines
+- Keep the student's original spelling and grammar (do NOT fix errors — the writing coach will handle that)
+- If handwriting is unclear, do your best to interpret it
+- Only return the extracted text, nothing else — no commentary, no "Here is the text:", just the raw text`;
+
+        const r=await fetch("https://api.anthropic.com/v1/messages",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+          body:JSON.stringify({
+            model:"claude-haiku-4-5-20251001",
+            max_tokens:2000,
+            messages:[{
+              role:"user",
+              content:[
+                {type:"image",source:{type:"base64",media_type:mediaType,data:base64}},
+                {type:"text",text:prompt}
+              ]
+            }]
+          })
+        });
+        const data=await r.json();
+        if(data.error)throw new Error(data.error.message);
+        const extracted=(data.content?.[0]?.text||"").trim();
+        if(extracted){
+          setScanText(extracted);
+          scanTextRef.current=extracted;
+        }
+      }catch(err){
+        console.error("Image OCR error:",err);
+      }
+      setScanImageLoading(false);
+    };
+    reader.onerror=()=>setScanImageLoading(false);
+    reader.readAsDataURL(file);
+  };
+
   /* ── Scan essay and return interactive issue list ── */
   const scanEssay=async()=>{
     const text=scanTextRef.current||scanText;
@@ -2843,14 +2899,72 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         {/* Input area */}
         {scanIssues.length===0&&!scanLoading&&(
           <div style={{background:"#fff",borderRadius:18,padding:20,border:"2px solid var(--border)"}}>
-            <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📝 Paste or type your essay below</div>
-            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:12}}>Nova will read it and give you interactive, step-by-step feedback on how to make it better.</div>
+            <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📝 How would you like to share your writing?</div>
+            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:14}}>Take a photo of your paper, upload an image, or type/paste your essay.</div>
+
+            {/* Camera / Upload buttons */}
+            <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
+              {/* Camera button — opens camera on iPad/iPhone */}
+              <label style={{flex:1,minWidth:120,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:6,padding:"16px 10px",borderRadius:14,border:"2px dashed var(--purple)",background:"#f5f3ff",cursor:"pointer",transition:"all .15s"}}>
+                <input type="file" accept="image/*" capture="environment"
+                  style={{display:"none"}}
+                  onChange={e=>e.target.files[0]&&scanImageForText(e.target.files[0])}/>
+                <span style={{fontSize:32}}>📷</span>
+                <span style={{fontSize:11,fontWeight:900,color:"var(--purple)"}}>Take Photo</span>
+                <span style={{fontSize:9,fontWeight:600,color:"var(--muted)",textAlign:"center"}}>Opens camera on iPad/iPhone</span>
+              </label>
+
+              {/* Upload from files */}
+              <label style={{flex:1,minWidth:120,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:6,padding:"16px 10px",borderRadius:14,border:"2px dashed var(--blue)",background:"#eff6ff",cursor:"pointer",transition:"all .15s"}}>
+                <input type="file" accept="image/*,image/heic,image/heif"
+                  style={{display:"none"}}
+                  onChange={e=>e.target.files[0]&&scanImageForText(e.target.files[0])}/>
+                <span style={{fontSize:32}}>🖼️</span>
+                <span style={{fontSize:11,fontWeight:900,color:"var(--blue)"}}>Upload Image</span>
+                <span style={{fontSize:9,fontWeight:600,color:"var(--muted)",textAlign:"center"}}>From photos or files</span>
+              </label>
+
+              {/* Divider */}
+              <div style={{display:"flex",alignItems:"center",padding:"0 4px",color:"var(--muted)",fontSize:11,fontWeight:700}}>or</div>
+
+              {/* Type/paste */}
+              <div style={{flex:2,minWidth:120,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:6,padding:"16px 10px",borderRadius:14,border:"2px dashed var(--border)",background:"#fafafa"}}>
+                <span style={{fontSize:32}}>⌨️</span>
+                <span style={{fontSize:11,fontWeight:900,color:"var(--text)"}}>Type or Paste</span>
+                <span style={{fontSize:9,fontWeight:600,color:"var(--muted)",textAlign:"center"}}>Use the box below</span>
+              </div>
+            </div>
+
+            {/* Image loading indicator */}
+            {scanImageLoading&&(
+              <div style={{padding:"14px",borderRadius:12,background:"#f5f3ff",border:"2px solid var(--purple)",marginBottom:12,display:"flex",alignItems:"center",gap:12}}>
+                <span style={{fontSize:24,animation:"spin 1s linear infinite",display:"inline-block"}}>◌</span>
+                <div>
+                  <div style={{fontSize:12,fontWeight:900,color:"var(--purple)"}}>Nova is reading your photo...</div>
+                  <div style={{fontSize:10,color:"var(--muted)",fontWeight:600}}>Extracting text from the image. This takes a few seconds!</div>
+                </div>
+              </div>
+            )}
+
+            {/* Image preview + extracted text confirmation */}
+            {scanImagePreview&&!scanImageLoading&&(
+              <div style={{marginBottom:12,padding:"12px",borderRadius:12,background:"#f0fdf4",border:"2px solid var(--green)",display:"flex",gap:12,alignItems:"flex-start"}}>
+                <img src={scanImagePreview} alt="Scanned essay" style={{width:80,height:60,objectFit:"cover",borderRadius:8,flexShrink:0,border:"1px solid var(--border)"}}/>
+                <div>
+                  <div style={{fontSize:12,fontWeight:900,color:"var(--green)",marginBottom:2}}>✅ Text extracted from photo!</div>
+                  <div style={{fontSize:10,fontWeight:600,color:"var(--muted)"}}>Check the text below and fix anything Nova may have misread, then scan for feedback.</div>
+                  <button onClick={()=>{setScanImagePreview(null);}} style={{marginTop:6,padding:"3px 10px",borderRadius:20,border:"none",background:"#dcfce7",color:"var(--green)",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>Change photo ↺</button>
+                </div>
+              </div>
+            )}
+
             <input
               placeholder="Give your essay a title (optional)..."
               value={scanTitle}
               onChange={e=>setScanTitle(e.target.value)}
               style={{width:"100%",padding:"9px 12px",borderRadius:9,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:12,fontWeight:700,outline:"none",marginBottom:10,color:"var(--navy)"}}/>
             <textarea
+              key={scanText} // re-mount when image text is loaded so defaultValue updates
               placeholder={"Paste your essay here, "+profile?.name+"! Nova will read every sentence carefully and show you exactly how to improve it. ✍️"}
               defaultValue={scanText}
               onInput={e=>{scanTextRef.current=e.target.value;}}
@@ -2865,7 +2979,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
               <span style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{wordCount} words</span>
               <button
                 onClick={scanEssay}
-                disabled={wordCount<10}
+                disabled={wordCount<10||scanImageLoading}
                 style={{padding:"11px 28px",borderRadius:12,border:"none",background:wordCount>=10?"linear-gradient(135deg,var(--purple),var(--blue))":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:wordCount>=10?"pointer":"not-allowed",boxShadow:wordCount>=10?"0 4px 14px rgba(139,92,246,.3)":"none"}}>
                 🔍 Scan My Writing
               </button>
@@ -2947,7 +3061,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                 style={{flex:1,padding:"13px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:"0 4px 14px rgba(139,92,246,.3)"}}>
                 📓 Save to My Notes
               </button>
-              <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");}}
+              <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setScanImagePreview(null);}}
                 style={{padding:"13px 20px",borderRadius:12,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>
                 Scan Another ↺
               </button>
