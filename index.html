@@ -2974,7 +2974,40 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         {(profile?.gaps||[]).length>0&&(
           <div>
             <div className="sidebar-label">🎯 Focus Areas</div>
-            {profile.gaps.slice(0,4).map((g,i)=><div key={i} className="gap-pill" style={{cursor:"default"}}>→ {g}</div>)}
+            {profile.gaps.slice(0,4).map((g,i)=>{
+              // Map gap name → node IDs (same map as updateGaps)
+              const GAP_MAP={"Fractions & Division":["m3","m4","m5","m13","m16"],"Decimals":["m14","m15"],"Place Value":["m11","m12"],"Ratios & Percents":["m17","m18","m19"],"Pre-Algebra":["m20","m21","m22","m27"],"Geometry":["m6","m7","m8","m23","m24"],"Data & Probability":["m25","m26"],"Forces & Motion":["s1","s2","s3","s4"],"Energy & Waves":["s18","s19","s20"],"States of Matter":["s5","s6","s7"],"Life Science":["s11","s12","s13","s14"],"Earth Science":["s15","s16","s17"],"Space Science":["s8"],"Ecosystems":["s10","s9"],"Chemistry Basics":["ch1","ch2","ch3"],"Chemical Reactions":["ch4","ch5","ch6","ch7"],"Cell Biology":["b1","b2"],"Human Body":["b3","b5","b6"],"Ecology & Evolution":["b4"],"Logic & Loops":["c3","c4"],"Variables & Functions":["c5","c6","c9","c10"],"Web & Advanced CS":["c11","c12","c13","c14"],"Critical Thinking":["ct1","ct2","ct3","ct4","ct5"]};
+              // Find the weakest (lowest mastery) unlocked node in this gap
+              const nodeIds=GAP_MAP[g]||[];
+              const tm=profile?.topicMastery||{};
+              const candidates=nodeIds.map(id=>gN(id)).filter(Boolean);
+              // Pick the one with the lowest mastery score (prioritise started-but-low over not-started)
+              const started=candidates.filter(n=>tm[n.id]!==undefined).sort((a,b)=>(tm[a.id]||0)-(tm[b.id]||0));
+              const target=started[0]||candidates[0];
+              const fixGap=()=>{
+                if(!target)return;
+                // Determine subject key from node id prefix
+                const subKey=target.id.startsWith("m")?"math":target.id.startsWith("s")?"science":target.id.startsWith("ch")?"chemistry":target.id.startsWith("b")?"biology":target.id.startsWith("c")&&!target.id.startsWith("ch")?"coding":"critical";
+                setWritingMode(false);
+                setLearnSubject(subKey);
+                setLearnTopic(null);
+                setLearnPhase("topics");
+                // Auto-launch lesson for this specific node after a tick
+                setTimeout(()=>startLesson(target),50);
+              };
+              return(
+                <div key={i} style={{marginBottom:6,padding:"8px 10px",borderRadius:10,background:"#fff7ed",border:"1px solid #fed7aa"}}>
+                  <div style={{fontSize:10,fontWeight:800,color:"#92400e",marginBottom:5}}>→ {g}</div>
+                  {target?(
+                    <button onClick={fixGap} style={{width:"100%",padding:"5px 8px",borderRadius:7,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",fontSize:9,fontWeight:900,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4}}>
+                      🎯 Fix This Gap — {target.icon} {target.name}
+                    </button>
+                  ):(
+                    <div style={{fontSize:9,color:"#92400e",fontWeight:600}}>Complete earlier topics first</div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
         <div style={{marginTop:"auto",paddingTop:8}}>
