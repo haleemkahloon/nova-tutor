@@ -1617,13 +1617,18 @@ function App(){
   const[essayUrlInput,setEssayUrlInput]=useState("");
   const essayUrlRef=useRef("");
   const[essayUrlLoading,setEssayUrlLoading]=useState(false);
-  const[essayUrlStatus,setEssayUrlStatus]=useState(null); // null | "ok" | "error"
+  const[essayUrlStatus,setEssayUrlStatus]=useState(null);
   const[essayFileLoading,setEssayFileLoading]=useState(false);
-  const[essaySources,setEssaySources]=useState([]); // [{type,label,snippet}]
+  const[essaySources,setEssaySources]=useState([]);
+  const[essayWebQuery,setEssayWebQuery]=useState("");
+  const essayWebQueryRef=useRef("");
+  const[essayWebLoading,setEssayWebLoading]=useState(false);
+  const[essayWebStatus,setEssayWebStatus]=useState(null); // null|"ok"|"error"
   const[essayRevisionInput,setEssayRevisionInput]=useState("");
   const essayRevisionRef=useRef("");
   const[essayRevisionLoading,setEssayRevisionLoading]=useState(false);
   const[essayRevisionHistory,setEssayRevisionHistory]=useState([]);
+  const[essaySavedNoteId,setEssaySavedNoteId]=useState(null); // id of note if already saved
   const[voiceOn,setVoiceOn]=useState(true);
   const[isSpeaking,setIsSpeaking]=useState(false);
   const[isListening,setIsListening]=useState(false);
@@ -2969,6 +2974,57 @@ Return ONLY the revised essay text (no commentary, no "Here is the revised essay
     setEssayUrlLoading(false);
   };
 
+  /* ── Search the web and pull results as research ── */
+  const searchWeb=async()=>{
+    const query=(essayWebQueryRef.current||essayWebQuery).trim();
+    if(!query)return;
+    setEssayWebLoading(true);
+    setEssayWebStatus(null);
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      // Use Claude with web_search tool to search and summarize results
+      const r=await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body:JSON.stringify({
+          model:"claude-haiku-4-5-20251001",
+          max_tokens:1500,
+          tools:[{type:"web_search_20250305",name:"web_search"}],
+          messages:[{role:"user",content:`Search the web for information about: "${query}"
+
+Find the most relevant, accurate, and up-to-date information. Summarize the key facts, statistics, quotes, and important details that would be useful for writing an essay on this topic.
+
+Return a well-organized summary of what you found — include specific facts, numbers, and examples. No commentary about the search process, just the content.`}]
+        })
+      });
+      const data=await r.json();
+      if(data.error)throw new Error(data.error.message);
+
+      // Extract all text blocks from response (Claude will include search results inline)
+      const textContent=(data.content||[])
+        .filter(b=>b.type==="text")
+        .map(b=>b.text)
+        .join("\n")
+        .trim();
+
+      if(textContent&&textContent.length>50){
+        const snippet=textContent.slice(0,150)+"...";
+        const newResearch=(essayResearchRef.current||essayResearch)+"\n\n--- Web Search: "+query+" ---\n"+textContent;
+        setEssayResearch(newResearch.trim());
+        essayResearchRef.current=newResearch.trim();
+        setEssaySources(prev=>[...prev,{type:"web",label:'🔍 "'+query+'"',snippet}]);
+        setEssayWebStatus("ok");
+        setEssayWebQuery("");
+        essayWebQueryRef.current="";
+      }else{
+        throw new Error("No results");
+      }
+    }catch(err){
+      setEssayWebStatus("error");
+    }
+    setEssayWebLoading(false);
+  };
+
   /* ── Load text/PDF file ── */
   const loadFile=async(file)=>{
     if(!file)return;
@@ -3119,9 +3175,49 @@ Write the essay now:`;
 
   const saveStudentNote=(note)=>{
     const u=localStorage.getItem("nova_user")||"";
-    const updated=[note,...studentNotes].slice(0,50); // keep 50 most recent
+    const updated=[note,...studentNotes].slice(0,50);
     setStudentNotes(updated);
     localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));
+  };
+
+  const updateStudentNote=(id,changes)=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const updated=studentNotes.map(n=>n.id===id?{...n,...changes,updatedAt:new Date().toISOString()}:n);
+    setStudentNotes(updated);
+    localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));
+  };
+
+  const saveEssayToNotes=()=>{
+    if(!essayOutput)return;
+    if(essaySavedNoteId){
+      // Update existing note with latest essay body + revision history
+      updateStudentNote(essaySavedNoteId,{
+        body:essayOutput.body,
+        highlights:essayOutput.highlights,
+        wordCount:essayOutput.wordCount,
+        revisionHistory:essayRevisionHistory,
+        title:essayOutput.topic,
+      });
+    } else {
+      // Create new note
+      const note={
+        id:Date.now(),
+        type:"essay", // distinguish from scan notes
+        date:new Date().toISOString(),
+        title:essayOutput.topic,
+        body:essayOutput.body,
+        highlights:essayOutput.highlights||{},
+        wordCount:essayOutput.wordCount,
+        essayType:essayOutput.type,
+        essayLength:essayOutput.length,
+        sources:essaySources||[],
+        revisionHistory:essayRevisionHistory,
+        studentName:profile?.name,
+        grade:profile?.grade,
+      };
+      saveStudentNote(note);
+      setEssaySavedNoteId(note.id);
+    }
   };
 
   /* ── Extract text from image using Claude vision ── */
@@ -3590,6 +3686,88 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
 
     if(note){
       const chosen=note.choices||{};
+      const isEssay=note.type==="essay";
+
+      // Essay note view
+      if(isEssay){
+        const downloadEssayNote=()=>{
+          const blob=new Blob([note.body||""],{type:"text/plain"});
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement("a");
+          a.href=url;a.download=`nova-essay-${(note.title||"essay").replace(/[^a-z0-9]/gi,"-").toLowerCase()}-${new Date(note.date).toISOString().slice(0,10)}.txt`;
+          a.click();URL.revokeObjectURL(url);
+        };
+        return(
+          <div className="notes-wrap fade-in">
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4,flexWrap:"wrap"}}>
+              <button className="writing-back" onClick={()=>setViewingNote(null)}>← All Notes</button>
+              <div style={{fontSize:14,fontWeight:900,color:"var(--navy)",flex:1}}>{note.title}</div>
+              <button onClick={downloadEssayNote} style={{padding:"6px 12px",borderRadius:20,border:"none",background:"linear-gradient(135deg,var(--blue),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer"}}>⬇️ Download</button>
+            </div>
+            <div style={{fontSize:10,color:"var(--muted)",fontWeight:600,marginBottom:12,display:"flex",gap:10,flexWrap:"wrap"}}>
+              <span>{new Date(note.date).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</span>
+              <span>· {note.studentName} · {note.grade} grade</span>
+              <span>· {note.wordCount} words</span>
+              {note.updatedAt&&<span style={{color:"var(--green)"}}>· Updated {new Date(note.updatedAt).toLocaleDateString()}</span>}
+            </div>
+
+            {/* Continue Editing button */}
+            <button onClick={()=>{
+              // Load essay back into EssayWriter
+              setEssayOutput({body:note.body,highlights:note.highlights||{},wordCount:note.wordCount,topic:note.title,type:note.essayType||"opinion",length:note.essayLength||"medium",date:note.date});
+              setEssayRevisionHistory(note.revisionHistory||[]);
+              setEssayRevisionInput("");
+              essayRevisionRef.current="";
+              setEssaySavedNoteId(note.id);
+              setEssaySources(note.sources||[]);
+              setViewingNote(null);
+              setWritingScreen("essaywriter");
+            }} style={{width:"100%",padding:"13px",borderRadius:14,border:"none",background:"linear-gradient(135deg,#7c3aed,#4f46e5)",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:"0 4px 14px rgba(124,58,237,.3)",marginBottom:4}}>
+              ✏️ Continue Editing This Essay
+            </button>
+            <div style={{textAlign:"center",fontSize:10,color:"var(--muted)",fontWeight:600,marginBottom:14}}>Opens in Essay Writer — all your revisions are preserved</div>
+
+            {/* Essay body */}
+            <div className="note-card">
+              <div className="note-card-header">
+                <div className="note-title">📄 Essay</div>
+                <span style={{fontSize:10,fontWeight:700,color:"var(--muted)"}}>{note.essayType} · {note.wordCount} words</span>
+              </div>
+              <div style={{fontSize:13,lineHeight:1.9,fontWeight:600,color:"var(--text)",whiteSpace:"pre-wrap"}}>{note.body}</div>
+            </div>
+
+            {/* Revision history */}
+            {(note.revisionHistory||[]).length>0&&(
+              <div className="note-card">
+                <div className="note-card-header">
+                  <div className="note-title">💬 Revision History</div>
+                  <span style={{fontSize:10,fontWeight:700,color:"var(--muted)"}}>{note.revisionHistory.length} messages</span>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                  {note.revisionHistory.map((msg,i)=>(
+                    <div key={i} style={{padding:"7px 10px",borderRadius:8,fontSize:11,fontWeight:600,lineHeight:1.5,background:msg.role==="user"?"#fff7ed":"#f0fdf4",color:msg.role==="user"?"#92400e":"#166534",borderLeft:"3px solid "+(msg.role==="user"?"var(--orange)":"var(--green)")}}>
+                      <span style={{fontWeight:900}}>{msg.role==="user"?note.studentName||"Student":"🦉 Nova"}:</span>{" "}{msg.text}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sources used */}
+            {(note.sources||[]).length>0&&(
+              <div className="note-card">
+                <div className="note-card-header"><div className="note-title">🔬 Sources Used</div></div>
+                {note.sources.map((src,i)=>(
+                  <div key={i} style={{display:"flex",gap:8,padding:"6px 0",borderBottom:"1px solid var(--border)",fontSize:11,fontWeight:600,color:"var(--muted)"}}>
+                    <span>{src.type==="web"?"🔍":src.type==="url"?"🌐":src.type==="pdf"?"📄":src.type==="image"?"📷":"📎"}</span>
+                    <span style={{flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{src.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      }
       return(
         <div className="notes-wrap fade-in">
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4,flexWrap:"wrap"}}>
@@ -3658,26 +3836,43 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         ):(
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
             {studentNotes.map(n=>{
-              const chosen=Object.keys(n.choices||{}).length;
-              const total=(n.issues||[]).length;
-              const improvements=(n.issues||[]).filter(i=>i.type!=="strength").length;
+              const isEssay=n.type==="essay";
+              const chosen=isEssay?0:Object.keys(n.choices||{}).length;
+              const total=isEssay?0:(n.issues||[]).length;
+              const improvements=isEssay?0:(n.issues||[]).filter(i=>i.type!=="strength").length;
               return(
-                <div key={n.id} className="note-card" style={{cursor:"pointer",transition:"all .15s"}}
+                <div key={n.id} className="note-card" style={{cursor:"pointer",transition:"all .15s",borderLeft:"4px solid "+(isEssay?"var(--purple)":"var(--blue)")}}
                   onClick={()=>setViewingNote(n.id)}>
                   <div className="note-card-header">
-                    <div className="note-title">{n.title}</div>
+                    <div style={{display:"flex",alignItems:"center",gap:7}}>
+                      <span style={{fontSize:16}}>{isEssay?"✏️":"📄"}</span>
+                      <div>
+                        <div className="note-title">{n.title}</div>
+                        <span style={{fontSize:9,fontWeight:800,padding:"1px 7px",borderRadius:10,background:isEssay?"#f5f3ff":"#eff6ff",color:isEssay?"var(--purple)":"var(--blue)"}}>{isEssay?"ESSAY":"SCAN"}</span>
+                      </div>
+                    </div>
                     <div style={{display:"flex",gap:6,alignItems:"center"}}>
                       <button onClick={e=>{e.stopPropagation();downloadNote(n);}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"var(--blue)",color:"#fff",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>⬇️</button>
                       <button onClick={e=>{e.stopPropagation();const updated=studentNotes.filter(x=>x.id!==n.id);setStudentNotes(updated);const u=localStorage.getItem("nova_user")||"";localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"#fef2f2",color:"var(--red)",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>🗑️</button>
                     </div>
                   </div>
-                  <div className="note-date">{new Date(n.date).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"})}</div>
+                  <div className="note-date">{new Date(n.date).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"})}{n.updatedAt&&<span style={{color:"var(--green)",marginLeft:6}}>· updated {new Date(n.updatedAt).toLocaleDateString()}</span>}</div>
                   <div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}>
-                    <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{total} annotations</span>
-                    <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{chosen} revisions chosen</span>
-                    <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#eff6ff",color:"var(--blue)"}}>{improvements} improvements</span>
+                    {isEssay?(
+                      <>
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{n.wordCount||0} words</span>
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{(n.revisionHistory||[]).filter(m=>m.role==="user").length} revisions</span>
+                        {(n.sources||[]).length>0&&<span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#eff6ff",color:"var(--blue)"}}>{n.sources.length} sources</span>}
+                      </>
+                    ):(
+                      <>
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{total} annotations</span>
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{chosen} revisions chosen</span>
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#eff6ff",color:"var(--blue)"}}>{improvements} improvements</span>
+                      </>
+                    )}
                   </div>
-                  <div style={{marginTop:8,fontSize:11,color:"var(--muted)",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(n.original||"").slice(0,120)}...</div>
+                  <div style={{marginTop:8,fontSize:11,color:"var(--muted)",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{isEssay?(n.body||"").slice(0,120):(n.original||"").slice(0,120)}...</div>
                 </div>
               );
             })}
@@ -3756,6 +3951,39 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             {/* Source buttons row */}
             <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
 
+              {/* 🔍 Web Search — full width row */}
+              <div style={{width:"100%",display:"flex",gap:6,alignItems:"center",padding:"12px 14px",borderRadius:12,background:"linear-gradient(135deg,#f0f9ff,#e0f2fe)",border:"2px solid var(--blue)"}}>
+                <span style={{fontSize:20,flexShrink:0}}>🔍</span>
+                <div style={{flex:1,position:"relative"}}>
+                  <input
+                    defaultValue={essayWebQuery}
+                    onInput={e=>{essayWebQueryRef.current=e.target.value;}}
+                    onBlur={e=>{setEssayWebQuery(e.target.value);essayWebQueryRef.current=e.target.value;}}
+                    onKeyDown={e=>e.key==="Enter"&&searchWeb()}
+                    placeholder={`Search the web... e.g. "effects of climate change on oceans"`}
+                    autoComplete="off"
+                    inputMode="search"
+                    style={{width:"100%",padding:"9px 12px",borderRadius:9,border:"2px solid rgba(59,130,246,.3)",fontFamily:"var(--font)",fontSize:12,fontWeight:600,outline:"none",color:"var(--navy)",background:"#fff",WebkitUserSelect:"text",userSelect:"text"}}/>
+                </div>
+                <button onClick={searchWeb}
+                  disabled={essayWebLoading}
+                  style={{padding:"9px 16px",borderRadius:9,border:"none",background:"linear-gradient(135deg,var(--blue),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer",flexShrink:0,whiteSpace:"nowrap",boxShadow:"0 2px 8px rgba(59,130,246,.3)"}}>
+                  {essayWebLoading
+                    ?<span className="spin" style={{display:"inline-block"}}>◌</span>
+                    :"Search →"}
+                </button>
+              </div>
+              {essayWebStatus==="ok"&&<div style={{width:"100%",fontSize:11,color:"var(--green)",fontWeight:700}}>✅ Web results added to research!</div>}
+              {essayWebStatus==="error"&&<div style={{width:"100%",fontSize:11,color:"var(--red)",fontWeight:700}}>❌ Search failed. Try a different query or paste content manually.</div>}
+              {essayWebLoading&&<div style={{width:"100%",fontSize:11,color:"var(--blue)",fontWeight:700}}><span className="spin" style={{display:"inline-block",marginRight:5}}>◌</span>Searching the web for "{essayWebQueryRef.current||essayWebQuery}"...</div>}
+
+              {/* Divider */}
+              <div style={{width:"100%",display:"flex",alignItems:"center",gap:8,color:"var(--muted)",fontSize:10,fontWeight:700}}>
+                <div style={{flex:1,height:1,background:"var(--border)"}}/>
+                OR ADD FROM
+                <div style={{flex:1,height:1,background:"var(--border)"}}/>
+              </div>
+
               {/* URL input */}
               <div style={{flex:1,minWidth:200,display:"flex",gap:6,alignItems:"center"}}>
                 <div style={{position:"relative",flex:1}}>
@@ -3765,13 +3993,13 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                     onInput={e=>{essayUrlRef.current=e.target.value;}}
                     onBlur={e=>{setEssayUrlInput(e.target.value);essayUrlRef.current=e.target.value;}}
                     onKeyDown={e=>e.key==="Enter"&&fetchFromUrl()}
-                    placeholder="Paste a website URL..."
+                    placeholder="Paste a specific URL..."
                     autoComplete="off"
                     inputMode="url"
-                    style={{width:"100%",padding:"8px 10px 8px 32px",borderRadius:9,border:"2px solid "+(essayUrlStatus==="ok"?"var(--green)":essayUrlStatus==="error"?"var(--red)":"var(--blue)"),fontFamily:"var(--font)",fontSize:11,fontWeight:600,outline:"none",color:"var(--navy)",background:essayUrlStatus==="ok"?"#f0fdf4":essayUrlStatus==="error"?"#fef2f2":"#eff6ff"}}/>
+                    style={{width:"100%",padding:"8px 10px 8px 32px",borderRadius:9,border:"2px solid "+(essayUrlStatus==="ok"?"var(--green)":essayUrlStatus==="error"?"var(--red)":"var(--border)"),fontFamily:"var(--font)",fontSize:11,fontWeight:600,outline:"none",color:"var(--navy)",background:essayUrlStatus==="ok"?"#f0fdf4":essayUrlStatus==="error"?"#fef2f2":"#fff"}}/>
                 </div>
                 <button onClick={fetchFromUrl} disabled={essayUrlLoading||!(essayUrlRef.current||essayUrlInput).trim()}
-                  style={{padding:"8px 12px",borderRadius:9,border:"none",background:(essayUrlRef.current||essayUrlInput).trim()?"var(--blue)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:(essayUrlRef.current||essayUrlInput).trim()?"pointer":"not-allowed",flexShrink:0,whiteSpace:"nowrap"}}>
+                  style={{padding:"8px 12px",borderRadius:9,border:"none",background:(essayUrlRef.current||essayUrlInput).trim()?"var(--navy)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:(essayUrlRef.current||essayUrlInput).trim()?"pointer":"not-allowed",flexShrink:0,whiteSpace:"nowrap"}}>
                   {essayUrlLoading?<span className="spin" style={{display:"inline-block"}}>◌</span>:"Fetch →"}
                 </button>
               </div>
@@ -3804,7 +4032,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                 <div style={{fontSize:10,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:6}}>Sources added:</div>
                 {essaySources.map((src,i)=>(
                   <div key={i} style={{display:"flex",alignItems:"flex-start",gap:8,padding:"7px 10px",borderRadius:8,background:"#f8fafc",border:"1px solid var(--border)",marginBottom:5}}>
-                    <span style={{fontSize:14,flexShrink:0}}>{src.type==="url"?"🌐":src.type==="pdf"?"📄":src.type==="image"?"📷":"📎"}</span>
+                    <span style={{fontSize:14,flexShrink:0}}>{src.type==="url"?"🌐":src.type==="web"?"🔍":src.type==="pdf"?"📄":src.type==="image"?"📷":"📎"}</span>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontSize:10,fontWeight:800,color:"var(--navy)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{src.label}</div>
                       <div style={{fontSize:10,color:"var(--muted)",fontWeight:600,lineHeight:1.4,marginTop:2}}>{src.snippet}</div>
@@ -3894,6 +4122,17 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
               </button>
             </div>
 
+            {/* Save to Notes — prominent green button */}
+            <button onClick={()=>{saveEssayToNotes();}}
+              style={{width:"100%",padding:"14px",borderRadius:14,border:"none",background:essaySavedNoteId?"linear-gradient(135deg,var(--green),var(--teal))":"linear-gradient(135deg,#16a34a,#15803d)",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:"0 4px 14px rgba(22,163,74,.3)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              {essaySavedNoteId?"✅ Saved to Notes — Click to Update":"📓 Save to My Notes"}
+            </button>
+            {essaySavedNoteId&&(
+              <div style={{textAlign:"center",fontSize:11,color:"var(--green)",fontWeight:700,marginTop:-6}}>
+                This essay is saved. Every revision you make is auto-saved when you click the button above.
+              </div>
+            )}
+
             {/* Revision box */}
             <div className="essay-revision-box">
               <div className="essay-revision-title">
@@ -3935,13 +4174,17 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             </div>
 
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <button onClick={()=>{setEssayOutput(null);setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";}}
+              <button onClick={()=>{setEssayOutput(null);setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySavedNoteId(null);}}
                 style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--purple)"}}>
                 ✏️ Write New Essay
               </button>
               <button onClick={()=>{setScanText(essayOutput.body);scanTextRef.current=essayOutput.body;setScanTitle(essayOutput.topic);setScanIssues([]);setScanChoices([]);setShowRevisedEssay(false);setWritingScreen("scan");}}
                 style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--orange)",background:"#fff7ed",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--orange)"}}>
                 🔍 Scan for Feedback
+              </button>
+              <button onClick={()=>{setWritingScreen("notes");}}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--green)",background:"#f0fdf4",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--green)"}}>
+                📓 View Notes
               </button>
             </div>
           </>
@@ -3966,7 +4209,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             <div style={{fontSize:13,fontWeight:900}}>Scan My Essay</div>
             <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Get interactive feedback</div>
           </button>
-          <button onClick={()=>{setEssayOutput(null);setEssayTopic("");essayTopicRef.current="";setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");essayUrlRef.current="";setEssayUrlStatus(null);setWritingScreen("essaywriter");}}
+          <button onClick={()=>{setEssayOutput(null);setEssayTopic("");essayTopicRef.current="";setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");essayUrlRef.current="";setEssayUrlStatus(null);setEssayWebQuery("");essayWebQueryRef.current="";setEssayWebStatus(null);setEssaySavedNoteId(null);setWritingScreen("essaywriter");}}
             style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(249,115,22,.3)"}}>
             <div style={{fontSize:28,marginBottom:6}}>✏️</div>
             <div style={{fontSize:13,fontWeight:900}}>Write My Essay</div>
