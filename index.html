@@ -259,6 +259,55 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .game-popup-btn:hover{transform:translateY(-2px)}
 .game-popup-skip{background:none;border:none;font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;padding:4px}
 .game-popup-skip:hover{color:var(--navy)}
+/* ── Writing Module ── */
+.writing-home{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px;background:linear-gradient(160deg,#faf5ff,#f0f9ff)}
+.writing-home-title{font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:4px}
+.writing-home-sub{font-size:13px;color:var(--muted);font-weight:600;text-align:center;margin-bottom:8px}
+.writing-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:600px;margin:0 auto;width:100%}
+.writing-type-card{padding:22px 18px;border-radius:18px;border:2px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.writing-type-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.writing-type-icon{font-size:36px;margin-bottom:10px}
+.writing-type-name{font-size:14px;font-weight:900;color:var(--navy);margin-bottom:4px}
+.writing-type-desc{font-size:11px;color:var(--muted);font-weight:600;line-height:1.5}
+.writing-type-skills{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.writing-skill-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;background:#f1f5f9;color:var(--muted)}
+/* Writing lesson area */
+.writing-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.writing-header{padding:12px 18px;border-bottom:1px solid var(--border);background:#fff;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap}
+.writing-back{padding:5px 12px;border-radius:20px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
+.writing-back:hover{border-color:var(--navy);color:var(--navy)}
+.writing-step-bar{display:flex;align-items:center;gap:6px;margin-left:auto}
+.writing-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .2s}
+.writing-step-dot.done{background:var(--green)}
+.writing-step-dot.active{background:var(--purple);transform:scale(1.3)}
+.writing-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.writing-nova-bubble{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07);border-left:4px solid var(--purple)}
+.writing-nova-label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.writing-nova-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.8}
+.writing-example-box{background:linear-gradient(135deg,#faf5ff,#f0f9ff);border-radius:14px;padding:16px;border:2px dashed rgba(139,92,246,.3)}
+.writing-example-label{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:8px}
+.writing-example-text{font-size:13px;font-weight:600;color:var(--navy);line-height:1.8;font-style:italic}
+.writing-try-area{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07);border:2px solid var(--border)}
+.writing-try-label{font-size:11px;font-weight:800;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.writing-textarea{width:100%;min-height:120px;padding:12px 14px;border-radius:12px;border:2px solid var(--border);font-family:var(--font);font-size:13px;font-weight:600;color:var(--text);resize:vertical;outline:none;transition:border-color .15s;line-height:1.7;background:#fafafa}
+.writing-textarea:focus{border-color:var(--purple);background:#fff}
+.writing-textarea::placeholder{color:#94a3b8}
+.writing-submit-btn{padding:12px 28px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-family:var(--font);font-size:13px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(139,92,246,.3);margin-top:10px}
+.writing-submit-btn:hover{transform:translateY(-2px)}
+.writing-submit-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.writing-feedback-box{border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.writing-feedback-box.positive{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:2px solid var(--green)}
+.writing-feedback-box.coaching{background:linear-gradient(135deg,#fffbeb,#fef9c3);border:2px solid var(--yellow)}
+.writing-score-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800}
+.writing-score-badge.high{background:#dcfce7;color:#166534}
+.writing-score-badge.mid{background:#fef9c3;color:#92400e}
+.writing-score-badge.low{background:#fee2e2;color:#991b1b}
+.writing-next-btn{padding:11px 24px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;font-family:var(--font);font-size:12px;font-weight:900;cursor:pointer;transition:all .15s;margin-top:10px}
+.writing-next-btn:hover{transform:translateY(-2px)}
+.writing-skills-progress{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.writing-skill-row{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700}
+.writing-skill-bar{flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.writing-skill-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--blue));transition:width .6s}
 .status-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
 .status-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800}
 .chip-subject{background:var(--navy);color:#fff} .chip-mode{background:#f1f5f9;color:var(--muted)} .chip-struggling{background:#fff7ed;color:var(--orange);border:1px solid var(--orange)}
@@ -1158,6 +1207,62 @@ const STRUGGLE=["don't understand","dont understand","confused","confusing","don
 const GRADES=["1st","2nd","3rd","4th","5th","6th","7th","8th"];
 const INTERESTS=[{key:"space",label:"Space & Rockets",icon:"🚀"},{key:"animals",label:"Animals & Nature",icon:"🦁"},{key:"games",label:"Video Games",icon:"🎮"},{key:"building",label:"Building & Legos",icon:"🧱"},{key:"sports",label:"Sports",icon:"⚽"},{key:"cooking",label:"Cooking & Food",icon:"🍕"},{key:"art",label:"Art & Drawing",icon:"🎨"},{key:"robots",label:"Robots & Tech",icon:"🤖"}];
 const SUBJ=[{key:"math",label:"Math",icon:"🔢",color:"#3b82f6"},{key:"science",label:"Science",icon:"⚛️",color:"#8b5cf6"},{key:"chemistry",label:"Chemistry",icon:"🧪",color:"#f97316"},{key:"biology",label:"Biology",icon:"🧬",color:"#22c55e"},{key:"coding",label:"Coding",icon:"💻",color:"#14b8a6"},{key:"critical",label:"Think",icon:"🧠",color:"#ec4899"}];
+
+/* ── Writing Curriculum (Common Core W.3-5, aligned to grades 3-5) ── */
+const WRITING_TYPES=[
+  {
+    id:"essay",icon:"✍️",name:"Essay Writing",color:"#7c3aed",bg:"#f5f3ff",
+    desc:"Opinion, informational, and argument essays with clear structure",
+    skills:["Hook & Intro","Thesis Statement","Body Paragraphs","Topic Sentences","Evidence & Details","Transitions","Conclusion","Revision"],
+    standard:"CCSS W.3-5.1 / W.3-5.2",
+    lessons:[
+      {id:"e1",name:"What Is an Essay?",skill:"Hook & Intro",icon:"📄",concept:"An essay is a piece of writing where you share your ideas about one topic. Every essay has three parts: an introduction, body paragraphs, and a conclusion. Think of it like a sandwich — the bread is the intro and conclusion, and the filling is your body paragraphs!",example:"Topic: 'My favorite season is summer because the days are long, the weather is warm, and school is out.'",prompt:"Write 2-3 sentences introducing YOUR favorite season. Start with 'My favorite season is...' and give two reasons why.",skillFocus:"Introduction",ccss:"W.3.1a"},
+      {id:"e2",name:"The Hook — Grab the Reader!",skill:"Hook & Intro",icon:"🪝",concept:"A hook is the very first sentence of your essay. Its job is to make the reader WANT to keep reading. Great hooks can be a question, a surprising fact, a bold statement, or a vivid description.",example:"Hook: 'Have you ever wondered why some kids love summer while others prefer cozy winter days?' — This question makes YOU want to read on!",prompt:"Write a hook sentence for an essay about your favorite food. Try starting with a question like 'Have you ever...' or a surprising statement.",skillFocus:"Hook",ccss:"W.3.1a"},
+      {id:"e3",name:"The Thesis Statement",skill:"Thesis Statement",icon:"🎯",concept:"The thesis statement is the MOST important sentence in your essay. It tells the reader exactly what your essay is about and what you think. A strong thesis has a topic + your opinion + your three reasons.",example:"Weak: 'Pizza is good.' ✗\nStrong: 'Pizza is the best food because it is delicious, easy to share, and you can put any topping on it.' ✓",prompt:"Write a thesis statement for an essay about why your school should have more recess time. Use the formula: [Topic] is [opinion] because [reason 1], [reason 2], and [reason 3].",skillFocus:"Thesis",ccss:"W.3.1"},
+      {id:"e4",name:"Topic Sentences",skill:"Topic Sentences",icon:"📌",concept:"Every body paragraph starts with a topic sentence. It tells the reader what ONE idea that paragraph is about. Think of it as a mini-thesis for just that paragraph.",example:"Thesis: 'Pizza is the best food because it is delicious, easy to share, and you can put any topping on it.'\nBody 1 topic sentence: 'First, pizza has the most delicious combination of flavors of any food.'",prompt:"You are writing an essay about why kids should learn to cook. Write topic sentences for your THREE body paragraphs. Start each with a transition word: First..., Second..., Finally...",skillFocus:"Topic Sentences",ccss:"W.3.2a"},
+      {id:"e5",name:"Supporting Details & Evidence",skill:"Evidence & Details",icon:"🔍",concept:"After your topic sentence, you need PROOF! Add 2-3 supporting details, examples, or facts. Think of TEEA: Topic sentence → Explain → Example → Analysis (how does this prove your point?).",example:"Topic: 'Pizza is delicious.'\nExplain: When you take a bite, the cheese stretches and the sauce is perfectly tangy.\nExample: A study found that pizza is America's #1 favorite food.\nAnalysis: This proves that millions of people agree pizza tastes amazing.",prompt:"Write a full body paragraph about one reason kids should go outside every day. Include: a topic sentence, one explanation, one real example from your life, and one sentence connecting it back to your point.",skillFocus:"Evidence",ccss:"W.3.2b"},
+      {id:"e6",name:"Transition Words",skill:"Transitions",icon:"🌉",concept:"Transition words are bridges between your ideas. They help your writing flow smoothly. Use them at the START of paragraphs and between sentences.",example:"Between paragraphs: First, Second, Third, In addition, Furthermore, Moreover, Finally, In conclusion...\nWithin paragraphs: because, therefore, however, for example, as a result, in fact...",prompt:"Rewrite these choppy sentences using transition words to make them flow better:\n'I like dogs. They are loyal. They protect you. They are fun to play with. I want a dog.'",skillFocus:"Transitions",ccss:"W.3.2c"},
+      {id:"e7",name:"The Conclusion",skill:"Conclusion",icon:"🏁",concept:"The conclusion wraps up your essay. It should: (1) Restate your thesis in NEW words, (2) Summarize your 3 main points briefly, (3) End with a powerful final thought or call to action.",example:"'In conclusion, pizza truly is the greatest food because of its incredible taste, its ability to bring people together, and its endless variety. The next time you are hungry, reach for a slice — you will not be disappointed!'",prompt:"Write a conclusion for an essay about why summer is the best season. Remember: restate your thesis differently, briefly mention your 3 reasons, and end with a memorable final sentence.",skillFocus:"Conclusion",ccss:"W.3.1d"},
+      {id:"e8",name:"Full 5-Paragraph Essay",skill:"Revision",icon:"📝",concept:"Now you are ready to write a complete 5-paragraph essay! The structure is: Introduction (hook + thesis) → Body 1 → Body 2 → Body 3 → Conclusion. Each body paragraph follows TEEA. Take it one paragraph at a time.",example:"Introduction: Hook + background + thesis\nBody 1: First reason + details\nBody 2: Second reason + details\nBody 3: Third reason + details\nConclusion: Restate + summary + powerful close",prompt:"Write a complete 5-paragraph essay on this prompt: 'What is one change you would make to improve your school, and why?' Take your time — write each section step by step.",skillFocus:"Full Essay",ccss:"W.3.1 / W.4.1 / W.5.1"},
+    ]
+  },
+  {
+    id:"creative",icon:"🌟",name:"Creative Writing",color:"#0ea5e9",bg:"#f0f9ff",
+    desc:"Stories, personal narratives, and imaginative writing",
+    skills:["Story Structure","Characters","Setting","Plot","Dialogue","Sensory Details","Voice","Ending"],
+    standard:"CCSS W.3-5.3",
+    lessons:[
+      {id:"c1",name:"Story Structure — The Arc",skill:"Story Structure",icon:"🌈",concept:"Every great story has a shape called a story arc: Beginning (introduce characters + setting + problem) → Rising Action (things get complicated) → Climax (the biggest moment) → Falling Action → Resolution (how it ends). Without structure, stories feel lost.",example:"Beginning: Maya found a mysterious key in her grandmother's attic.\nRising Action: The key opened a hidden door no one had seen before.\nClimax: Inside was a time machine — and it was already running.\nResolution: Maya decided to step inside.",prompt:"Plan a short story using the arc structure. Write 1-2 sentences for each part: Beginning, Rising Action, Climax, and Resolution. Your story can be about anything — be creative!",skillFocus:"Story Arc",ccss:"W.3.3"},
+      {id:"c2",name:"Characters — Bring Them to Life",skill:"Characters",icon:"🧑‍🎨",concept:"Great characters feel REAL. Readers need to know: What do they LOOK like? What do they WANT? What are they AFRAID of? What makes them special? Show character through actions and dialogue, not just descriptions.",example:"Weak: 'Sam was a funny kid.' ✗\nStrong: 'Sam slid into his seat two seconds before the bell, grinning like he'd just won a race. He always had a joke ready — even in the middle of a pop quiz.' ✓",prompt:"Create a character for a story. Write a short paragraph (4-6 sentences) describing them WITHOUT using the words 'nice,' 'funny,' or 'good.' Show us who they are through what they do, say, and think.",skillFocus:"Characterization",ccss:"W.3.3a"},
+      {id:"c3",name:"Setting — Paint the Scene",skill:"Setting",icon:"🏞️",concept:"Setting is WHERE and WHEN your story takes place. A great setting uses all five senses: what you see, hear, smell, touch, and taste. The setting should FEEL like a real place.",example:"Weak: 'They were at the beach.' ✗\nStrong: 'The salt air stung Mia's nose as waves crashed against the shore. Sand, hot from the afternoon sun, burned the soles of her feet. Somewhere far out, a ship's horn bellowed.' ✓",prompt:"Pick one of these settings and describe it in 4-5 sentences using at least THREE of the five senses: a) A haunted library at midnight, b) A bustling farmers' market, c) A treehouse in a thunderstorm.",skillFocus:"Setting & Sensory Detail",ccss:"W.3.3d"},
+      {id:"c4",name:"Dialogue — Characters Talking",skill:"Dialogue",icon:"💬",concept:"Dialogue makes stories come alive! Rules: (1) New speaker = new paragraph, (2) Use quotation marks around what is spoken, (3) Use dialogue to reveal character — not just to share information.",example:"'Did you eat my sandwich?' Jake demanded, slamming his locker.\n'What sandwich?' Emma asked, crumbs on her chin.\n'THAT sandwich.' He pointed at her face.",prompt:"Write a short scene (6-8 lines of dialogue) between two characters who have just found something strange in their backyard. Show their personalities through HOW they speak, not just WHAT they say.",skillFocus:"Dialogue",ccss:"W.3.3b"},
+      {id:"c5",name:"Sensory Details & Vivid Language",skill:"Sensory Details",icon:"🎨",concept:"Strong writing SHOWS rather than TELLS. Instead of 'he was scared,' show it: 'his hands shook as he reached for the door.' Use strong verbs, specific nouns, and sensory details to make writing come alive.",example:"TELLS: 'The pizza was good.' ✗\nSHOWS: 'Cheese stretched a foot long when she lifted the slice, and the garlic-butter crust crunched with every bite.' ✓",prompt:"Take these 'telling' sentences and rewrite them as 'showing' sentences:\n1. 'She was nervous before the test.'\n2. 'The storm was scary.'\n3. 'He was happy when he scored the goal.'",skillFocus:"Show Don't Tell",ccss:"W.5.3d"},
+      {id:"c6",name:"Personal Narrative",skill:"Voice",icon:"📔",concept:"A personal narrative is a true story from YOUR life. It uses first-person 'I' and shares your thoughts and feelings. The best personal narratives zoom in on ONE small moment and explore it deeply.",example:"'The day I scored my first goal, everything seemed to move in slow motion. I remember the squeak of my cleats, the roar that came from my dad in the stands, and the way my teammates piled on top of me. I had never felt so alive.'",prompt:"Write a personal narrative about a time you felt proud of yourself. Start in the MIDDLE of the action (not 'One day...'). Include what you saw, heard, thought, and felt. Aim for 8-10 sentences.",skillFocus:"Personal Narrative",ccss:"W.3.3 / W.4.3 / W.5.3"},
+    ]
+  },
+  {
+    id:"persuasive",icon:"💪",name:"Persuasive Writing",color:"#ef4444",bg:"#fef2f2",
+    desc:"Convince others with facts, logic, and strong arguments",
+    skills:["Opinion vs Fact","Claim & Reasons","Counter-argument","Emotional Appeal","Evidence","Call to Action"],
+    standard:"CCSS W.3-5.1",
+    lessons:[
+      {id:"p1",name:"Opinion vs. Fact",skill:"Opinion vs Fact",icon:"⚖️",concept:"The foundation of persuasive writing is knowing the difference between FACTS (can be proven true) and OPINIONS (what someone believes). Strong persuasive writing uses FACTS to support OPINIONS.",example:"Fact: 'Studies show students who read 20 minutes daily score higher on tests.' ✓\nOpinion: 'Reading is better than video games.' (This is what someone believes, not a fact)\nFact supporting opinion: 'Students who read 20 min/day know 1.8 million more words by 6th grade.'",prompt:"Read these 5 statements and label each as FACT or OPINION. Then pick one OPINION and write 2 facts that could support it:\n1. Summer is the best season. 2. The Earth orbits the Sun. 3. Dogs make better pets than cats. 4. Exercise improves mood. 5. Chocolate ice cream is delicious.",skillFocus:"Fact vs Opinion",ccss:"W.3.1"},
+      {id:"p2",name:"Building Your Argument",skill:"Claim & Reasons",icon:"🏗️",concept:"Every persuasive essay starts with a CLAIM (your opinion) supported by REASONS (why you think so). Each reason needs EVIDENCE (proof). Think: Claim → Reason → Evidence → So what?",example:"Claim: 'Schools should start later in the morning.'\nReason 1: Teenagers need more sleep for their brains to work well.\nEvidence: The CDC says teens need 8-10 hours of sleep, but most only get 7.\nSo what?: Starting school at 8:30am instead of 7:30am could improve grades and reduce depression.",prompt:"Choose a topic you feel strongly about (school lunches, screen time rules, a pet policy, etc.). Write your CLAIM and then list THREE reasons with at least one piece of evidence for each reason.",skillFocus:"Argument Structure",ccss:"W.3.1 / W.4.1"},
+      {id:"p3",name:"The Counter-Argument",skill:"Counter-argument",icon:"🔄",concept:"The most persuasive writers ADDRESS the other side. This is called a counter-argument and refutation. You say 'Some people think X, BUT here is why they are wrong.' This shows you have thought deeply.",example:"'Some people argue that longer school days give students more learning time. However, research shows that tired, overworked students actually retain less information. Quality of learning matters more than quantity of hours.'",prompt:"Write a paragraph that includes: (1) a counter-argument someone might make against your position, (2) a transition like 'However,' 'On the other hand,' or 'While some believe...', and (3) your refutation (why they are wrong).",skillFocus:"Counter-argument",ccss:"W.4.1 / W.5.1"},
+    ]
+  },
+  {
+    id:"research",icon:"🔎",name:"Research Writing",color:"#059669",bg:"#ecfdf5",
+    desc:"Informational reports and research-based writing",
+    skills:["Choosing a Topic","Finding Information","Note-Taking","Organizing Facts","Citing Sources","Report Writing"],
+    standard:"CCSS W.3-5.2 / W.3-5.7",
+    lessons:[
+      {id:"r1",name:"What Makes Good Research?",skill:"Choosing a Topic",icon:"🔬",concept:"Good research writing starts with a FOCUSED topic and a guiding question. Too broad means you cannot cover everything. Too narrow means you cannot find information. Goldilocks topics are just right!",example:"Too broad: 'Animals' ✗\nToo narrow: 'The exact number of teeth a blue whale has' ✗\nJust right: 'How dolphins communicate with each other' ✓",prompt:"You need to write a research report. Take this broad topic and make it more focused:\n'The Ocean'\nWrite 3 possible focused research questions that start with 'How,' 'Why,' or 'What.' Then pick your favorite and explain why it would make a good report topic.",skillFocus:"Research Focus",ccss:"W.3.7"},
+      {id:"r2",name:"Note-Taking & Organizing Facts",skill:"Note-Taking",icon:"📋",concept:"When you research, take notes in YOUR OWN WORDS — never copy sentences from a source. Organize your notes into categories. Use the questions WHO, WHAT, WHERE, WHEN, WHY, and HOW to guide your notes.",example:"Topic: Dolphins\nCATEGORY 1 — What they look like:\n• 4-12 feet long, 400+ lbs\n• Smooth gray skin\nCATEGORY 2 — How they communicate:\n• Use clicks and whistles\n• Each dolphin has a unique 'signature whistle'",prompt:"Pretend you just read an article about your favorite animal. Write 6-8 notes about it organized into 2-3 categories. Write every note in your OWN words — no copying! Start each note with a bullet point.",skillFocus:"Note-Taking",ccss:"W.3.8"},
+      {id:"r3",name:"Writing an Informational Report",skill:"Report Writing",icon:"📑",concept:"An informational report shares facts about a topic clearly and logically. Structure: Introduction (what is the topic + why it matters) → 2-3 body paragraphs (each covering one category) → Conclusion (what you learned + why it matters).",example:"Introduction: 'Dolphins are one of the most intelligent animals on Earth. These incredible ocean mammals have fascinated scientists for decades with their complex communication and social behavior.'\nBody paragraphs each cover one category of facts.\nConclusion: wraps up the key facts and explains why this matters.",prompt:"Using your notes from the previous lesson (or new facts you know), write an informational report about your favorite animal. Include: an introduction with a hook, at least 2 body paragraphs, and a conclusion. Aim for 3-4 sentences per paragraph.",skillFocus:"Report Writing",ccss:"W.3.2 / W.4.2 / W.5.2"},
+    ]
+  },
+];
 const MODES=[{key:"mixed",label:"🎲 Mixed"},{key:"socratic",label:"❓ Socratic"},{key:"lecture",label:"📖 Lecture"},{key:"project",label:"🚀 Project"}];
 const QS=[
   {subject:"math",subjectLabel:"Mathematics",badge:"badge-math",icon:"🔢",q:"144 cookies shared among 12 friends. How many each?",hint:"What operation splits equally?",options:["10","12","14","16"],correct:1,explanation:"144 ÷ 12 = 12. Division splits a total into equal groups!"},
@@ -1303,7 +1408,19 @@ function App(){
   const[quizScore,setQuizScore]=useState(0);
   const[quizExplain,setQuizExplain]=useState("");
 
-  /* ── Voice: Text-to-Speech + Speech-to-Text ── */
+  /* ── Writing Module State ── */
+  const[writingMode,setWritingMode]=useState(false);
+  const[writingType,setWritingType]=useState(null);
+  const[writingLesson,setWritingLesson]=useState(null);
+  const[writingStep,setWritingStep]=useState(0);
+  const[writingDraft,setWritingDraft]=useState("");
+  const[writingRevision,setWritingRevision]=useState("");
+  const[writingFeedback,setWritingFeedback]=useState(null);
+  const[writingLoading,setWritingLoading]=useState(false);
+  const[writingHistory,setWritingHistory]=useState(()=>{
+    const p=localStorage.getItem("nova_writing_"+localStorage.getItem("nova_user"));
+    return p?JSON.parse(p):{};
+  });
   const[voiceOn,setVoiceOn]=useState(true);
   const[isSpeaking,setIsSpeaking]=useState(false);
   const[isListening,setIsListening]=useState(false);
@@ -1818,10 +1935,19 @@ Return the JSON array now:`;
       const weekSessions=(cp?.sessionLog||[]).filter(s=>new Date(s.date).getTime()>oneWeekAgo);
       const totalXP=weekSessions.reduce((a,s)=>a+(s.xpGained||0),0);
       const topicsStudied=[...new Set(weekSessions.flatMap(s=>s.topics||[]))];
-      const prompt=`Write a warm, encouraging weekly progress report for a parent about their child named ${cp?.name||childUser}.
-Child's data:
+      // Writing history from profile
+      const wh=cp?.writingHistory||{};
+      const weekWriting=Object.entries(wh).filter(([,v])=>new Date(v.date).getTime()>oneWeekAgo);
+      const writingLessons=weekWriting.map(([,v])=>v.lessonName||v.skillFocus);
+      const avgWritingScore=weekWriting.length>0?Math.round(weekWriting.reduce((a,[,v])=>a+(v.score||0),0)/weekWriting.length):null;
+      // Identify weak writing skills (score < 6)
+      const weakWriting=Object.values(wh).filter(v=>v.score<6).map(v=>v.skillFocus);
+      const strongWriting=Object.values(wh).filter(v=>v.score>=8).map(v=>v.skillFocus);
+      const prompt=`Write a warm, encouraging daily/weekly progress report for a parent about their child named ${cp?.name||childUser}.
+
+STEM Progress:
 - Grade: ${cp?.grade||"unknown"}
-- Sessions this week: ${weekSessions.length}
+- Study sessions this week: ${weekSessions.length}
 - XP earned this week: ${totalXP}
 - Topics studied: ${topicsStudied.join(", ")||"none yet"}
 - Struggle sessions: ${weekSessions.filter(s=>s.hadStruggle).length}
@@ -1830,15 +1956,22 @@ Child's data:
 - Known gaps: ${(cp?.gaps||[]).join(", ")||"none identified"}
 - Strengths: ${(cp?.strengths||[]).join(", ")||"still discovering"}
 
-Write exactly 3 paragraphs:
-1. Celebrate specific wins and progress this week
-2. What to focus on next week based on gaps (positive, actionable)
-3. One fun real-world activity the parent can do with their child related to what they studied
+Writing Progress:
+- Writing lessons completed this week: ${weekWriting.length} (${writingLessons.join(", ")||"none"})
+- Average writing score this week: ${avgWritingScore!==null?avgWritingScore+"/10":"no writing this week"}
+- Writing skills needing work: ${weakWriting.length>0?[...new Set(weakWriting)].join(", "):"none identified yet"}
+- Writing strengths: ${strongWriting.length>0?[...new Set(strongWriting)].join(", "):"still developing"}
 
-Keep it warm, specific, under 200 words. Address the parent directly. Sign off as "Nova 🦉"`;
+Write exactly 4 paragraphs:
+1. Celebrate specific STEM wins and progress from this week (be specific about topics/XP)
+2. Celebrate writing progress — what skills they showed strength in, what needs more practice
+3. Actionable focus for next week: one STEM gap + one writing skill to work on (positive, concrete)
+4. One fun real-world activity the parent can do WITH their child that combines learning and fun
+
+Keep it warm, personal, specific. Under 220 words total. Address the parent directly. Sign off as "Nova 🦉"`;
       try{
         const key=localStorage.getItem("nova_api_key");
-        const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:600,messages:[{role:"user",content:prompt}]})});
+        const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:700,messages:[{role:"user",content:prompt}]})});
         const data=await r.json();
         if(data.error)throw new Error(data.error.message);
         setReport(data.content?.[0]?.text||"");
@@ -2324,6 +2457,309 @@ Keep it warm, specific, under 200 words. Address the parent directly. Sign off a
   }
 
   /* ── Structured Learning Screens ── */
+  /* ── Writing Module ── */
+
+  const saveWritingHistory=(lessonId,entry)=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const updated={...writingHistory,[lessonId]:entry};
+    setWritingHistory(updated);
+    localStorage.setItem("nova_writing_"+u,JSON.stringify(updated));
+    // Also save to profile for daily reports
+    const up={...profile,writingHistory:updated,lastWritingSession:new Date().toISOString()};
+    saveProfile(up);
+  };
+
+  const getWritingFeedback=async(lesson,draft,isRevision=false)=>{
+    setWritingLoading(true);
+    const prompt=`You are Nova, an experienced and warm elementary school writing coach for ${profile?.name}, a ${profile?.grade} grade student.
+
+The student just completed this writing exercise:
+SKILL FOCUS: ${lesson.skillFocus} (${lesson.ccss})
+PROMPT: ${lesson.prompt}
+STUDENT'S ${isRevision?"REVISED":"FIRST"} DRAFT:
+"${draft}"
+
+Respond ONLY with a valid JSON object (no markdown, no extra text):
+{
+  "score": <number 1-10>,
+  "scoreLabel": "<Excellent|Good|Developing|Keep Practicing>",
+  "praise": "<2-3 specific sentences praising what the student did WELL. Be specific — name exact phrases or ideas they used. Be warm and encouraging.>",
+  "improve": "<2-3 specific, actionable suggestions for improvement. Start each with an action verb. Be gentle but concrete.>",
+  "exampleFix": "<Show one specific sentence from their draft and how to make it stronger. Format: Original: '...' → Improved: '...'>",
+  "skillScore": <number 1-10 for this specific skill>,
+  "nextStep": "<One encouraging sentence about what they should try next.>",
+  "readyForNext": <true if score >= 6, false otherwise>
+}`;
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:700,messages:[{role:"user",content:prompt}]})});
+      const data=await r.json();
+      if(data.error)throw new Error(data.error.message);
+      const raw=data.content?.[0]?.text||"{}";
+      const clean=raw.replace(/```json|```/g,"").trim();
+      const fb=JSON.parse(clean);
+      setWritingFeedback(fb);
+      // Save to history
+      saveWritingHistory(lesson.id,{
+        score:fb.score,skillScore:fb.skillScore,
+        feedback:fb,draft,
+        date:new Date().toISOString(),
+        lessonName:lesson.name,skillFocus:lesson.skillFocus,
+        typeId:writingType?.id
+      });
+      setWritingStep(3);
+    }catch(err){
+      setWritingFeedback({score:5,scoreLabel:"Good",praise:"Great effort on this writing exercise!",improve:"Keep practicing and your writing will keep improving.",exampleFix:"",skillScore:5,nextStep:"Try revising your draft.",readyForNext:true});
+      setWritingStep(3);
+    }
+    setWritingLoading(false);
+  };
+
+  function WritingHome(){
+    // Show lesson completion status per type
+    return(
+      <div className="writing-home fade-in">
+        <div className="writing-home-title">✍️ Writing Workshop</div>
+        <div className="writing-home-sub">Choose a writing type to practice. Nova will teach you step by step.</div>
+        <div className="writing-type-grid">
+          {WRITING_TYPES.map(wt=>{
+            const done=wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length;
+            const total=wt.lessons.length;
+            const pct=Math.round((done/total)*100);
+            return(
+              <div key={wt.id} className="writing-type-card"
+                style={{borderColor:pct>0?wt.color:"var(--border)",background:pct>0?wt.bg:"#fff"}}
+                onClick={()=>{setWritingType(wt);setWritingLesson(null);setWritingStep(0);setWritingDraft("");setWritingFeedback(null);}}>
+                <div className="writing-type-icon">{wt.icon}</div>
+                <div className="writing-type-name" style={{color:wt.color}}>{wt.name}</div>
+                <div className="writing-type-desc">{wt.desc}</div>
+                <div style={{marginTop:8,fontSize:10,fontWeight:700,color:wt.color}}>{done}/{total} lessons complete {pct>0&&`· ${pct}%`}</div>
+                {pct>0&&<div style={{height:4,background:"rgba(0,0,0,.1)",borderRadius:4,marginTop:6,overflow:"hidden"}}><div style={{height:"100%",background:wt.color,borderRadius:4,width:pct+"%"}}/></div>}
+                <div className="writing-type-skills">
+                  {wt.skills.slice(0,4).map(s=><span key={s} className="writing-skill-tag">{s}</span>)}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {Object.keys(writingHistory).length>0&&(
+          <div style={{maxWidth:600,margin:"0 auto",width:"100%"}}>
+            <div style={{fontSize:11,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:10}}>📈 Your Writing Progress</div>
+            {WRITING_TYPES.map(wt=>{
+              const myLessons=wt.lessons.filter(l=>writingHistory[l.id]);
+              if(!myLessons.length)return null;
+              const avgScore=Math.round(myLessons.reduce((a,l)=>a+(writingHistory[l.id]?.score||0),0)/myLessons.length);
+              return(
+                <div key={wt.id} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",borderRadius:10,background:"#fff",marginBottom:6,border:"1px solid var(--border)"}}>
+                  <span>{wt.icon}</span>
+                  <span style={{fontSize:12,fontWeight:800,flex:1}}>{wt.name}</span>
+                  <div style={{width:80,height:5,background:"var(--border)",borderRadius:3,overflow:"hidden"}}><div style={{height:"100%",background:wt.color,width:(avgScore*10)+"%",borderRadius:3}}/></div>
+                  <span style={{fontSize:11,fontWeight:800,color:wt.color}}>{avgScore}/10</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function WritingLessonPicker(){
+    if(!writingType)return null;
+    return(
+      <div className="writing-home fade-in" style={{background:writingType.bg}}>
+        <button className="writing-back" onClick={()=>setWritingType(null)} style={{alignSelf:"flex-start"}}>← Back</button>
+        <div className="writing-home-title" style={{color:writingType.color}}>{writingType.icon} {writingType.name}</div>
+        <div className="writing-home-sub">Complete lessons in order — each one builds on the last.</div>
+        <div style={{maxWidth:620,margin:"0 auto",width:"100%",display:"flex",flexDirection:"column",gap:10}}>
+          {writingType.lessons.map((lesson,i)=>{
+            const hist=writingHistory[lesson.id];
+            const done=hist&&hist.score>=6;
+            const locked=i>0&&!writingHistory[writingType.lessons[i-1].id];
+            return(
+              <div key={lesson.id} style={{padding:"14px 18px",borderRadius:14,border:"2px solid "+(done?"var(--green)":locked?"var(--border)":"var(--border)"),background:done?"#f0fdf4":locked?"#f8fafc":"#fff",cursor:locked?"not-allowed":"pointer",opacity:locked?.5:1,display:"flex",alignItems:"center",gap:14,boxShadow:done||locked?"none":"0 2px 8px rgba(0,0,0,.06)",transition:"all .15s"}}
+                onClick={()=>{if(!locked){setWritingLesson(lesson);setWritingStep(0);setWritingDraft("");setWritingRevision("");setWritingFeedback(null);}}}>
+                <div style={{fontSize:28}}>{done?"✅":locked?"🔒":lesson.icon}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:900,color:"var(--navy)"}}>{lesson.name}</div>
+                  <div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>Skill: {lesson.skillFocus} · {lesson.ccss}</div>
+                  {hist&&<div style={{fontSize:10,fontWeight:700,color:done?"var(--green)":"var(--orange)",marginTop:2}}>Score: {hist.score}/10 · {hist.feedback?.scoreLabel}</div>}
+                </div>
+                {!locked&&!done&&<div style={{fontSize:12,fontWeight:800,color:writingType.color}}>Start →</div>}
+                {done&&<div style={{fontSize:12,fontWeight:800,color:"var(--green)"}}>Redo ↺</div>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  function WritingLessonScreen(){
+    if(!writingLesson||!writingType)return null;
+    const lesson=writingLesson;
+    const steps=["Learn","See Example","You Try","Feedback","Revise","Done!"];
+    const scoreColor=writingFeedback?(writingFeedback.score>=8?"var(--green)":writingFeedback.score>=6?"var(--yellow)":"var(--red)"):"var(--muted)";
+    const badgeCls=writingFeedback?(writingFeedback.score>=8?"high":writingFeedback.score>=6?"mid":"low"):"mid";
+
+    return(
+      <div className="writing-wrap">
+        <div className="writing-header">
+          <button className="writing-back" onClick={()=>{setWritingLesson(null);setWritingStep(0);}}>← Lessons</button>
+          <div style={{fontSize:13,fontWeight:900,color:"var(--navy)"}}>{lesson.icon} {lesson.name}</div>
+          <div style={{fontSize:10,fontWeight:700,color:writingType.color,marginLeft:4}}>{lesson.skillFocus}</div>
+          <div className="writing-step-bar">
+            {steps.map((_,i)=><div key={i} className={"writing-step-dot"+(i===writingStep?" active":i<writingStep?" done":"")}/>)}
+          </div>
+        </div>
+        <div className="writing-body">
+
+          {/* STEP 0: LEARN */}
+          {writingStep===0&&(
+            <>
+              <div className="writing-nova-bubble">
+                <div className="writing-nova-label">🦉 Nova teaches</div>
+                <div className="writing-nova-text">{lesson.concept}</div>
+              </div>
+              <div style={{textAlign:"center",paddingTop:8}}>
+                <button className="writing-submit-btn" onClick={()=>setWritingStep(1)}>See an Example →</button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 1: EXAMPLE */}
+          {writingStep===1&&(
+            <>
+              <div className="writing-nova-bubble">
+                <div className="writing-nova-label">🦉 Nova teaches</div>
+                <div className="writing-nova-text">{lesson.concept}</div>
+              </div>
+              <div className="writing-example-box">
+                <div className="writing-example-label">📖 Example</div>
+                <div className="writing-example-text" style={{whiteSpace:"pre-line"}}>{lesson.example}</div>
+              </div>
+              <div style={{textAlign:"center"}}>
+                <button className="writing-submit-btn" onClick={()=>setWritingStep(2)}>Now I'll Try It! ✏️</button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 2: WRITE */}
+          {writingStep===2&&(
+            <>
+              <div className="writing-example-box">
+                <div className="writing-example-label">📖 Example (for reference)</div>
+                <div className="writing-example-text" style={{whiteSpace:"pre-line",fontSize:11}}>{lesson.example}</div>
+              </div>
+              <div className="writing-try-area">
+                <div className="writing-try-label">✏️ Your Turn, {profile?.name}!</div>
+                <div style={{fontSize:12,fontWeight:700,color:"var(--navy)",marginBottom:10,lineHeight:1.6,whiteSpace:"pre-line"}}>{lesson.prompt}</div>
+                <textarea className="writing-textarea"
+                  placeholder="Start writing here... take your time, there are no wrong answers!"
+                  value={writingDraft}
+                  onChange={e=>setWritingDraft(e.target.value)}
+                  rows={7}/>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:8}}>
+                  <span style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{writingDraft.trim().split(/\s+/).filter(Boolean).length} words</span>
+                  <button className="writing-submit-btn"
+                    disabled={writingLoading||writingDraft.trim().length<20}
+                    onClick={()=>getWritingFeedback(lesson,writingDraft)}>
+                    {writingLoading?<span className="spin">◌</span>:"Submit for Feedback →"}
+                  </button>
+                </div>
+                {writingDraft.trim().length<20&&writingDraft.length>0&&<div style={{fontSize:11,color:"var(--muted)",marginTop:4}}>Keep writing — try to write at least a few sentences!</div>}
+              </div>
+            </>
+          )}
+
+          {/* STEP 3: FEEDBACK */}
+          {writingStep===3&&writingFeedback&&(
+            <>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
+                <div className={`writing-score-badge ${badgeCls}`} style={{fontSize:14,padding:"6px 16px"}}>
+                  {writingFeedback.score}/10 — {writingFeedback.scoreLabel}
+                </div>
+              </div>
+              <div className="writing-feedback-box positive">
+                <div style={{fontSize:11,fontWeight:800,color:"#166534",marginBottom:6}}>⭐ What you did WELL:</div>
+                <div style={{fontSize:13,fontWeight:600,color:"#166534",lineHeight:1.7}}>{writingFeedback.praise}</div>
+              </div>
+              <div className="writing-feedback-box coaching">
+                <div style={{fontSize:11,fontWeight:800,color:"#92400e",marginBottom:6}}>💡 How to make it even stronger:</div>
+                <div style={{fontSize:13,fontWeight:600,color:"#92400e",lineHeight:1.7}}>{writingFeedback.improve}</div>
+                {writingFeedback.exampleFix&&<div style={{marginTop:10,padding:"8px 12px",borderRadius:8,background:"rgba(255,255,255,.6)",fontSize:12,fontWeight:600,color:"#92400e",whiteSpace:"pre-line"}}>{writingFeedback.exampleFix}</div>}
+              </div>
+              <div style={{padding:"12px 16px",borderRadius:12,background:"#eff6ff",border:"1px solid var(--blue)",fontSize:12,fontWeight:600,color:"var(--blue)"}}>
+                🦉 {writingFeedback.nextStep}
+              </div>
+              <div style={{display:"flex",gap:10,marginTop:4}}>
+                {!writingFeedback.readyForNext&&(
+                  <button className="writing-submit-btn" onClick={()=>{setWritingRevision(writingDraft);setWritingStep(4);}}>
+                    Revise My Writing ✏️
+                  </button>
+                )}
+                <button className="writing-next-btn" onClick={()=>setWritingStep(writingFeedback.readyForNext?5:4)}>
+                  {writingFeedback.readyForNext?"Next Lesson! →":"Try Again →"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* STEP 4: REVISE */}
+          {writingStep===4&&(
+            <>
+              <div style={{padding:"10px 14px",borderRadius:10,background:"#f0fdf4",border:"1px solid var(--green)",fontSize:12,fontWeight:600,color:"#166534",marginBottom:4}}>
+                ✅ Original feedback saved! Now revise based on Nova's suggestions.
+              </div>
+              <div className="writing-try-area">
+                <div className="writing-try-label">✏️ Revised Draft — {profile?.name}</div>
+                <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:8}}>Use Nova's feedback to make your writing stronger!</div>
+                <textarea className="writing-textarea"
+                  value={writingRevision||writingDraft}
+                  onChange={e=>setWritingRevision(e.target.value)}
+                  rows={8}/>
+                <div style={{display:"flex",justifyContent:"flex-end",marginTop:8}}>
+                  <button className="writing-submit-btn"
+                    disabled={writingLoading}
+                    onClick={()=>getWritingFeedback(lesson,writingRevision||writingDraft,true)}>
+                    {writingLoading?<span className="spin">◌</span>:"Get Feedback on Revision →"}
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* STEP 5: DONE */}
+          {writingStep===5&&(
+            <div style={{textAlign:"center",padding:"32px 20px"}}>
+              <div style={{fontSize:60,marginBottom:12,animation:"float 1s ease-in-out infinite"}}>🎉</div>
+              <div style={{fontSize:20,fontWeight:900,color:"var(--navy)",marginBottom:8}}>Lesson Complete, {profile?.name}!</div>
+              <div style={{fontSize:13,fontWeight:600,color:"var(--muted)",marginBottom:20,lineHeight:1.7}}>
+                You practiced <strong>{lesson.skillFocus}</strong>.<br/>
+                {writingFeedback&&<>Your score: <strong style={{color:scoreColor}}>{writingFeedback.score}/10</strong></>}
+              </div>
+              <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap"}}>
+                <button className="writing-submit-btn" onClick={()=>{setWritingLesson(null);setWritingStep(0);}}>
+                  More Lessons →
+                </button>
+                <button className="writing-next-btn" onClick={()=>{setWritingStep(0);setWritingDraft("");setWritingRevision("");setWritingFeedback(null);}}>
+                  Redo This Lesson ↺
+                </button>
+              </div>
+            </div>
+          )}
+
+          {writingLoading&&writingStep!==2&&writingStep!==4&&(
+            <div style={{textAlign:"center",padding:24}}>
+              <span style={{fontSize:36,animation:"float 1s ease-in-out infinite",display:"block"}}>🦉</span>
+              <div style={{marginTop:10,fontWeight:700,color:"var(--muted)"}}>Nova is reading your writing...</div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   function SubjectPicker(){
     return(
       <div className="subj-pick-wrap fade-in">
@@ -2339,6 +2775,13 @@ Keep it warm, specific, under 200 words. Address the parent directly. Sign off a
               </button>
             );
           })}
+          {/* Writing Tab */}
+          <button className="subj-pick-btn" style={{borderColor:"#7c3aed",background:Object.keys(writingHistory).length>0?"#f5f3ff":"#fff"}}
+            onClick={()=>setWritingMode(true)}>
+            <div className="subj-pick-icon">✍️</div>
+            <div className="subj-pick-label" style={{color:"#7c3aed"}}>Writing</div>
+            {Object.keys(writingHistory).length>0&&<div className="subj-pick-pct" style={{color:"#7c3aed"}}>{Object.keys(writingHistory).length} lessons done</div>}
+          </button>
         </div>
       </div>
     );
@@ -2504,10 +2947,17 @@ Keep it warm, specific, under 200 words. Address the parent directly. Sign off a
   /* ── Main Sidebar (progress + game break) ── */
   function LearnSidebar(){
     const lvl=profile?getLevel(profile.xp||0):null;
+    const writingDone=Object.keys(writingHistory).length;
     return(
       <div className="learn-sidebar">
         <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>👤 {profile?.name}</div>
-        <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginBottom:12}}>{profile?.grade} grade · {lvl?.name}</div>
+        <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginBottom:8}}>{profile?.grade} grade · {lvl?.name}</div>
+        {writingMode&&(
+          <button onClick={()=>{setWritingMode(false);setWritingType(null);setWritingLesson(null);}}
+            style={{width:"100%",padding:"7px",borderRadius:9,border:"2px solid #7c3aed",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"#7c3aed",marginBottom:8}}>
+            ← Back to STEM
+          </button>
+        )}
         <div className="sidebar-xp" style={{cursor:"pointer"}} onClick={()=>setShowRewards(true)}>
           <div className="sidebar-xp-val">⭐ {profile?.xp||0}</div>
           <div className="sidebar-xp-lbl">XP — Tap for Rewards!</div>
@@ -2588,10 +3038,18 @@ Keep it warm, specific, under 200 words. Address the parent directly. Sign off a
       <div className="learn-wrap">
         <LearnSidebar/>
         <div className="learn-main">
-          {learnPhase==="subjects"&&<SubjectPicker/>}
-          {learnPhase==="topics"&&<TopicPicker/>}
-          {learnPhase==="teaching"&&<TeachingScreen/>}
-          {(learnPhase==="quiz"||learnPhase==="results")&&<QuizScreen/>}
+          {writingMode?(
+            writingLesson?<WritingLessonScreen/>:
+            writingType?<WritingLessonPicker/>:
+            <WritingHome/>
+          ):(
+            <>
+              {learnPhase==="subjects"&&<SubjectPicker/>}
+              {learnPhase==="topics"&&<TopicPicker/>}
+              {learnPhase==="teaching"&&<TeachingScreen/>}
+              {(learnPhase==="quiz"||learnPhase==="results")&&<QuizScreen/>}
+            </>
+          )}
         </div>
       </div>
     </div>
