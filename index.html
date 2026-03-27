@@ -250,6 +250,15 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .speak-bar:nth-child(5){animation:speakPulse .6s ease infinite .05s;height:5px}
 .voice-speed-btn{padding:3px 8px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-family:var(--font);font-size:9px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
 .voice-speed-btn.active{border-color:var(--purple);background:#f5f3ff;color:var(--purple)}
+/* Game Break Popup */
+.game-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease}
+.game-popup-card{background:#fff;border-radius:24px;padding:36px;max-width:380px;width:90%;text-align:center;box-shadow:0 16px 60px rgba(0,0,0,.3);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.game-popup-title{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.game-popup-sub{font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;margin-bottom:24px}
+.game-popup-btn{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#f97316,#fbbf24);color:#fff;font-family:var(--font);font-size:15px;font-weight:900;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(249,115,22,.4);margin-bottom:10px}
+.game-popup-btn:hover{transform:translateY(-2px)}
+.game-popup-skip{background:none;border:none;font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;padding:4px}
+.game-popup-skip:hover{color:var(--navy)}
 .status-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
 .status-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800}
 .chip-subject{background:var(--navy);color:#fff} .chip-mode{background:#f1f5f9;color:var(--muted)} .chip-struggling{background:#fff7ed;color:var(--orange);border:1px solid var(--orange)}
@@ -1276,6 +1285,7 @@ function App(){
   const taRef=useRef(null);
   const[showGameBreak,setShowGameBreak]=useState(false);
   const[gameBreakReady,setGameBreakReady]=useState(false);
+  const[showGamePopup,setShowGamePopup]=useState(false);
   const[sessionStartTime]=useState(()=>Date.now());
   const[lastBreakTime,setLastBreakTime]=useState(()=>Date.now());
   const gameBreakTimerRef=useRef(null);
@@ -1383,12 +1393,38 @@ function App(){
     gameBreakTimerRef.current=setInterval(()=>{
       setLastBreakTime(prev=>{
         const elapsed=(Date.now()-prev)/1000/60;
-        if(elapsed>=15){setGameBreakReady(true);}
+        if(elapsed>=15){
+          setGameBreakReady(true);
+          setShowGamePopup(true); // show popup notification
+          clearInterval(gameBreakTimerRef.current);
+        }
         return prev;
       });
     },10000);
     return()=>clearInterval(gameBreakTimerRef.current);
   },[screen]);
+
+  // Restart timer after game ends
+  const handleGameReturn=()=>{
+    setShowGameBreak(false);
+    setGameBreakReady(false);
+    setShowGamePopup(false);
+    const now=Date.now();
+    setLastBreakTime(now); // reset to NOW so timer counts fresh 15 min
+    // Restart the interval
+    clearInterval(gameBreakTimerRef.current);
+    gameBreakTimerRef.current=setInterval(()=>{
+      setLastBreakTime(prev=>{
+        const elapsed=(Date.now()-prev)/1000/60;
+        if(elapsed>=15){
+          setGameBreakReady(true);
+          setShowGamePopup(true);
+          clearInterval(gameBreakTimerRef.current);
+        }
+        return prev;
+      });
+    },10000);
+  };
 
   /* Boot */
   useEffect(()=>{
@@ -1636,24 +1672,46 @@ Keep it engaging, age-appropriate, and exciting. Use emojis. Maximum 150 words.`
     setQuizIdx(0);setQuizSel(null);setQuizAnswered(false);setQuizScore(0);setQuizExplain("");setQuizQs([]);
     setIsLoading(true);
     const prompt=`Generate exactly 8 multiple-choice quiz questions about "${learnTopic.name}" for a ${profile.grade} grade student named ${profile.name}.
-Return ONLY valid JSON array, no markdown, no explanation. Format:
-[{"q":"question text","opts":["A","B","C","D"],"correct":0,"explain":"Why the correct answer is right, and briefly why the wrong ones are wrong. 1-2 sentences."}]
-- correct is the 0-based index of the right answer
-- Make questions progressively harder (first 3 easy, next 3 medium, last 2 hard)
-- Use fun, age-appropriate language
-- Make wrong answers plausible but clearly incorrect`;
+
+CRITICAL: Return ONLY a valid JSON array. No markdown, no code blocks, no explanation outside the JSON.
+
+Each question MUST follow this exact format:
+{"q":"question text","opts":["Option A","Option B","Option C","Option D"],"correct":0,"explain":"REQUIRED: 2 sentences. First sentence explains WHY the correct answer is right. Second sentence explains the most common misconception or why the wrong answers are wrong."}
+
+Rules:
+- "correct" is the 0-based index (0=A, 1=B, 2=C, 3=D)
+- "explain" is REQUIRED and must NEVER be empty
+- Questions 1-3: easy, Questions 4-6: medium, Questions 7-8: challenging
+- Use fun real-world examples relevant to a ${profile.grade} grader
+- Wrong answer options must be plausible, not obviously silly
+
+Return the JSON array now:`;
     try{
       const key=localStorage.getItem("nova_api_key");
-      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1200,messages:[{role:"user",content:prompt}]})});
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2000,messages:[{role:"user",content:prompt}]})});
       const data=await r.json();
       if(data.error)throw new Error(data.error.message);
       const raw=data.content?.[0]?.text||"";
-      const clean=raw.replace(/```json|```/g,"").trim();
-      const qs=JSON.parse(clean);
-      setQuizQs(qs);
+      // Robust parsing - strip any markdown wrapping
+      const clean=raw.replace(/```json\s*/gi,"").replace(/```\s*/g,"").trim();
+      const jsonStr=clean.startsWith("[")? clean : clean.substring(clean.indexOf("["));
+      const qs=JSON.parse(jsonStr);
+      // Validate and fill missing explanations
+      const validated=qs.map((q,i)=>({
+        ...q,
+        explain: (q.explain&&q.explain.trim().length>5)
+          ? q.explain
+          : `The correct answer is "${q.opts[q.correct]}". Study this topic more and try again!`
+      }));
+      setQuizQs(validated);
     }catch(err){
-      // Fallback to 3 simple questions if API fails
-      setQuizQs([{q:"What is "+learnTopic.name+"?",opts:["The correct answer","Wrong option","Wrong option","Wrong option"],correct:0,explain:"This is the correct answer."}]);
+      console.error("Quiz generation error:",err);
+      // Meaningful fallback questions
+      setQuizQs([
+        {q:`What is the main idea of "${learnTopic.name}"?`,opts:["The correct concept","A common misconception","An unrelated idea","None of these"],correct:0,explain:`"${learnTopic.name}" is about ${learnTopic.sub}. Review the lesson and try again!`},
+        {q:`Which best describes "${learnTopic.name}"?`,opts:["The right description","A partially correct description","An incorrect description","A completely wrong description"],correct:0,explain:`Remember: ${learnTopic.sub}. Go back to the lesson if you need a refresher.`},
+        {q:`${learnTopic.name} is part of which subject?`,opts:[SUBJ.find(s=>s.key===learnSubject)?.label||"Science","History","Art","Music"],correct:0,explain:`${learnTopic.name} is a ${SUBJ.find(s=>s.key===learnSubject)?.label||"STEM"} topic: ${learnTopic.sub}`},
+      ]);
     }
     setIsLoading(false);
   };
@@ -1881,10 +1939,16 @@ Return ONLY valid JSON array, no markdown, no explanation. Format:
           const[editGrade,setEditGrade]=React.useState(cp2?.grade||"4th");
           const[saving,setSaving]=React.useState(false);
           const saveChildName=async()=>{
+            if(!editName.trim())return;
             setSaving(true);
-            const updated={...cp2,name:editName.trim()||cu,grade:editGrade};
-            await sb.updateProfile(cu,updated);
-            setChildProfiles(prev=>({...prev,[cu]:updated}));
+            // Fetch the full latest profile from Supabase first so we don't overwrite other fields
+            const row=await sb.getProfile(cu);
+            const base=row?.profile_data||cp2||{};
+            const updated={...base,name:editName.trim(),grade:editGrade,username:cu};
+            const ok=await sb.updateProfile(cu,updated);
+            if(ok){
+              setChildProfiles(prev=>({...prev,[cu]:updated}));
+            }
             setSaving(false);setEditing(false);
           };
           return(
@@ -2328,7 +2392,7 @@ Return ONLY valid JSON array, no markdown, no explanation. Format:
         )}
         <div style={{marginTop:"auto",paddingTop:8}}>
           {gameBreakReady?(
-            <button onClick={()=>{setShowGameBreak(true);setGameBreakReady(false);setLastBreakTime(Date.now());clearInterval(gameBreakTimerRef.current);}}
+            <button onClick={()=>{setShowGamePopup(true);}}
               style={{width:"100%",padding:"10px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"Nunito,sans-serif",fontSize:12,fontWeight:900,cursor:"pointer",animation:"pulseGlow 2s infinite",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
               🎮 Game Break Ready!
             </button>
@@ -2353,7 +2417,7 @@ Return ONLY valid JSON array, no markdown, no explanation. Format:
   if(showGameBreak)return(
     <div className="app">
       <Header/>
-      <GameBreakScreen onReturn={()=>setShowGameBreak(false)}/>
+      <GameBreakScreen onReturn={handleGameReturn}/>
     </div>
   );
 
@@ -2364,6 +2428,25 @@ Return ONLY valid JSON array, no markdown, no explanation. Format:
       {levelToast&&<div className="level-toast">{levelToast}</div>}
       {masteredToast&&<div className="mastered-toast">{masteredToast}</div>}
       {gapToast&&<div className="gap-toast">{gapToast}</div>}
+      {/* Game Break Popup */}
+      {showGamePopup&&(
+        <div className="game-popup-overlay" onClick={()=>setShowGamePopup(false)}>
+          <div className="game-popup-card" onClick={e=>e.stopPropagation()}>
+            <div style={{fontSize:60,marginBottom:12,animation:"bounce 1s ease infinite"}}>🎮</div>
+            <div className="game-popup-title">Game Break Time!</div>
+            <div className="game-popup-sub">
+              You've been studying hard, {profile?.name}! 🌟<br/>
+              You earned a 2-minute game break. Have fun!
+            </div>
+            <button className="game-popup-btn" onClick={()=>{setShowGamePopup(false);setShowGameBreak(true);}}>
+              Let's Play! 🚀
+            </button>
+            <button className="game-popup-skip" onClick={()=>{setShowGamePopup(false);setGameBreakReady(false);handleGameReturn();}}>
+              Skip for now — keep studying
+            </button>
+          </div>
+        </div>
+      )}
       <div className="learn-wrap">
         <LearnSidebar/>
         <div className="learn-main">
