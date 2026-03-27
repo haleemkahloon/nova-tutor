@@ -308,6 +308,47 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .writing-skill-row{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700}
 .writing-skill-bar{flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden}
 .writing-skill-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--blue));transition:width .6s}
+/* ── Scan & Review ── */
+.scan-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;max-width:760px;margin:0 auto;width:100%}
+.scan-upload-card{background:#fff;border-radius:18px;padding:22px;border:2px dashed var(--purple);cursor:pointer;transition:all .2s;text-align:center}
+.scan-upload-card:hover{background:#f5f3ff;border-color:#6d28d9}
+.scan-upload-icon{font-size:40px;margin-bottom:8px}
+.scan-upload-title{font-size:15px;font-weight:900;color:#6d28d9;margin-bottom:4px}
+.scan-upload-sub{font-size:12px;color:var(--muted);font-weight:600}
+.scan-issue-card{background:#fff;border-radius:14px;padding:16px;border:2px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06);animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+.scan-issue-card.grammar{border-left:4px solid var(--red)}
+.scan-issue-card.clarity{border-left:4px solid var(--orange)}
+.scan-issue-card.structure{border-left:4px solid var(--blue)}
+.scan-issue-card.word-choice{border-left:4px solid var(--purple)}
+.scan-issue-card.strength{border-left:4px solid var(--green)}
+.scan-issue-type{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px}
+.scan-issue-type.grammar{background:#fef2f2;color:var(--red)}
+.scan-issue-type.clarity{background:#fff7ed;color:var(--orange)}
+.scan-issue-type.structure{background:#eff6ff;color:var(--blue)}
+.scan-issue-type.word-choice{background:#f5f3ff;color:var(--purple)}
+.scan-issue-type.strength{background:#f0fdf4;color:var(--green)}
+.scan-original{font-size:12px;font-weight:600;color:var(--muted);padding:8px 12px;border-radius:8px;background:#f8fafc;border-left:3px solid var(--muted);margin-bottom:8px;font-style:italic;line-height:1.6}
+.scan-why{font-size:12px;font-weight:700;color:var(--text);line-height:1.6;margin-bottom:10px}
+.scan-options{display:flex;flex-direction:column;gap:7px}
+.scan-option-btn{padding:10px 14px;border-radius:10px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;text-align:left;transition:all .15s;color:var(--text);line-height:1.5}
+.scan-option-btn:hover{border-color:var(--purple);background:#f5f3ff;transform:translateX(3px)}
+.scan-option-btn.chosen{border-color:var(--green)!important;background:#f0fdf4!important;color:#166534!important}
+.scan-option-label{font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.scan-why-box{font-size:11px;font-weight:600;color:#166534;background:#f0fdf4;border-radius:8px;padding:8px 10px;margin-top:6px;line-height:1.5}
+/* Student Notes */
+.notes-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;max-width:760px;margin:0 auto;width:100%}
+.note-card{background:#fff;border-radius:14px;padding:18px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.note-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.note-title{font-size:14px;font-weight:900;color:var(--navy)}
+.note-date{font-size:10px;color:var(--muted);font-weight:600}
+.note-original{font-size:12px;color:var(--muted);font-weight:600;line-height:1.7;white-space:pre-wrap;padding:10px 12px;background:#f8fafc;border-radius:8px;margin-bottom:10px;font-style:italic}
+.note-annotations{display:flex;flex-direction:column;gap:7px}
+.note-annotation{padding:8px 12px;border-radius:8px;font-size:11px;font-weight:600;line-height:1.5}
+.note-annotation.grammar{background:#fef2f2;color:#991b1b;border-left:3px solid var(--red)}
+.note-annotation.clarity{background:#fff7ed;color:#92400e;border-left:3px solid var(--orange)}
+.note-annotation.structure{background:#eff6ff;color:"#1e40af";border-left:3px solid var(--blue)}
+.note-annotation.word-choice{background:#f5f3ff;color:#5b21b6;border-left:3px solid var(--purple)}
+.note-annotation.strength{background:#f0fdf4;color:#166534;border-left:3px solid var(--green)}
 .status-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
 .status-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800}
 .chip-subject{background:var(--navy);color:#fff} .chip-mode{background:#f1f5f9;color:var(--muted)} .chip-struggling{background:#fff7ed;color:var(--orange);border:1px solid var(--orange)}
@@ -1499,6 +1540,21 @@ function App(){
     const p=localStorage.getItem("nova_writing_"+localStorage.getItem("nova_user"));
     return p?JSON.parse(p):{};
   });
+
+  /* ── Scan & Review + Student Notes state ── */
+  const[writingScreen,setWritingScreen]=useState("home"); // home|scan|notes
+  const[scanText,setScanText]=useState("");
+  const scanTextRef=useRef("");
+  const[scanTitle,setScanTitle]=useState("");
+  const[scanLoading,setScanLoading]=useState(false);
+  const[scanIssues,setScanIssues]=useState([]); // array of issue objects
+  const[scanChoices,setScanChoices]=useState({}); // {issueIdx: chosenOptionIdx}
+  const[studentNotes,setStudentNotes]=useState(()=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const p=localStorage.getItem("nova_notes_"+u);
+    return p?JSON.parse(p):[];
+  });
+  const[viewingNote,setViewingNote]=useState(null);
   const[voiceOn,setVoiceOn]=useState(true);
   const[isSpeaking,setIsSpeaking]=useState(false);
   const[isListening,setIsListening]=useState(false);
@@ -2628,6 +2684,91 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
   /* ── Structured Learning Screens ── */
   /* ── Writing Module ── */
 
+  /* ── Save student note to localStorage ── */
+  const saveStudentNote=(note)=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const updated=[note,...studentNotes].slice(0,50); // keep 50 most recent
+    setStudentNotes(updated);
+    localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));
+  };
+
+  /* ── Scan essay and return interactive issue list ── */
+  const scanEssay=async()=>{
+    const text=scanTextRef.current||scanText;
+    if(!text.trim()||text.trim().split(/\s+/).length<10)return;
+    setScanLoading(true);
+    setScanIssues([]);
+    setScanChoices({});
+    const prompt=`You are Nova, a warm and encouraging writing coach reviewing ${profile?.name}'s writing. ${profile?.name} is a ${profile?.grade} grade student.
+
+Here is their writing to review:
+"""
+${text}
+"""
+
+Your job: Find 4-7 specific, actionable issues in this writing. For each issue, provide 2-3 rewrite options the student can choose from.
+
+Respond ONLY with valid JSON array, no markdown, no explanation:
+[
+  {
+    "type": "grammar|clarity|structure|word-choice|strength",
+    "original": "exact phrase or sentence from the text (keep it short, max 15 words)",
+    "why": "Friendly explanation of what's happening and why it matters. 1-2 sentences. Be encouraging, not critical. Start with the student's name sometimes.",
+    "options": [
+      {"label": "Option A", "text": "rewritten version", "reason": "why this version is stronger (1 sentence)"},
+      {"label": "Option B", "text": "different rewrite approach", "reason": "why this works (1 sentence)"},
+      {"label": "Option C", "text": "a third approach (more advanced)", "reason": "why this is the strongest (1 sentence)"}
+    ]
+  }
+]
+
+Types:
+- grammar: spelling, punctuation, subject-verb agreement, run-on sentences
+- clarity: confusing sentences, vague words, unclear meaning
+- structure: paragraph organization, missing transitions, weak intro/conclusion
+- word-choice: repetitive words, weak verbs, overused words like "good/bad/nice"
+- strength: a GOOD thing they did — celebrate it! Include at least 1-2 of these.
+
+Rules:
+- "original" must be an EXACT short quote from their text
+- Options must be meaningfully different from each other (not just synonyms)
+- For "strength" type: options should be "ways to build on this strength" not rewrites
+- Grade-appropriate language — ${profile?.grade} grade level
+- Maximum 7 issues total. Quality over quantity.
+- NEVER be harsh. Always frame as "here's how to make it even better"`;
+
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2000,messages:[{role:"user",content:prompt}]})});
+      const data=await r.json();
+      if(data.error)throw new Error(data.error.message);
+      const raw=data.content?.[0]?.text||"[]";
+      const clean=raw.replace(/```json|```/g,"").trim();
+      const issues=JSON.parse(clean);
+      setScanIssues(issues);
+    }catch(err){
+      setScanIssues([{type:"clarity",original:"(scan error)",why:"Nova had trouble reading your essay. Please try again!",options:[{label:"Option A",text:"Try pasting the text again",reason:"Sometimes a fresh paste works better"}]}]);
+    }
+    setScanLoading(false);
+  };
+
+  const saveNoteFromScan=()=>{
+    const text=scanTextRef.current||scanText;
+    const note={
+      id:Date.now(),
+      date:new Date().toISOString(),
+      title:scanTitle||"Untitled Essay — "+new Date().toLocaleDateString(),
+      original:text,
+      issues:scanIssues,
+      choices:scanChoices,
+      grade:profile?.grade,
+      studentName:profile?.name,
+    };
+    saveStudentNote(note);
+    setWritingScreen("notes");
+    setViewingNote(note.id);
+  };
+
   const saveWritingHistory=(lessonId,entry)=>{
     const u=localStorage.getItem("nova_user")||"";
     const updated={...writingHistory,[lessonId]:entry};
@@ -2684,12 +2825,292 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
     setWritingLoading(false);
   };
 
+  /* ── Scan My Writing Screen ── */
+  function ScanScreen(){
+    const wordCount=(scanTextRef.current||scanText).trim().split(/\s+/).filter(Boolean).length;
+    const typeColors={grammar:"var(--red)",clarity:"var(--orange)",structure:"var(--blue)","word-choice":"var(--purple)",strength:"var(--green)"};
+    const typeEmoji={grammar:"🔴",clarity:"🟠",structure:"🔵","word-choice":"🟣",strength:"🟢"};
+    return(
+      <div className="scan-wrap fade-in">
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
+          <button className="writing-back" onClick={()=>setWritingScreen("home")}>← Back</button>
+          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>📄 Scan My Writing</div>
+          <button onClick={()=>setWritingScreen("notes")} style={{marginLeft:"auto",padding:"5px 12px",borderRadius:20,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--purple)"}}>
+            📓 My Notes ({studentNotes.length})
+          </button>
+        </div>
+
+        {/* Input area */}
+        {scanIssues.length===0&&!scanLoading&&(
+          <div style={{background:"#fff",borderRadius:18,padding:20,border:"2px solid var(--border)"}}>
+            <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📝 Paste or type your essay below</div>
+            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:12}}>Nova will read it and give you interactive, step-by-step feedback on how to make it better.</div>
+            <input
+              placeholder="Give your essay a title (optional)..."
+              value={scanTitle}
+              onChange={e=>setScanTitle(e.target.value)}
+              style={{width:"100%",padding:"9px 12px",borderRadius:9,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:12,fontWeight:700,outline:"none",marginBottom:10,color:"var(--navy)"}}/>
+            <textarea
+              placeholder={"Paste your essay here, "+profile?.name+"! Nova will read every sentence carefully and show you exactly how to improve it. ✍️"}
+              defaultValue={scanText}
+              onInput={e=>{scanTextRef.current=e.target.value;}}
+              onBlur={e=>{setScanText(e.target.value);scanTextRef.current=e.target.value;}}
+              rows={10}
+              autoComplete="off"
+              autoCorrect="on"
+              spellCheck="true"
+              inputMode="text"
+              style={{width:"100%",padding:"12px 14px",borderRadius:12,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:13,fontWeight:600,color:"var(--text)",resize:"vertical",outline:"none",lineHeight:1.7,background:"#fafafa",WebkitUserSelect:"text",userSelect:"text"}}/>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:10,flexWrap:"wrap",gap:8}}>
+              <span style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{wordCount} words</span>
+              <button
+                onClick={scanEssay}
+                disabled={wordCount<10}
+                style={{padding:"11px 28px",borderRadius:12,border:"none",background:wordCount>=10?"linear-gradient(135deg,var(--purple),var(--blue))":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:wordCount>=10?"pointer":"not-allowed",boxShadow:wordCount>=10?"0 4px 14px rgba(139,92,246,.3)":"none"}}>
+                🔍 Scan My Writing
+              </button>
+            </div>
+            {wordCount>0&&wordCount<10&&<div style={{fontSize:11,color:"var(--muted)",marginTop:6}}>Write at least a few sentences so Nova can give useful feedback!</div>}
+          </div>
+        )}
+
+        {/* Loading */}
+        {scanLoading&&(
+          <div style={{textAlign:"center",padding:48,background:"#fff",borderRadius:18,border:"2px solid var(--border)"}}>
+            <div style={{fontSize:48,animation:"float 1s ease-in-out infinite",marginBottom:12}}>🦉</div>
+            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Nova is reading your essay...</div>
+            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Checking every sentence carefully. This takes a few seconds!</div>
+          </div>
+        )}
+
+        {/* Results */}
+        {scanIssues.length>0&&!scanLoading&&(
+          <>
+            <div style={{background:"linear-gradient(135deg,#f5f3ff,#eff6ff)",borderRadius:14,padding:"14px 18px",border:"2px solid rgba(139,92,246,.2)"}}>
+              <div style={{fontSize:14,fontWeight:900,color:"var(--navy)",marginBottom:4}}>🦉 Nova's Review — {scanTitle||"Your Essay"}</div>
+              <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:8}}>
+                Nova found <strong>{scanIssues.filter(i=>i.type!=="strength").length} things to improve</strong> and <strong>{scanIssues.filter(i=>i.type==="strength").length} things you did great!</strong><br/>
+                For each one, pick the version you like best or skip it. Then save to your Notes!
+              </div>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                {Object.entries({grammar:"🔴 Grammar",clarity:"🟠 Clarity",structure:"🔵 Structure","word-choice":"🟣 Word Choice",strength:"🟢 Strengths"}).map(([k,v])=>{
+                  const count=scanIssues.filter(i=>i.type===k).length;
+                  if(!count)return null;
+                  return <span key={k} style={{fontSize:10,fontWeight:800,padding:"2px 9px",borderRadius:20,background:"#fff",color:typeColors[k],border:"1px solid "+typeColors[k]}}>{v}: {count}</span>;
+                })}
+              </div>
+            </div>
+
+            {scanIssues.map((issue,idx)=>(
+              <div key={idx} className={"scan-issue-card "+issue.type}>
+                <div className={"scan-issue-type "+issue.type}>{typeEmoji[issue.type]} {issue.type==="word-choice"?"Word Choice":issue.type.charAt(0).toUpperCase()+issue.type.slice(1)}</div>
+                <div className="scan-original">"{issue.original}"</div>
+                <div className="scan-why">💡 {issue.why}</div>
+                {issue.type!=="strength"?(
+                  <>
+                    <div className="scan-option-label">✏️ Choose a better version:</div>
+                    <div className="scan-options">
+                      {issue.options.map((opt,oi)=>(
+                        <div key={oi}>
+                          <button
+                            className={"scan-option-btn"+(scanChoices[idx]===oi?" chosen":"")}
+                            onClick={()=>setScanChoices(prev=>({...prev,[idx]:prev[idx]===oi?undefined:oi}))}>
+                            <span style={{fontWeight:900,color:"var(--purple)",marginRight:6}}>{opt.label}.</span>{opt.text}
+                          </button>
+                          {scanChoices[idx]===oi&&(
+                            <div className="scan-why-box">✅ {opt.reason}</div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    {scanChoices[idx]!==undefined&&<div style={{fontSize:10,color:"var(--green)",fontWeight:800,marginTop:6}}>✓ Choice saved to your notes!</div>}
+                  </>
+                ):(
+                  <>
+                    <div className="scan-option-label">⭐ Build on this strength:</div>
+                    <div className="scan-options">
+                      {issue.options.map((opt,oi)=>(
+                        <button key={oi} className={"scan-option-btn"+(scanChoices[idx]===oi?" chosen":"")}
+                          style={{borderColor:"var(--green)"}}
+                          onClick={()=>setScanChoices(prev=>({...prev,[idx]:prev[idx]===oi?undefined:oi}))}>
+                          <span style={{fontWeight:900,color:"var(--green)",marginRight:6}}>{opt.label}.</span>{opt.text}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+
+            <div style={{display:"flex",gap:10,padding:"4px 0 16px",flexWrap:"wrap"}}>
+              <button onClick={saveNoteFromScan}
+                style={{flex:1,padding:"13px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:"0 4px 14px rgba(139,92,246,.3)"}}>
+                📓 Save to My Notes
+              </button>
+              <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");}}
+                style={{padding:"13px 20px",borderRadius:12,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>
+                Scan Another ↺
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  /* ── Student Notes Screen ── */
+  function StudentNotes(){
+    const note=viewingNote?studentNotes.find(n=>n.id===viewingNote):null;
+    const typeColors={grammar:"var(--red)",clarity:"var(--orange)",structure:"var(--blue)","word-choice":"var(--purple)",strength:"var(--green)"};
+    const typeEmoji={grammar:"🔴",clarity:"🟠",structure:"🔵","word-choice":"🟣",strength:"🟢"};
+
+    const downloadNote=(n)=>{
+      const chosen=n.choices||{};
+      let content=`STUDENT WRITING NOTES\n${n.title}\n${new Date(n.date).toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"})}\nStudent: ${n.studentName||""} · Grade: ${n.grade||""}\n\n`;
+      content+=`${"═".repeat(60)}\nORIGINAL ESSAY\n${"═".repeat(60)}\n${n.original}\n\n`;
+      content+=`${"═".repeat(60)}\nNOVA'S FEEDBACK\n${"═".repeat(60)}\n`;
+      (n.issues||[]).forEach((issue,i)=>{
+        content+=`\n[${issue.type.toUpperCase()}] "${issue.original}"\n`;
+        content+=`Why: ${issue.why}\n`;
+        if(chosen[i]!==undefined){
+          const opt=issue.options[chosen[i]];
+          content+=`✓ Chosen revision (${opt.label}): ${opt.text}\n`;
+          content+=`   Reason: ${opt.reason}\n`;
+        } else {
+          content+=`(No revision chosen for this item)\n`;
+        }
+      });
+      const blob=new Blob([content],{type:"text/plain"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;a.download=`nova-notes-${(n.title||"essay").replace(/[^a-z0-9]/gi,"-").toLowerCase()}-${new Date(n.date).toISOString().slice(0,10)}.txt`;
+      a.click();URL.revokeObjectURL(url);
+    };
+
+    if(note){
+      const chosen=note.choices||{};
+      return(
+        <div className="notes-wrap fade-in">
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4,flexWrap:"wrap"}}>
+            <button className="writing-back" onClick={()=>setViewingNote(null)}>← All Notes</button>
+            <div style={{fontSize:14,fontWeight:900,color:"var(--navy)",flex:1}}>{note.title}</div>
+            <button onClick={()=>downloadNote(note)} style={{padding:"6px 14px",borderRadius:20,border:"none",background:"linear-gradient(135deg,var(--blue),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer"}}>⬇️ Download</button>
+          </div>
+          <div style={{fontSize:10,color:"var(--muted)",fontWeight:600,marginBottom:8}}>{new Date(note.date).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})} · {note.studentName} · {note.grade} grade</div>
+
+          {/* Original essay */}
+          <div className="note-card">
+            <div className="note-card-header">
+              <div className="note-title">📄 Original Essay</div>
+            </div>
+            <div className="note-original">{note.original}</div>
+          </div>
+
+          {/* Annotations */}
+          <div className="note-card">
+            <div className="note-card-header">
+              <div className="note-title">🦉 Nova's Annotations</div>
+              <div style={{fontSize:10,color:"var(--muted)",fontWeight:600}}>{Object.keys(chosen).length} of {(note.issues||[]).length} revisions chosen</div>
+            </div>
+            <div className="note-annotations">
+              {(note.issues||[]).map((issue,i)=>{
+                const ch=chosen[i];
+                return(
+                  <div key={i} className={"note-annotation "+issue.type}>
+                    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4}}>
+                      <span>{typeEmoji[issue.type]}</span>
+                      <span style={{fontWeight:900,textTransform:"uppercase",fontSize:9,letterSpacing:"1px"}}>{issue.type}</span>
+                    </div>
+                    <div style={{fontStyle:"italic",marginBottom:4,opacity:.8}}>Original: "{issue.original}"</div>
+                    <div style={{marginBottom:4}}>{issue.why}</div>
+                    {ch!==undefined?(
+                      <div style={{background:"rgba(255,255,255,.6)",borderRadius:6,padding:"5px 8px",marginTop:4}}>
+                        <span style={{fontWeight:900}}>✓ Chosen ({issue.options[ch]?.label}): </span>{issue.options[ch]?.text}
+                        <div style={{fontSize:10,opacity:.8,marginTop:2}}>{issue.options[ch]?.reason}</div>
+                      </div>
+                    ):(
+                      <div style={{opacity:.6,fontSize:10,fontStyle:"italic"}}>No revision chosen</div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return(
+      <div className="notes-wrap fade-in">
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+          <button className="writing-back" onClick={()=>setWritingScreen("home")}>← Writing</button>
+          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}> 📓 My Student Notes</div>
+          <button onClick={()=>setWritingScreen("scan")} style={{marginLeft:"auto",padding:"6px 14px",borderRadius:20,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer"}}>+ Scan Essay</button>
+        </div>
+        {studentNotes.length===0?(
+          <div style={{textAlign:"center",padding:40,background:"#fff",borderRadius:18,border:"2px dashed var(--border)"}}>
+            <div style={{fontSize:40,marginBottom:12}}>📓</div>
+            <div style={{fontSize:14,fontWeight:900,color:"var(--navy)",marginBottom:8}}>No notes yet!</div>
+            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:16}}>Scan an essay and Nova will save your feedback and chosen revisions here.</div>
+            <button onClick={()=>setWritingScreen("scan")} style={{padding:"11px 24px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>📄 Scan My First Essay</button>
+          </div>
+        ):(
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {studentNotes.map(n=>{
+              const chosen=Object.keys(n.choices||{}).length;
+              const total=(n.issues||[]).length;
+              const improvements=(n.issues||[]).filter(i=>i.type!=="strength").length;
+              return(
+                <div key={n.id} className="note-card" style={{cursor:"pointer",transition:"all .15s"}}
+                  onClick={()=>setViewingNote(n.id)}>
+                  <div className="note-card-header">
+                    <div className="note-title">{n.title}</div>
+                    <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                      <button onClick={e=>{e.stopPropagation();downloadNote(n);}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"var(--blue)",color:"#fff",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>⬇️</button>
+                      <button onClick={e=>{e.stopPropagation();const updated=studentNotes.filter(x=>x.id!==n.id);setStudentNotes(updated);const u=localStorage.getItem("nova_user")||"";localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"#fef2f2",color:"var(--red)",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>🗑️</button>
+                    </div>
+                  </div>
+                  <div className="note-date">{new Date(n.date).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"})}</div>
+                  <div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}>
+                    <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{total} annotations</span>
+                    <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{chosen} revisions chosen</span>
+                    <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#eff6ff",color:"var(--blue)"}}>{improvements} improvements</span>
+                  </div>
+                  <div style={{marginTop:8,fontSize:11,color:"var(--muted)",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{(n.original||"").slice(0,120)}...</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   function WritingHome(){
-    // Show lesson completion status per type
+    const done=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length,0);
+    const total=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.length,0);
     return(
       <div className="writing-home fade-in">
         <div className="writing-home-title">✍️ Writing Workshop</div>
-        <div className="writing-home-sub">Choose a writing type to practice. Nova will teach you step by step.</div>
+        <div className="writing-home-sub">Learn step by step, then scan your own writing for instant feedback.</div>
+
+        {/* Action buttons row */}
+        <div style={{display:"flex",gap:12,maxWidth:600,margin:"0 auto",width:"100%",flexWrap:"wrap"}}>
+          <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setWritingScreen("scan");}}
+            style={{flex:1,minWidth:160,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#7c3aed,#4f46e5)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(124,58,237,.3)"}}>
+            <div style={{fontSize:28,marginBottom:6}}>📄</div>
+            <div style={{fontSize:13,fontWeight:900}}>Scan My Essay</div>
+            <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Get interactive feedback on your writing</div>
+          </button>
+          <button onClick={()=>setWritingScreen("notes")}
+            style={{flex:1,minWidth:160,padding:"16px",borderRadius:16,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center"}}>
+            <div style={{fontSize:28,marginBottom:6}}>📓</div>
+            <div style={{fontSize:13,fontWeight:900,color:"var(--purple)"}}>Student Notes</div>
+            <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2}}>{studentNotes.length} saved {studentNotes.length===1?"note":"notes"}</div>
+          </button>
+        </div>
+
+        <div style={{maxWidth:600,margin:"4px auto",width:"100%",fontSize:11,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)"}}>📚 Lessons</div>
         <div className="writing-type-grid">
           {WRITING_TYPES.map(wt=>{
             const done=wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length;
@@ -3150,7 +3571,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>👤 {profile?.name}</div>
         <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginBottom:8}}>{profile?.grade} grade · {lvl?.name}</div>
         {writingMode&&(
-          <button onClick={()=>{setWritingMode(false);setWritingType(null);setWritingLesson(null);}}
+          <button onClick={()=>{setWritingMode(false);setWritingType(null);setWritingLesson(null);setWritingScreen("home");}}
             style={{width:"100%",padding:"7px",borderRadius:9,border:"2px solid #7c3aed",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"#7c3aed",marginBottom:8}}>
             ← Back to STEM
           </button>
@@ -3271,6 +3692,8 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
           {writingMode?(
             writingLesson?<WritingLessonScreen/>:
             writingType?<WritingLessonPicker/>:
+            writingScreen==="scan"?<ScanScreen/>:
+            writingScreen==="notes"?<StudentNotes/>:
             <WritingHome/>
           ):(
             <>
