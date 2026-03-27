@@ -1244,6 +1244,8 @@ function App(){
   const[childProfiles,setChildProfiles]=useState({});
   const[parentDashPage,setParentDashPage]=useState("overview");
   const[showAddChild,setShowAddChild]=useState(false);
+  const[showWeeklyReport,setShowWeeklyReport]=useState(false);
+  const[showRewards,setShowRewards]=useState(false);
   const[addChildUsername,setAddChildUsername]=useState("");
   const[addChildErr,setAddChildErr]=useState("");
   const[addChildLoading,setAddChildLoading]=useState(false);
@@ -1759,6 +1761,7 @@ Return the JSON array now:`;
         const xg=10+Math.round(pct/10);
         up.xp=(up.xp||0)+xg;up.sessions=(up.sessions||0)+1;up.lastSession=new Date().toISOString();
         up.struggleCount=(up.struggleCount||0)+(pct<50?1:0);
+        if(pct===100)up.quizPerfects=(up.quizPerfects||0)+1;
         const{gaps,strengths}=updateGaps(tm,up.gaps,up.strengths);
         up.gaps=gaps;up.strengths=strengths;
         const log=up.sessionLog||[];
@@ -1805,6 +1808,136 @@ Return the JSON array now:`;
   const getQS=()=>{const base=[{emoji:"🍕",text:"Teach me about fractions using pizza!"},{emoji:"⚛️",text:"What are atoms made of?"},{emoji:"🧬",text:"How does DNA carry our traits?"},{emoji:"💻",text:"What is a loop in coding?"},{emoji:"🧪",text:"What happens in a chemical reaction?"},{emoji:"🧠",text:"What is a logical fallacy?"},{emoji:"🌍",text:"How does gravity keep planets in orbit?"},{emoji:"📊",text:"What's the difference between mean and median?"}];if(!profile?.interests?.length)return base.slice(0,6);const extra=[];if(profile.interests.some(i=>i.includes("Space")))extra.push({emoji:"🌌",text:"What makes a black hole so powerful?"});if(profile.interests.some(i=>i.includes("Game")))extra.push({emoji:"🎮",text:"How do video games use math and code?"});if(profile.interests.some(i=>i.includes("Lego")||i.includes("Build")))extra.push({emoji:"🧱",text:"How do engineers design strong buildings?"});if(profile.interests.some(i=>i.includes("Animal")))extra.push({emoji:"🧬",text:"Why do animals inherit traits from parents?"});if(profile.interests.some(i=>i.includes("Robot")))extra.push({emoji:"🤖",text:"How does AI learn from data?"});if(profile.interests.some(i=>i.includes("Cook")))extra.push({emoji:"🧪",text:"What chemistry happens when you bake a cake?"});if(profile.interests.some(i=>i.includes("Art")))extra.push({emoji:"🎨",text:"How do screens mix colors using math?"});if(profile.interests.some(i=>i.includes("Sport")))extra.push({emoji:"⚽",text:"What forces make a soccer ball curve?"});return[...extra.slice(0,2),...base].slice(0,6);};
 
   /* Tree Panel */
+  /* ── Weekly Progress Report ── */
+  function WeeklyReport({childUser,cp,onClose}){
+    const[generating,setGenerating]=useState(false);
+    const[report,setReport]=useState(null);
+    const generateReport=async()=>{
+      setGenerating(true);
+      const oneWeekAgo=Date.now()-7*24*60*60*1000;
+      const weekSessions=(cp?.sessionLog||[]).filter(s=>new Date(s.date).getTime()>oneWeekAgo);
+      const totalXP=weekSessions.reduce((a,s)=>a+(s.xpGained||0),0);
+      const topicsStudied=[...new Set(weekSessions.flatMap(s=>s.topics||[]))];
+      const prompt=`Write a warm, encouraging weekly progress report for a parent about their child named ${cp?.name||childUser}.
+Child's data:
+- Grade: ${cp?.grade||"unknown"}
+- Sessions this week: ${weekSessions.length}
+- XP earned this week: ${totalXP}
+- Topics studied: ${topicsStudied.join(", ")||"none yet"}
+- Struggle sessions: ${weekSessions.filter(s=>s.hadStruggle).length}
+- Current mastery: Math ${cp?.mastery?.math||0}%, Science ${cp?.mastery?.science||0}%, Coding ${cp?.mastery?.coding||0}%
+- Current level: ${getLevel(cp?.xp||0).name}
+- Known gaps: ${(cp?.gaps||[]).join(", ")||"none identified"}
+- Strengths: ${(cp?.strengths||[]).join(", ")||"still discovering"}
+
+Write exactly 3 paragraphs:
+1. Celebrate specific wins and progress this week
+2. What to focus on next week based on gaps (positive, actionable)
+3. One fun real-world activity the parent can do with their child related to what they studied
+
+Keep it warm, specific, under 200 words. Address the parent directly. Sign off as "Nova 🦉"`;
+      try{
+        const key=localStorage.getItem("nova_api_key");
+        const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:600,messages:[{role:"user",content:prompt}]})});
+        const data=await r.json();
+        if(data.error)throw new Error(data.error.message);
+        setReport(data.content?.[0]?.text||"");
+      }catch(err){setReport("Could not generate report: "+err.message);}
+      setGenerating(false);
+    };
+    useEffect(()=>{generateReport();},[]);
+    const download=()=>{
+      const blob=new Blob([report||""],{type:"text/plain"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;a.download=`nova-report-${cp?.name||childUser}-${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();URL.revokeObjectURL(url);
+    };
+    return(
+      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:600,display:"flex",alignItems:"center",justifyContent:"center",padding:20}} onClick={onClose}>
+        <div style={{background:"#fff",borderRadius:20,padding:28,maxWidth:500,width:"100%",maxHeight:"80vh",display:"flex",flexDirection:"column",boxShadow:"0 16px 60px rgba(0,0,0,.25)",animation:"popIn .3s cubic-bezier(.34,1.56,.64,1)"}} onClick={e=>e.stopPropagation()}>
+          <div style={{fontSize:18,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📊 Weekly Report — {cp?.name||childUser}</div>
+          <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:16}}>Week ending {new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</div>
+          <div style={{flex:1,overflowY:"auto",marginBottom:16}}>
+            {generating
+              ?<div style={{textAlign:"center",padding:32}}><span style={{fontSize:40,display:"block",animation:"float 1s ease-in-out infinite"}}>🦉</span><div style={{marginTop:12,fontWeight:700,color:"var(--muted)"}}>Generating report...</div></div>
+              :<div style={{whiteSpace:"pre-wrap",fontSize:13,lineHeight:1.9,color:"var(--text)",fontWeight:600}}>{report}</div>
+            }
+          </div>
+          <div style={{display:"flex",gap:10}}>
+            <button onClick={download} disabled={generating||!report} style={{flex:1,padding:"11px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--blue),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>⬇️ Download</button>
+            <button onClick={onClose} style={{padding:"11px 18px",borderRadius:10,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Close</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Rewards & Stars Store ── */
+  const REWARDS=[
+    {id:"r1",name:"Quiz Champion",desc:"Score 100% on any quiz",icon:"🏆",type:"achievement",condition:p=>(p?.quizPerfects||0)>=1},
+    {id:"r2",name:"Topic Master",desc:"Master 5 topics (80%+)",icon:"⭐",type:"achievement",condition:p=>Object.values(p?.topicMastery||{}).filter(v=>v>=80).length>=5},
+    {id:"r3",name:"Week Warrior",desc:"Study 5 days in a row",icon:"🔥",type:"achievement",condition:p=>(p?.streak||0)>=5},
+    {id:"r4",name:"Bonus Game Time",desc:"Instantly unlock a game break right now",icon:"🎮",xpCost:150,type:"redeem"},
+    {id:"r5",name:"Choose Any Topic",desc:"Nova teaches any topic you pick",icon:"🎓",xpCost:200,type:"redeem"},
+    {id:"r6",name:"Fun Day Pass",desc:"Skip the quiz — just explore today",icon:"🌟",xpCost:100,type:"redeem"},
+    {id:"r7",name:"Home Experiment",desc:"Nova designs a real experiment to try at home",icon:"🔬",xpCost:250,type:"redeem"},
+    {id:"r8",name:"Story Mode",desc:"Nova teaches your next topic as an adventure story",icon:"📖",xpCost:175,type:"redeem"},
+  ];
+
+  function RewardsStore(){
+    const xp=profile?.xp||0;
+    const lvl=profile?getLevel(xp):null;
+    const[msg,setMsg]=useState(null);
+    const redeem=(r)=>{
+      if(xp<r.xpCost){setMsg("❌ You need "+r.xpCost+"⭐ XP — keep studying to earn more!");return;}
+      const up={...profile,xp:xp-r.xpCost,redeemedRewards:[...(profile.redeemedRewards||[]),{id:r.id,date:new Date().toISOString()}]};
+      saveProfile(up);
+      const actions={
+        r4:"Your game break starts now! Hit the 🎮 button in the sidebar.",
+        r5:"Type any topic you want in the subject picker and Nova will teach it!",
+        r6:"Your next quiz is skipped — just enjoy the lesson!",
+        r7:"Go to any topic, finish the lesson, then ask Nova: 'Design a home experiment for this!'",
+        r8:"Go to any topic and ask Nova: 'Teach me this as an adventure story!'",
+      };
+      if(r.id==="r4"){setLastBreakTime(Date.now()-14*60*1000);setGameBreakReady(true);}
+      setMsg("🎉 Redeemed: "+r.name+"! "+( actions[r.id]||"Enjoy!"));
+    };
+    return(
+      <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:600,display:"flex",alignItems:"center",justifyContent:"center",padding:16}} onClick={()=>{setShowRewards(false);}}>
+        <div style={{background:"#fff",borderRadius:22,padding:24,maxWidth:500,width:"100%",maxHeight:"88vh",display:"flex",flexDirection:"column",boxShadow:"0 16px 60px rgba(0,0,0,.25)",animation:"popIn .3s cubic-bezier(.34,1.56,.64,1)"}} onClick={e=>e.stopPropagation()}>
+          <div style={{fontSize:18,fontWeight:900,color:"var(--navy)",marginBottom:12}}>⭐ Rewards & Stars</div>
+          <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:12,background:"linear-gradient(135deg,#fef9c3,#fffbeb)",border:"2px solid #fbbf24",marginBottom:14}}>
+            <div style={{fontSize:28}}>⭐</div>
+            <div><div style={{fontSize:18,fontWeight:900,color:"var(--navy)"}}>{xp} XP</div><div style={{fontSize:11,fontWeight:700,color:"#92400e"}}>{lvl?.name}</div></div>
+          </div>
+          {msg&&<div style={{padding:"10px 14px",borderRadius:10,background:"#f0fdf4",border:"2px solid var(--green)",color:"#166534",fontSize:12,fontWeight:700,marginBottom:12,lineHeight:1.5}}>{msg}</div>}
+          <div style={{flex:1,overflowY:"auto"}}>
+            <div style={{fontSize:10,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>🏆 Achievements — earned automatically</div>
+            {REWARDS.filter(r=>r.type==="achievement").map(r=>{
+              const earned=r.condition&&r.condition(profile);
+              return(<div key={r.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",borderRadius:12,border:"2px solid "+(earned?"var(--green)":"var(--border)"),background:earned?"#f0fdf4":"#fafafa",marginBottom:8,opacity:earned?1:0.55}}>
+                <div style={{fontSize:26}}>{r.icon}</div>
+                <div style={{flex:1}}><div style={{fontSize:12,fontWeight:900}}>{r.name}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{r.desc}</div></div>
+                <div style={{fontSize:11,fontWeight:800,color:earned?"var(--green)":"var(--muted)"}}>{earned?"✅":"🔒"}</div>
+              </div>);
+            })}
+            <div style={{fontSize:10,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginTop:14,marginBottom:8}}>🎁 Spend Your Stars</div>
+            {REWARDS.filter(r=>r.type==="redeem").map(r=>{
+              const can=xp>=r.xpCost;
+              return(<div key={r.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",borderRadius:12,border:"2px solid "+(can?"#fbbf24":"var(--border)"),background:can?"#fffbeb":"#fafafa",marginBottom:8}}>
+                <div style={{fontSize:26}}>{r.icon}</div>
+                <div style={{flex:1}}><div style={{fontSize:12,fontWeight:900}}>{r.name}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{r.desc}</div></div>
+                <button onClick={()=>redeem(r)} disabled={!can} style={{padding:"6px 12px",borderRadius:9,border:"none",background:can?"#d97706":"var(--border)",color:can?"#fff":"var(--muted)",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:can?"pointer":"not-allowed",whiteSpace:"nowrap"}}>{r.xpCost}⭐</button>
+              </div>);
+            })}
+          </div>
+          <button onClick={()=>setShowRewards(false)} style={{marginTop:12,padding:"11px",borderRadius:10,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>Close</button>
+        </div>
+      </div>
+    );
+  }
+
   function TreePanel(){
     const tm=profile?.topicMastery||{};const units=CURRICULUM[treeSubject];const sc={math:"#3b82f6",science:"#8b5cf6",chemistry:"#f97316",biology:"#22c55e",coding:"#14b8a6",critical:"#ec4899"};
     const getStatus=node=>{if(!isUL(node,tm))return"locked";const pct=tm[node.id];if(pct===undefined)return"current";if(pct>=80)return"mastered";if(struggleTopics.includes(node.id))return"struggling-node";if((profile?.gaps||[]).some(g=>({"Fractions & Division":["m3","m4","m5","m13","m16"],"Decimals":["m14","m15"],"Place Value":["m11","m12"],"Ratios & Percents":["m17","m18","m19"],"Pre-Algebra":["m20","m21","m22","m27"],"Geometry":["m6","m7","m8","m23","m24"],"Data & Probability":["m25","m26"],"Forces & Motion":["s1","s2","s3","s4"],"Energy & Waves":["s18","s19","s20"],"States of Matter":["s5","s6","s7"],"Life Science":["s11","s12","s13","s14"],"Earth Science":["s15","s16","s17"],"Chemistry Basics":["ch1","ch2","ch3"],"Chemical Reactions":["ch4","ch5","ch6","ch7"],"Cell Biology":["b1","b2"],"Human Body":["b3","b5","b6"],"Ecology & Evolution":["b4"],"Logic & Loops":["c3","c4"],"Variables & Functions":["c5","c6","c9","c10"],"Critical Thinking":["ct1","ct2","ct3","ct4","ct5"]}[g]||[]).includes(node.id)))return"gap";return"current";};
@@ -1884,7 +2017,11 @@ Return the JSON array now:`;
     const masteredCount=Object.values(topicMastery).filter(v=>v>=80).length;const tot=allN().length;
     const lvl=getLevel(xp||0);const nxt=getNextLevel(xp||0);
     if(parentDashPage==="overview")return(<>
-      <div className="dash-page-title">{name}'s Overview</div>
+      {showWeeklyReport&&<WeeklyReport childUser={childUser} cp={cp} onClose={()=>setShowWeeklyReport(false)}/>}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10,marginBottom:4}}>
+        <div className="dash-page-title">{name}'s Overview</div>
+        <button onClick={()=>setShowWeeklyReport(true)} style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--blue),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer"}}>📊 Weekly Report</button>
+      </div>
       <div className="dash-page-sub">{grade} grade · Last session: {cp.lastSession?new Date(cp.lastSession).toLocaleDateString():"Not yet"}</div>
       <div className="stat-grid">
         <div className="stat-card"><div className="stat-icon">📅</div><div className="stat-val">{sessions||0}</div><div className="stat-lbl">Messages</div></div>
@@ -2371,9 +2508,9 @@ Return the JSON array now:`;
       <div className="learn-sidebar">
         <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>👤 {profile?.name}</div>
         <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginBottom:12}}>{profile?.grade} grade · {lvl?.name}</div>
-        <div className="sidebar-xp">
+        <div className="sidebar-xp" style={{cursor:"pointer"}} onClick={()=>setShowRewards(true)}>
           <div className="sidebar-xp-val">⭐ {profile?.xp||0}</div>
-          <div className="sidebar-xp-lbl">XP</div>
+          <div className="sidebar-xp-lbl">XP — Tap for Rewards!</div>
         </div>
         <div style={{marginTop:12}}>
           <div className="sidebar-label">Mastery</div>
@@ -2428,6 +2565,7 @@ Return the JSON array now:`;
       {levelToast&&<div className="level-toast">{levelToast}</div>}
       {masteredToast&&<div className="mastered-toast">{masteredToast}</div>}
       {gapToast&&<div className="gap-toast">{gapToast}</div>}
+      {showRewards&&<RewardsStore/>}
       {/* Game Break Popup */}
       {showGamePopup&&(
         <div className="game-popup-overlay" onClick={()=>setShowGamePopup(false)}>
