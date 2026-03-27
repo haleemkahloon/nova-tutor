@@ -1605,6 +1605,7 @@ function App(){
   const[viewingNote,setViewingNote]=useState(null);
   /* Essay Writer */
   const[essayTopic,setEssayTopic]=useState("");
+  const essayTopicRef=useRef("");
   const[essayLength,setEssayLength]=useState("medium");
   const[essayType,setEssayType]=useState("opinion");
   const[essayResearch,setEssayResearch]=useState("");
@@ -1614,6 +1615,7 @@ function App(){
   const[essayOutput,setEssayOutput]=useState(null);
   const[essaySearching,setEssaySearching]=useState(false);
   const[essayUrlInput,setEssayUrlInput]=useState("");
+  const essayUrlRef=useRef("");
   const[essayUrlLoading,setEssayUrlLoading]=useState(false);
   const[essayUrlStatus,setEssayUrlStatus]=useState(null); // null | "ok" | "error"
   const[essayFileLoading,setEssayFileLoading]=useState(false);
@@ -2914,7 +2916,7 @@ Return ONLY the revised essay text (no commentary, no "Here is the revised essay
 
   /* ── Fetch content from a URL via Claude web_search tool ── */
   const fetchFromUrl=async()=>{
-    const url=essayUrlInput.trim();
+    const url=(essayUrlRef.current||essayUrlInput).trim();
     if(!url)return;
     setEssayUrlLoading(true);
     setEssayUrlStatus(null);
@@ -3033,7 +3035,7 @@ Return ONLY the revised essay text (no commentary, no "Here is the revised essay
   };
 
   const generateEssay=async()=>{
-    if(!essayTopic.trim())return;
+    const topicVal=(essayTopicRef.current||essayTopic).trim();if(!topicVal)return;
     setEssayLoading(true);
     setEssayOutput(null);
     const lengthMap={short:"3 paragraphs (~200 words)",medium:"5 paragraphs (~400 words)",long:"7 paragraphs (~600 words)"};
@@ -3044,7 +3046,7 @@ After writing the essay, add a JSON block at the very end (after the essay text)
 <HIGHLIGHTS>{"thesis":["exact thesis sentence"],"topic":["topic sentence 1","topic sentence 2","topic sentence 3"],"evidence":["key evidence phrase 1","key evidence phrase 2"],"transition":["transition phrase 1","transition phrase 2"]}</HIGHLIGHTS>
 These will be used to color-code the essay for the student.`:"";
 
-    const prompt=`You are Nova, an expert writing tutor. Write a ${typeMap[essayType]} for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${essayTopic}"
+    const prompt=`You are Nova, an expert writing tutor. Write a ${typeMap[essayType]} for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${topicVal}"
 
 Length: ${lengthMap[essayLength]}
 Grade level: ${profile?.grade} grade — use age-appropriate vocabulary and sentence structure
@@ -3071,9 +3073,9 @@ Write the essay now:`;
         try{highlights=JSON.parse(hMatch[1]);}catch{}
       }
       const wc=bodyText.trim().split(/\s+/).length;
-      setEssayOutput({body:bodyText,highlights,wordCount:wc,topic:essayTopic,type:essayType,length:essayLength,date:new Date().toISOString()});
+      setEssayOutput({body:bodyText,highlights,wordCount:wc,topic:topicVal,type:essayType,length:essayLength,date:new Date().toISOString()});
     }catch(err){
-      setEssayOutput({body:"Sorry, Nova had trouble writing the essay. Please try again.",highlights:{},wordCount:0,topic:essayTopic,type:essayType,length:essayLength,date:new Date().toISOString()});
+      setEssayOutput({body:"Sorry, Nova had trouble writing the essay. Please try again.",highlights:{},wordCount:0,topic:topicVal,type:essayType,length:essayLength,date:new Date().toISOString()});
     }
     setEssayLoading(false);
   };
@@ -3710,11 +3712,15 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
           {/* Topic */}
           <div className="essay-config-card">
             <div className="essay-config-title">📌 What's your essay topic?</div>
-            <input value={essayTopic} onChange={e=>setEssayTopic(e.target.value)}
+            <input
+              defaultValue={essayTopic}
+              onInput={e=>{essayTopicRef.current=e.target.value;}}
+              onBlur={e=>{setEssayTopic(e.target.value);essayTopicRef.current=e.target.value;}}
               placeholder={`e.g. "Why every school should have a garden" or "The water cycle" or "My best day ever"`}
-              style={{width:"100%",padding:"11px 14px",borderRadius:10,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:13,fontWeight:600,outline:"none",color:"var(--navy)",transition:"border-color .15s"}}
-              onFocus={e=>e.target.style.borderColor="#7c3aed"}
-              onBlur={e=>e.target.style.borderColor="var(--border)"}/>
+              autoComplete="off"
+              inputMode="text"
+              style={{width:"100%",padding:"11px 14px",borderRadius:10,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:13,fontWeight:600,outline:"none",color:"var(--navy)",transition:"border-color .15s",WebkitUserSelect:"text",userSelect:"text"}}
+              onFocus={e=>e.target.style.borderColor="#7c3aed"}/>
           </div>
 
           {/* Type */}
@@ -3755,14 +3761,17 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                 <div style={{position:"relative",flex:1}}>
                   <span style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",fontSize:14}}>🌐</span>
                   <input
-                    value={essayUrlInput}
-                    onChange={e=>setEssayUrlInput(e.target.value)}
+                    defaultValue={essayUrlInput}
+                    onInput={e=>{essayUrlRef.current=e.target.value;}}
+                    onBlur={e=>{setEssayUrlInput(e.target.value);essayUrlRef.current=e.target.value;}}
                     onKeyDown={e=>e.key==="Enter"&&fetchFromUrl()}
                     placeholder="Paste a website URL..."
+                    autoComplete="off"
+                    inputMode="url"
                     style={{width:"100%",padding:"8px 10px 8px 32px",borderRadius:9,border:"2px solid "+(essayUrlStatus==="ok"?"var(--green)":essayUrlStatus==="error"?"var(--red)":"var(--blue)"),fontFamily:"var(--font)",fontSize:11,fontWeight:600,outline:"none",color:"var(--navy)",background:essayUrlStatus==="ok"?"#f0fdf4":essayUrlStatus==="error"?"#fef2f2":"#eff6ff"}}/>
                 </div>
-                <button onClick={fetchFromUrl} disabled={essayUrlLoading||!essayUrlInput.trim()}
-                  style={{padding:"8px 12px",borderRadius:9,border:"none",background:essayUrlInput.trim()?"var(--blue)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:essayUrlInput.trim()?"pointer":"not-allowed",flexShrink:0,whiteSpace:"nowrap"}}>
+                <button onClick={fetchFromUrl} disabled={essayUrlLoading||!(essayUrlRef.current||essayUrlInput).trim()}
+                  style={{padding:"8px 12px",borderRadius:9,border:"none",background:(essayUrlRef.current||essayUrlInput).trim()?"var(--blue)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:(essayUrlRef.current||essayUrlInput).trim()?"pointer":"not-allowed",flexShrink:0,whiteSpace:"nowrap"}}>
                   {essayUrlLoading?<span className="spin" style={{display:"inline-block"}}>◌</span>:"Fetch →"}
                 </button>
               </div>
@@ -3834,8 +3843,8 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             </button>
           </div>
 
-          <button onClick={generateEssay} disabled={!essayTopic.trim()}
-            style={{width:"100%",padding:"14px",borderRadius:14,border:"none",background:essayTopic.trim()?"linear-gradient(135deg,#7c3aed,#4f46e5)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:14,fontWeight:900,cursor:essayTopic.trim()?"pointer":"not-allowed",boxShadow:essayTopic.trim()?"0 4px 18px rgba(124,58,237,.35)":"none"}}>
+          <button onClick={generateEssay} disabled={!(essayTopicRef.current||essayTopic).trim()}
+            style={{width:"100%",padding:"14px",borderRadius:14,border:"none",background:(essayTopicRef.current||essayTopic).trim()?"linear-gradient(135deg,#7c3aed,#4f46e5)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:14,fontWeight:900,cursor:(essayTopicRef.current||essayTopic).trim()?"pointer":"not-allowed",boxShadow:(essayTopicRef.current||essayTopic).trim()?"0 4px 18px rgba(124,58,237,.35)":"none"}}>
             ✏️ Write My Essay
           </button>
         </>)}
@@ -3957,7 +3966,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             <div style={{fontSize:13,fontWeight:900}}>Scan My Essay</div>
             <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Get interactive feedback</div>
           </button>
-          <button onClick={()=>{setEssayOutput(null);setEssayTopic("");setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");setEssayUrlStatus(null);setWritingScreen("essaywriter");}}
+          <button onClick={()=>{setEssayOutput(null);setEssayTopic("");essayTopicRef.current="";setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");essayUrlRef.current="";setEssayUrlStatus(null);setWritingScreen("essaywriter");}}
             style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(249,115,22,.3)"}}>
             <div style={{fontSize:28,marginBottom:6}}>✏️</div>
             <div style={{fontSize:13,fontWeight:900}}>Write My Essay</div>
