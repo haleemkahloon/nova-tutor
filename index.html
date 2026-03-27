@@ -1489,7 +1489,10 @@ function App(){
   const[writingLesson,setWritingLesson]=useState(null);
   const[writingStep,setWritingStep]=useState(0);
   const[writingDraft,setWritingDraft]=useState("");
+  const writingDraftRef=useRef("");
   const[writingRevision,setWritingRevision]=useState("");
+  const writingRevisionRef=useRef("");
+  const[writingMicListening,setWritingMicListening]=useState(false);
   const[writingFeedback,setWritingFeedback]=useState(null);
   const[writingLoading,setWritingLoading]=useState(false);
   const[writingHistory,setWritingHistory]=useState(()=>{
@@ -1557,7 +1560,8 @@ function App(){
     setIsSpeaking(false);
   },[]);
 
-  // Setup speech recognition
+  // Setup speech recognition — supports both chat input and writing textarea
+  const writingMicTargetRef=useRef("draft"); // "draft" or "revision"
   useEffect(()=>{
     const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
     if(!SR)return;
@@ -1567,18 +1571,44 @@ function App(){
     rec.lang="en-US";
     rec.onresult=e=>{
       const transcript=e.results[0][0].transcript;
-      setInput(transcript);
-      setIsListening(false);
+      if(writingMicTargetRef.current==="draft"){
+        // Append to writing draft (don't replace)
+        const current=writingDraftRef.current;
+        const appended=current+(current&&!current.endsWith(" ")?" ":"")+transcript;
+        writingDraftRef.current=appended;
+        setWritingDraft(appended);
+        setWritingMicListening(false);
+      } else if(writingMicTargetRef.current==="revision"){
+        const current=writingRevisionRef.current;
+        const appended=current+(current&&!current.endsWith(" ")?" ":"")+transcript;
+        writingRevisionRef.current=appended;
+        setWritingRevision(appended);
+        setWritingMicListening(false);
+      } else {
+        setInput(transcript);
+        setIsListening(false);
+      }
     };
-    rec.onend=()=>setIsListening(false);
-    rec.onerror=()=>setIsListening(false);
+    rec.onend=()=>{setIsListening(false);setWritingMicListening(false);};
+    rec.onerror=()=>{setIsListening(false);setWritingMicListening(false);};
     recognitionRef.current=rec;
   },[]);
 
   const toggleMic=()=>{
     if(!recognitionRef.current)return;
     if(isListening){recognitionRef.current.stop();setIsListening(false);}
-    else{stopSpeaking();recognitionRef.current.start();setIsListening(true);}
+    else{stopSpeaking();writingMicTargetRef.current="chat";recognitionRef.current.start();setIsListening(true);}
+  };
+
+  const toggleWritingMic=(target)=>{
+    if(!recognitionRef.current)return;
+    if(writingMicListening){recognitionRef.current.stop();setWritingMicListening(false);}
+    else{
+      stopSpeaking();
+      writingMicTargetRef.current=target; // "draft" or "revision"
+      recognitionRef.current.start();
+      setWritingMicListening(true);
+    }
   };
 
   // 15-minute game break timer
@@ -2668,7 +2698,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             return(
               <div key={wt.id} className="writing-type-card"
                 style={{borderColor:pct>0?wt.color:"var(--border)",background:pct>0?wt.bg:"#fff"}}
-                onClick={()=>{setWritingType(wt);setWritingLesson(null);setWritingStep(0);setWritingDraft("");setWritingFeedback(null);}}>
+                onClick={()=>{setWritingType(wt);setWritingLesson(null);setWritingStep(0);setWritingDraft("");writingDraftRef.current="";setWritingRevision("");writingRevisionRef.current="";setWritingFeedback(null);}}>
                 <div className="writing-type-icon">{wt.icon}</div>
                 <div className="writing-type-name" style={{color:wt.color}}>{wt.name}</div>
                 <div className="writing-type-desc">{wt.desc}</div>
@@ -2717,7 +2747,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             const locked=i>0&&!writingHistory[writingType.lessons[i-1].id];
             return(
               <div key={lesson.id} style={{padding:"14px 18px",borderRadius:14,border:"2px solid "+(done?"var(--green)":locked?"var(--border)":"var(--border)"),background:done?"#f0fdf4":locked?"#f8fafc":"#fff",cursor:locked?"not-allowed":"pointer",opacity:locked?.5:1,display:"flex",alignItems:"center",gap:14,boxShadow:done||locked?"none":"0 2px 8px rgba(0,0,0,.06)",transition:"all .15s"}}
-                onClick={()=>{if(!locked){setWritingLesson(lesson);setWritingStep(0);setWritingDraft("");setWritingRevision("");setWritingFeedback(null);}}}>
+                onClick={()=>{if(!locked){setWritingLesson(lesson);setWritingStep(0);setWritingDraft("");writingDraftRef.current="";setWritingRevision("");writingRevisionRef.current="";setWritingFeedback(null);}}}>
                 <div style={{fontSize:28}}>{done?"✅":locked?"🔒":lesson.icon}</div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:13,fontWeight:900,color:"var(--navy)"}}>{lesson.name}</div>
@@ -2795,18 +2825,33 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                 <div style={{fontSize:12,fontWeight:700,color:"var(--navy)",marginBottom:10,lineHeight:1.6,whiteSpace:"pre-line"}}>{lesson.prompt}</div>
                 <textarea className="writing-textarea"
                   placeholder="Start writing here... take your time, there are no wrong answers!"
-                  value={writingDraft}
-                  onChange={e=>setWritingDraft(e.target.value)}
-                  rows={7}/>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:8}}>
-                  <span style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{writingDraft.trim().split(/\s+/).filter(Boolean).length} words</span>
+                  defaultValue={writingDraft}
+                  onInput={e=>{writingDraftRef.current=e.target.value;}}
+                  onBlur={e=>{setWritingDraft(e.target.value);writingDraftRef.current=e.target.value;}}
+                  rows={7}
+                  autoComplete="off"
+                  autoCorrect="on"
+                  spellCheck="true"
+                  inputMode="text"
+                  style={{WebkitUserSelect:"text",userSelect:"text"}}/>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:8,flexWrap:"wrap",gap:8}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <span style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{writingDraft.trim().split(/\s+/).filter(Boolean).length} words</span>
+                    {recognitionRef.current&&(
+                      <button onClick={()=>toggleWritingMic("draft")}
+                        style={{padding:"5px 10px",borderRadius:8,border:"none",background:writingMicListening?"linear-gradient(135deg,var(--red),#dc2626)":"linear-gradient(135deg,#64748b,#475569)",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",display:"flex",alignItems:"center",gap:4,animation:writingMicListening?"pulseGlow 1s infinite":"none"}}>
+                        {writingMicListening?"⏹ Stop":"🎤 Speak"}
+                      </button>
+                    )}
+                  </div>
                   <button className="writing-submit-btn"
-                    disabled={writingLoading||writingDraft.trim().length<20}
-                    onClick={()=>getWritingFeedback(lesson,writingDraft)}>
+                    disabled={writingLoading||writingDraftRef.current.trim().length<20}
+                    onClick={()=>{const d=writingDraftRef.current||writingDraft;setWritingDraft(d);getWritingFeedback(lesson,d);}}>
                     {writingLoading?<span className="spin">◌</span>:"Submit for Feedback →"}
                   </button>
                 </div>
-                {writingDraft.trim().length<20&&writingDraft.length>0&&<div style={{fontSize:11,color:"var(--muted)",marginTop:4}}>Keep writing — try to write at least a few sentences!</div>}
+                {writingMicListening&&<div style={{fontSize:11,color:"var(--red)",fontWeight:700,marginTop:4}}>🎤 Listening... speak your writing and it will appear above.</div>}
+                {writingDraftRef.current.trim().length<20&&writingDraft.length>0&&!writingMicListening&&<div style={{fontSize:11,color:"var(--muted)",marginTop:4}}>Keep writing — try to write at least a few sentences!</div>}
               </div>
             </>
           )}
@@ -2854,16 +2899,29 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                 <div className="writing-try-label">✏️ Revised Draft — {profile?.name}</div>
                 <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:8}}>Use Nova's feedback to make your writing stronger!</div>
                 <textarea className="writing-textarea"
-                  value={writingRevision||writingDraft}
-                  onChange={e=>setWritingRevision(e.target.value)}
-                  rows={8}/>
-                <div style={{display:"flex",justifyContent:"flex-end",marginTop:8}}>
+                  defaultValue={writingRevision||writingDraft}
+                  onInput={e=>{writingRevisionRef.current=e.target.value;}}
+                  onBlur={e=>{setWritingRevision(e.target.value);writingRevisionRef.current=e.target.value;}}
+                  rows={8}
+                  autoComplete="off"
+                  autoCorrect="on"
+                  spellCheck="true"
+                  inputMode="text"
+                  style={{WebkitUserSelect:"text",userSelect:"text"}}/>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8,flexWrap:"wrap",gap:8}}>
+                  {recognitionRef.current&&(
+                    <button onClick={()=>toggleWritingMic("revision")}
+                      style={{padding:"5px 10px",borderRadius:8,border:"none",background:writingMicListening?"linear-gradient(135deg,var(--red),#dc2626)":"linear-gradient(135deg,#64748b,#475569)",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",display:"flex",alignItems:"center",gap:4,animation:writingMicListening?"pulseGlow 1s infinite":"none"}}>
+                      {writingMicListening?"⏹ Stop":"🎤 Speak"}
+                    </button>
+                  )}
                   <button className="writing-submit-btn"
                     disabled={writingLoading}
-                    onClick={()=>getWritingFeedback(lesson,writingRevision||writingDraft,true)}>
+                    onClick={()=>{const d=writingRevisionRef.current||writingRevision||writingDraft;setWritingRevision(d);getWritingFeedback(lesson,d,true);}}>
                     {writingLoading?<span className="spin">◌</span>:"Get Feedback on Revision →"}
                   </button>
                 </div>
+                {writingMicListening&&<div style={{fontSize:11,color:"var(--red)",fontWeight:700,marginTop:4}}>🎤 Listening... speak your revision and it will appear above.</div>}
               </div>
             </>
           )}
@@ -2881,7 +2939,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                 <button className="writing-submit-btn" onClick={()=>{setWritingLesson(null);setWritingStep(0);}}>
                   More Lessons →
                 </button>
-                <button className="writing-next-btn" onClick={()=>{setWritingStep(0);setWritingDraft("");setWritingRevision("");setWritingFeedback(null);}}>
+                <button className="writing-next-btn" onClick={()=>{setWritingStep(0);setWritingDraft("");writingDraftRef.current="";setWritingRevision("");writingRevisionRef.current="";setWritingFeedback(null);}}>
                   Redo This Lesson ↺
                 </button>
               </div>
