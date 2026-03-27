@@ -349,6 +349,50 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .note-annotation.structure{background:#eff6ff;color:"#1e40af";border-left:3px solid var(--blue)}
 .note-annotation.word-choice{background:#f5f3ff;color:#5b21b6;border-left:3px solid var(--purple)}
 .note-annotation.strength{background:#f0fdf4;color:#166534;border-left:3px solid var(--green)}
+/* Revised Essay View */
+.revised-essay-wrap{background:#fff;border-radius:16px;padding:20px;border:2px solid var(--green)}
+.revised-essay-title{font-size:13px;font-weight:900;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.revised-para{margin-bottom:16px;line-height:1.9;font-size:13px;font-weight:600}
+.original-strike{text-decoration:line-through;color:#94a3b8;background:#f8fafc;padding:1px 3px;border-radius:3px}
+.chosen-text{background:#dcfce7;color:#166534;padding:1px 5px;border-radius:4px;font-weight:700;border:1px solid #86efac}
+.unchanged-text{color:var(--text)}
+/* Essay Writer */
+.essay-writer-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;max-width:760px;margin:0 auto;width:100%}
+.essay-config-card{background:#fff;border-radius:16px;padding:20px;border:2px solid var(--border)}
+.essay-config-title{font-size:13px;font-weight:900;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.essay-option-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.essay-option-pill{padding:7px 14px;border-radius:20px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:11px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
+.essay-option-pill.active{border-color:var(--purple);background:#f5f3ff;color:var(--purple)}
+.essay-output-wrap{background:#fff;border-radius:16px;padding:24px;border:2px solid var(--green);position:relative}
+.essay-output-title{font-size:16px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.essay-output-meta{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap}
+.essay-output-body{font-size:13px;line-height:1.9;color:var(--text);font-weight:600;white-space:pre-wrap}
+.essay-highlight-thesis{background:#fef9c3;border-radius:3px;padding:1px 3px}
+.essay-highlight-topic{background:#dbeafe;border-radius:3px;padding:1px 3px}
+.essay-highlight-evidence{background:#dcfce7;border-radius:3px;padding:1px 3px}
+.essay-highlight-transition{background:#f3e8ff;border-radius:3px;padding:1px 3px}
+.essay-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.essay-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--text)}
+.essay-legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+/* Essay revision input */
+.essay-revision-box{background:#fff;border-radius:14px;padding:16px;border:2px solid var(--orange);margin-top:4px}
+.essay-revision-title{font-size:12px;font-weight:900;color:#92400e;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.essay-revision-history{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;max-height:180px;overflow-y:auto}
+.essay-revision-msg{padding:8px 12px;border-radius:10px;font-size:12px;font-weight:600;line-height:1.5}
+.essay-revision-msg.user{background:#fff7ed;color:#92400e;text-align:right;border:1px solid #fed7aa;align-self:flex-end;max-width:85%}
+.essay-revision-msg.nova{background:#f0fdf4;color:#166534;border:1px solid #86efac;align-self:flex-start;max-width:90%}
+/* Print styles */
+@media print{
+  body{background:#fff!important}
+  .app,.learn-wrap,.learn-sidebar,.learn-main{all:unset!important;display:block!important}
+  *:not(.essay-print-area):not(.essay-print-area *){display:none!important}
+  .essay-print-area{display:block!important;max-width:100%!important;padding:0!important;margin:0!important}
+  .essay-print-title{font-size:22pt;font-weight:bold;margin-bottom:6pt;font-family:Georgia,serif}
+  .essay-print-meta{font-size:10pt;color:#666;margin-bottom:20pt;font-family:Arial,sans-serif}
+  .essay-print-body{font-size:12pt;line-height:1.8;font-family:Georgia,serif;white-space:pre-wrap;color:#000}
+  .essay-print-body mark{background:transparent!important;font-weight:bold}
+  .essay-print-legend{display:none!important}
+}
 .status-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
 .status-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800}
 .chip-subject{background:var(--navy);color:#fff} .chip-mode{background:#f1f5f9;color:var(--muted)} .chip-struggling{background:#fff7ed;color:var(--orange);border:1px solid var(--orange)}
@@ -1542,21 +1586,37 @@ function App(){
   });
 
   /* ── Scan & Review + Student Notes state ── */
-  const[writingScreen,setWritingScreen]=useState("home"); // home|scan|notes
+  const[writingScreen,setWritingScreen]=useState("home"); // home|scan|notes|essaywriter
   const[scanText,setScanText]=useState("");
   const scanTextRef=useRef("");
+  const scanWrapRef=useRef(null);
   const[scanTitle,setScanTitle]=useState("");
   const[scanLoading,setScanLoading]=useState(false);
-  const[scanImageLoading,setScanImageLoading]=useState(false); // OCR loading state
-  const[scanImagePreview,setScanImagePreview]=useState(null); // base64 preview
-  const[scanIssues,setScanIssues]=useState([]); // array of issue objects
-  const[scanChoices,setScanChoices]=useState({}); // {issueIdx: chosenOptionIdx}
+  const[scanImageLoading,setScanImageLoading]=useState(false);
+  const[scanImagePreview,setScanImagePreview]=useState(null);
+  const[scanIssues,setScanIssues]=useState([]);
+  const[scanChoices,setScanChoices]=useState({});
+  const[showRevisedEssay,setShowRevisedEssay]=useState(false);
   const[studentNotes,setStudentNotes]=useState(()=>{
     const u=localStorage.getItem("nova_user")||"";
     const p=localStorage.getItem("nova_notes_"+u);
     return p?JSON.parse(p):[];
   });
   const[viewingNote,setViewingNote]=useState(null);
+  /* Essay Writer */
+  const[essayTopic,setEssayTopic]=useState("");
+  const[essayLength,setEssayLength]=useState("medium");
+  const[essayType,setEssayType]=useState("opinion");
+  const[essayResearch,setEssayResearch]=useState("");
+  const essayResearchRef=useRef("");
+  const[essayHighlights,setEssayHighlights]=useState(true);
+  const[essayLoading,setEssayLoading]=useState(false);
+  const[essayOutput,setEssayOutput]=useState(null);
+  const[essaySearching,setEssaySearching]=useState(false);
+  const[essayRevisionInput,setEssayRevisionInput]=useState("");
+  const essayRevisionRef=useRef("");
+  const[essayRevisionLoading,setEssayRevisionLoading]=useState(false);
+  const[essayRevisionHistory,setEssayRevisionHistory]=useState([]);
   const[voiceOn,setVoiceOn]=useState(true);
   const[isSpeaking,setIsSpeaking]=useState(false);
   const[isListening,setIsListening]=useState(false);
@@ -2687,6 +2747,249 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
   /* ── Writing Module ── */
 
   /* ── Save student note to localStorage ── */
+  /* ── Build revised essay with strikethrough + highlights ── */
+  const buildRevisedEssay=()=>{
+    const text=scanTextRef.current||scanText;
+    if(!text||!scanIssues.length)return null;
+    // Build a map of original→replacement for chosen fixes
+    const replacements=[];
+    scanIssues.forEach((issue,idx)=>{
+      if(scanChoices[idx]!==undefined&&issue.type!=="strength"){
+        replacements.push({
+          original:issue.original,
+          chosen:issue.options[scanChoices[idx]]?.text||"",
+          type:issue.type,
+        });
+      }
+    });
+    // Split text into segments, marking replacements
+    let segments=[{text,type:"unchanged"}];
+    replacements.forEach(rep=>{
+      const newSegs=[];
+      segments.forEach(seg=>{
+        if(seg.type!=="unchanged"){newSegs.push(seg);return;}
+        const idx=seg.text.indexOf(rep.original);
+        if(idx===-1){newSegs.push(seg);return;}
+        if(idx>0)newSegs.push({text:seg.text.slice(0,idx),type:"unchanged"});
+        newSegs.push({text:rep.original,type:"strike",chosen:rep.chosen,issueType:rep.type});
+        const after=seg.text.slice(idx+rep.original.length);
+        if(after)newSegs.push({text:after,type:"unchanged"});
+      });
+      segments=newSegs;
+    });
+    return segments;
+  };
+
+  /* ── Generate essay using Claude ── */
+  /* ── Revise essay based on student instruction ── */
+  const reviseEssay=async()=>{
+    const instruction=essayRevisionRef.current||essayRevisionInput;
+    if(!instruction.trim()||!essayOutput)return;
+    setEssayRevisionLoading(true);
+    // Add user message to history
+    const userMsg={role:"user",text:instruction.trim()};
+    setEssayRevisionHistory(prev=>[...prev,userMsg]);
+    setEssayRevisionInput("");
+    essayRevisionRef.current="";
+
+    const highlightInstructions=essayHighlights?`
+After the revised essay, add a JSON block wrapped in <HIGHLIGHTS> tags:
+<HIGHLIGHTS>{"thesis":["exact thesis sentence"],"topic":["topic sentence 1","topic sentence 2","topic sentence 3"],"evidence":["key evidence phrase 1","key evidence phrase 2"],"transition":["transition phrase 1","transition phrase 2"]}</HIGHLIGHTS>`:"";
+
+    const prompt=`You are Nova, an expert writing tutor. A ${profile?.grade} grade student named ${profile?.name} has written an essay and wants to revise it.
+
+CURRENT ESSAY:
+"""
+${essayOutput.body}
+"""
+
+STUDENT'S REVISION REQUEST: "${instruction.trim()}"
+
+Please revise the essay according to the student's request. Keep the same style, voice, and grade level. Only change what the student asked for — don't rewrite the whole thing unless asked.
+
+Return ONLY the revised essay text (no commentary, no "Here is the revised essay:", just the essay itself).${highlightInstructions}`;
+
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2000,messages:[{role:"user",content:prompt}]})});
+      const data=await r.json();
+      if(data.error)throw new Error(data.error.message);
+      const raw=data.content?.[0]?.text||"";
+
+      let bodyText=raw;
+      let highlights={thesis:[],topic:[],evidence:[],transition:[]};
+      const hMatch=raw.match(/<HIGHLIGHTS>([\s\S]*?)<\/HIGHLIGHTS>/);
+      if(hMatch){
+        bodyText=raw.replace(/<HIGHLIGHTS>[\s\S]*?<\/HIGHLIGHTS>/,"").trim();
+        try{highlights=JSON.parse(hMatch[1]);}catch{}
+      }
+      const wc=bodyText.trim().split(/\s+/).length;
+      setEssayOutput(prev=>({...prev,body:bodyText,highlights,wordCount:wc}));
+      const novaMsg={role:"nova",text:"✅ Done! I've updated the essay. "+getRevisionConfirmation(instruction)};
+      setEssayRevisionHistory(prev=>[...prev,novaMsg]);
+    }catch(err){
+      setEssayRevisionHistory(prev=>[...prev,{role:"nova",text:"Sorry, I had trouble making that change. Please try again!"}]);
+    }
+    setEssayRevisionLoading(false);
+  };
+
+  const getRevisionConfirmation=(instruction)=>{
+    const i=instruction.toLowerCase();
+    if(i.includes("add")||i.includes("include"))return "The new content has been added.";
+    if(i.includes("remov")||i.includes("delet"))return "That part has been removed.";
+    if(i.includes("shorter")||i.includes("shorten"))return "The essay is now shorter.";
+    if(i.includes("longer")||i.includes("expand"))return "The essay has been expanded.";
+    if(i.includes("formal"))return "The tone has been made more formal.";
+    if(i.includes("simpl")||i.includes("easier"))return "The language has been simplified.";
+    return "Your changes have been applied.";
+  };
+
+  /* ── Print essay as PDF ── */
+  const printEssay=()=>{
+    if(!essayOutput)return;
+    const printWindow=window.open("","_blank","width=800,height=600");
+    const typeLabel={opinion:"Opinion Essay",informational:"Informational Essay",narrative:"Personal Narrative",compare:"Compare & Contrast",research:"Research Essay"};
+
+    // Build highlighted HTML for print
+    const buildHighlightedHTML=(body,highlights)=>{
+      if(!highlights||(!highlights.thesis?.length&&!highlights.topic?.length))return body.replace(/\n/g,"<br/>");
+      let html=body;
+      const marks=[
+        ...(highlights.thesis||[]).map(t=>({text:t,style:"background:#fef9c3;font-weight:bold;",label:"Thesis"})),
+        ...(highlights.topic||[]).map(t=>({text:t,style:"background:#dbeafe;",label:"Topic Sentence"})),
+        ...(highlights.evidence||[]).map(t=>({text:t,style:"background:#dcfce7;",label:"Evidence"})),
+        ...(highlights.transition||[]).map(t=>({text:t,style:"background:#f3e8ff;",label:"Transition"})),
+      ].filter(m=>m.text&&html.includes(m.text));
+      marks.forEach(m=>{
+        html=html.replace(m.text,`<mark style="${m.style}padding:1px 3px;border-radius:2px;" title="${m.label}">${m.text}</mark>`);
+      });
+      return html.replace(/\n/g,"<br/>");
+    };
+
+    const legendHTML=essayHighlights?`
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;padding:10px;border:1px solid #e5e7eb;border-radius:6px;font-size:10px;font-family:Arial,sans-serif;">
+        <span>🟡 <strong>Thesis</strong></span>
+        <span>🔵 <strong>Topic Sentences</strong></span>
+        <span>🟢 <strong>Evidence</strong></span>
+        <span>🟣 <strong>Transitions</strong></span>
+      </div>`:"";
+
+    const revisionsHTML=essayRevisionHistory.length>0?`
+      <div style="margin-top:40px;border-top:1px solid #e5e7eb;padding-top:20px;">
+        <h3 style="font-family:Arial,sans-serif;font-size:13px;color:#6b7280;margin-bottom:12px;">REVISION HISTORY</h3>
+        ${essayRevisionHistory.map(m=>`<div style="margin-bottom:8px;font-size:11px;font-family:Arial,sans-serif;color:${m.role==="user"?"#92400e":"#166534"};"><strong>${m.role==="user"?profile?.name||"Student":"Nova"}:</strong> ${m.text}</div>`).join("")}
+      </div>`:"";
+
+    printWindow.document.write(`<!DOCTYPE html><html><head>
+      <meta charset="UTF-8"/>
+      <title>${essayOutput.topic}</title>
+      <style>
+        body{font-family:Georgia,serif;max-width:680px;margin:40px auto;color:#111;line-height:1.8}
+        h1{font-size:22px;margin-bottom:4px}
+        .meta{font-size:11px;color:#6b7280;font-family:Arial,sans-serif;margin-bottom:24px}
+        .body{font-size:13px;line-height:1.9;white-space:pre-wrap}
+        @media print{body{margin:20px} @page{margin:2cm}}
+      </style>
+    </head><body>
+      <h1>${essayOutput.topic}</h1>
+      <div class="meta">
+        ${typeLabel[essayOutput.type]||essayOutput.type} &nbsp;·&nbsp;
+        ${essayOutput.wordCount} words &nbsp;·&nbsp;
+        ${profile?.name||"Student"}, ${profile?.grade||""} grade &nbsp;·&nbsp;
+        ${new Date(essayOutput.date).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})}
+      </div>
+      ${legendHTML}
+      <div class="body">${buildHighlightedHTML(essayOutput.body,essayHighlights?essayOutput.highlights:{})}</div>
+      ${revisionsHTML}
+    </body></html>`);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(()=>printWindow.print(),400);
+  };
+
+  const generateEssay=async()=>{
+    if(!essayTopic.trim())return;
+    setEssayLoading(true);
+    setEssayOutput(null);
+    const lengthMap={short:"3 paragraphs (~200 words)",medium:"5 paragraphs (~400 words)",long:"7 paragraphs (~600 words)"};
+    const typeMap={opinion:"opinion/persuasive essay",informational:"informational/explanatory essay",narrative:"personal narrative",compare:"compare and contrast essay",research:"research-based essay"};
+    const research=essayResearchRef.current||essayResearch;
+    const highlightInstructions=essayHighlights?`
+After writing the essay, add a JSON block at the very end (after the essay text) wrapped in <HIGHLIGHTS> tags like this:
+<HIGHLIGHTS>{"thesis":["exact thesis sentence"],"topic":["topic sentence 1","topic sentence 2","topic sentence 3"],"evidence":["key evidence phrase 1","key evidence phrase 2"],"transition":["transition phrase 1","transition phrase 2"]}</HIGHLIGHTS>
+These will be used to color-code the essay for the student.`:"";
+
+    const prompt=`You are Nova, an expert writing tutor. Write a ${typeMap[essayType]} for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${essayTopic}"
+
+Length: ${lengthMap[essayLength]}
+Grade level: ${profile?.grade} grade — use age-appropriate vocabulary and sentence structure
+${research?`Research material provided by the student:\n"""\n${research}\n"""\nUse this material to support the essay. Cite facts from it naturally.`:"Use your knowledge to write an accurate, well-supported essay."}
+
+Write a complete, polished essay. Use proper paragraph breaks. Start with a strong hook. End with a memorable conclusion.
+${highlightInstructions}
+
+Write the essay now:`;
+
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2000,messages:[{role:"user",content:prompt}]})});
+      const data=await r.json();
+      if(data.error)throw new Error(data.error.message);
+      const raw=data.content?.[0]?.text||"";
+
+      // Parse highlights if present
+      let bodyText=raw;
+      let highlights={thesis:[],topic:[],evidence:[],transition:[]};
+      const hMatch=raw.match(/<HIGHLIGHTS>([\s\S]*?)<\/HIGHLIGHTS>/);
+      if(hMatch){
+        bodyText=raw.replace(/<HIGHLIGHTS>[\s\S]*?<\/HIGHLIGHTS>/,"").trim();
+        try{highlights=JSON.parse(hMatch[1]);}catch{}
+      }
+      const wc=bodyText.trim().split(/\s+/).length;
+      setEssayOutput({body:bodyText,highlights,wordCount:wc,topic:essayTopic,type:essayType,length:essayLength,date:new Date().toISOString()});
+    }catch(err){
+      setEssayOutput({body:"Sorry, Nova had trouble writing the essay. Please try again.",highlights:{},wordCount:0,topic:essayTopic,type:essayType,length:essayLength,date:new Date().toISOString()});
+    }
+    setEssayLoading(false);
+  };
+
+  /* ── Highlight essay text ── */
+  const renderHighlightedEssay=(body,highlights)=>{
+    if(!highlights||(!highlights.thesis?.length&&!highlights.topic?.length))return body;
+    const allMarks=[
+      ...(highlights.thesis||[]).map(t=>({text:t,cls:"essay-highlight-thesis",label:"Thesis"})),
+      ...(highlights.topic||[]).map(t=>({text:t,cls:"essay-highlight-topic",label:"Topic Sentence"})),
+      ...(highlights.evidence||[]).map(t=>({text:t,cls:"essay-highlight-evidence",label:"Evidence"})),
+      ...(highlights.transition||[]).map(t=>({text:t,cls:"essay-highlight-transition",label:"Transition"})),
+    ].filter(m=>m.text&&body.includes(m.text));
+
+    if(!allMarks.length)return <span className="essay-output-body">{body}</span>;
+
+    // Build segments
+    let segments=[{text:body,cls:null}];
+    allMarks.forEach(mark=>{
+      const newSegs=[];
+      segments.forEach(seg=>{
+        if(seg.cls){newSegs.push(seg);return;}
+        const idx=seg.text.indexOf(mark.text);
+        if(idx===-1){newSegs.push(seg);return;}
+        if(idx>0)newSegs.push({text:seg.text.slice(0,idx),cls:null});
+        newSegs.push({text:mark.text,cls:mark.cls,label:mark.label});
+        const after=seg.text.slice(idx+mark.text.length);
+        if(after)newSegs.push({text:after,cls:null});
+      });
+      segments=newSegs;
+    });
+    return(
+      <span className="essay-output-body">
+        {segments.map((seg,i)=>seg.cls
+          ?<mark key={i} className={seg.cls} title={seg.label}>{seg.text}</mark>
+          :<span key={i}>{seg.text}</span>
+        )}
+      </span>
+    );
+  };
+
   const saveStudentNote=(note)=>{
     const u=localStorage.getItem("nova_user")||"";
     const updated=[note,...studentNotes].slice(0,50); // keep 50 most recent
@@ -2886,8 +3189,18 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
     const wordCount=(scanTextRef.current||scanText).trim().split(/\s+/).filter(Boolean).length;
     const typeColors={grammar:"var(--red)",clarity:"var(--orange)",structure:"var(--blue)","word-choice":"var(--purple)",strength:"var(--green)"};
     const typeEmoji={grammar:"🔴",clarity:"🟠",structure:"🔵","word-choice":"🟣",strength:"🟢"};
+    const choicesMade=Object.keys(scanChoices).filter(k=>scanChoices[k]!==undefined).length;
+    const totalFixable=scanIssues.filter(i=>i.type!=="strength").length;
+    // Scroll-preserving choice handler
+    const handleChoice=(idx,oi)=>{
+      const wrap=scanWrapRef.current;
+      const scrollTop=wrap?wrap.scrollTop:0;
+      setScanChoices(prev=>({...prev,[idx]:prev[idx]===oi?undefined:oi}));
+      // Restore scroll position after re-render
+      if(wrap)requestAnimationFrame(()=>{wrap.scrollTop=scrollTop;});
+    };
     return(
-      <div className="scan-wrap fade-in">
+      <div className="scan-wrap fade-in" ref={scanWrapRef}>
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
           <button className="writing-back" onClick={()=>setWritingScreen("home")}>← Back</button>
           <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>📄 Scan My Writing</div>
@@ -3028,7 +3341,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                         <div key={oi}>
                           <button
                             className={"scan-option-btn"+(scanChoices[idx]===oi?" chosen":"")}
-                            onClick={()=>setScanChoices(prev=>({...prev,[idx]:prev[idx]===oi?undefined:oi}))}>
+                            onClick={()=>handleChoice(idx,oi)}>
                             <span style={{fontWeight:900,color:"var(--purple)",marginRight:6}}>{opt.label}.</span>{opt.text}
                           </button>
                           {scanChoices[idx]===oi&&(
@@ -3046,7 +3359,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                       {issue.options.map((opt,oi)=>(
                         <button key={oi} className={"scan-option-btn"+(scanChoices[idx]===oi?" chosen":"")}
                           style={{borderColor:"var(--green)"}}
-                          onClick={()=>setScanChoices(prev=>({...prev,[idx]:prev[idx]===oi?undefined:oi}))}>
+                          onClick={()=>handleChoice(idx,oi)}>
                           <span style={{fontWeight:900,color:"var(--green)",marginRight:6}}>{opt.label}.</span>{opt.text}
                         </button>
                       ))}
@@ -3057,11 +3370,58 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             ))}
 
             <div style={{display:"flex",gap:10,padding:"4px 0 16px",flexWrap:"wrap"}}>
+              {/* Progress indicator */}
+              {totalFixable>0&&(
+                <div style={{width:"100%",padding:"10px 14px",borderRadius:10,background:choicesMade===totalFixable?"#f0fdf4":"#f8fafc",border:"1px solid "+(choicesMade===totalFixable?"var(--green)":"var(--border)"),display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{flex:1,height:6,background:"var(--border)",borderRadius:4,overflow:"hidden"}}>
+                    <div style={{height:"100%",background:"var(--green)",borderRadius:4,width:((choicesMade/totalFixable)*100)+"%",transition:"width .4s"}}/>
+                  </div>
+                  <span style={{fontSize:11,fontWeight:800,color:choicesMade===totalFixable?"var(--green)":"var(--muted)",whiteSpace:"nowrap"}}>{choicesMade}/{totalFixable} choices made</span>
+                </div>
+              )}
+
+              {/* Revised Essay toggle */}
+              {choicesMade>0&&(
+                <button onClick={()=>setShowRevisedEssay(v=>!v)}
+                  style={{width:"100%",padding:"12px",borderRadius:12,border:"2px solid "+(showRevisedEssay?"var(--green)":"var(--purple)"),background:showRevisedEssay?"#f0fdf4":"#f5f3ff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:showRevisedEssay?"var(--green)":"var(--purple)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                  {showRevisedEssay?"📄 Hide Revised Essay":"📝 Show Revised Essay with Changes"}
+                </button>
+              )}
+
+              {/* Revised essay view */}
+              {showRevisedEssay&&choicesMade>0&&(()=>{
+                const segments=buildRevisedEssay();
+                if(!segments)return null;
+                return(
+                  <div className="revised-essay-wrap" style={{width:"100%"}}>
+                    <div className="revised-essay-title">
+                      ✅ Your Revised Essay
+                      <span style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginLeft:"auto"}}><span style={{textDecoration:"line-through",color:"#94a3b8"}}>original</span> → <mark style={{background:"#dcfce7",padding:"1px 4px",borderRadius:3}}>chosen fix</mark></span>
+                    </div>
+                    <div className="revised-para">
+                      {segments.map((seg,i)=>{
+                        if(seg.type==="unchanged")return<span key={i} className="unchanged-text">{seg.text}</span>;
+                        return(
+                          <span key={i}>
+                            <span className="original-strike">{seg.text}</span>
+                            {" "}
+                            <span className="chosen-text">{seg.chosen}</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <div style={{fontSize:10,color:"var(--muted)",fontWeight:600,marginTop:8,borderTop:"1px solid var(--border)",paddingTop:8}}>
+                      🟡 <span style={{textDecoration:"line-through"}}>struck text</span> = original &nbsp;·&nbsp; <span style={{background:"#dcfce7",padding:"1px 4px",borderRadius:3,fontWeight:700,color:"#166534"}}>green text</span> = your chosen revision
+                    </div>
+                  </div>
+                );
+              })()}
+
               <button onClick={saveNoteFromScan}
                 style={{flex:1,padding:"13px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:"0 4px 14px rgba(139,92,246,.3)"}}>
                 📓 Save to My Notes
               </button>
-              <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setScanImagePreview(null);}}
+              <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setScanImagePreview(null);setShowRevisedEssay(false);}}
                 style={{padding:"13px 20px",borderRadius:12,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:800,cursor:"pointer",color:"var(--muted)"}}>
                 Scan Another ↺
               </button>
@@ -3200,6 +3560,220 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
     );
   }
 
+  /* ── Essay Writer Screen ── */
+  function EssayWriter(){
+    const lengthOpts=[{k:"short",l:"Short",d:"~200 words · 3 paragraphs"},{k:"medium",l:"Medium",d:"~400 words · 5 paragraphs"},{k:"long",l:"Long",d:"~600 words · 7 paragraphs"}];
+    const typeOpts=[{k:"opinion",l:"Opinion",icon:"💬"},{k:"informational",l:"Informational",icon:"📚"},{k:"narrative",l:"Narrative",icon:"📖"},{k:"compare",l:"Compare & Contrast",icon:"⚖️"},{k:"research",l:"Research",icon:"🔬"}];
+    const wc=essayOutput?.wordCount||0;
+    const downloadEssay=()=>{
+      if(!essayOutput)return;
+      const blob=new Blob([essayOutput.body],{type:"text/plain"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url;a.download=`nova-essay-${essayTopic.replace(/[^a-z0-9]/gi,"-").toLowerCase().slice(0,30)}-${new Date().toISOString().slice(0,10)}.txt`;
+      a.click();URL.revokeObjectURL(url);
+    };
+    return(
+      <div className="essay-writer-wrap fade-in">
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4,flexWrap:"wrap"}}>
+          <button className="writing-back" onClick={()=>{setWritingScreen("home");setEssayOutput(null);}}>← Back</button>
+          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}> ✏️ Write My Essay</div>
+        </div>
+        <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:4}}>Tell Nova what to write about and how. Nova will write a full essay tailored to your grade level, with key parts highlighted.</div>
+
+        {!essayOutput&&!essayLoading&&(<>
+          {/* Topic */}
+          <div className="essay-config-card">
+            <div className="essay-config-title">📌 What's your essay topic?</div>
+            <input value={essayTopic} onChange={e=>setEssayTopic(e.target.value)}
+              placeholder={`e.g. "Why every school should have a garden" or "The water cycle" or "My best day ever"`}
+              style={{width:"100%",padding:"11px 14px",borderRadius:10,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:13,fontWeight:600,outline:"none",color:"var(--navy)",transition:"border-color .15s"}}
+              onFocus={e=>e.target.style.borderColor="#7c3aed"}
+              onBlur={e=>e.target.style.borderColor="var(--border)"}/>
+          </div>
+
+          {/* Type */}
+          <div className="essay-config-card">
+            <div className="essay-config-title">📝 What type of essay?</div>
+            <div className="essay-option-row">
+              {typeOpts.map(t=>(
+                <button key={t.k} className={"essay-option-pill"+(essayType===t.k?" active":"")} onClick={()=>setEssayType(t.k)}>
+                  {t.icon} {t.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Length */}
+          <div className="essay-config-card">
+            <div className="essay-config-title">📏 How long?</div>
+            <div className="essay-option-row">
+              {lengthOpts.map(l=>(
+                <button key={l.k} className={"essay-option-pill"+(essayLength===l.k?" active":"")} onClick={()=>setEssayLength(l.k)}>
+                  <div style={{fontWeight:900}}>{l.l}</div>
+                  <div style={{fontSize:9,fontWeight:600,opacity:.8}}>{l.d}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Research material */}
+          <div className="essay-config-card">
+            <div className="essay-config-title">🔬 Research material (optional)</div>
+            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:10}}>Paste notes, facts, or paragraphs you've researched. Nova will use them in the essay. Or leave blank and Nova will use what she knows.</div>
+
+            {/* Upload image of research notes */}
+            <label style={{display:"inline-flex",alignItems:"center",gap:6,padding:"7px 14px",borderRadius:20,border:"2px solid var(--blue)",background:"#eff6ff",cursor:"pointer",fontSize:11,fontWeight:800,color:"var(--blue)",marginBottom:10}}>
+              <input type="file" accept="image/*" style={{display:"none"}}
+                onChange={async e=>{
+                  const file=e.target.files[0];
+                  if(!file)return;
+                  setEssaySearching(true);
+                  const reader=new FileReader();
+                  reader.onload=async ev=>{
+                    const base64=ev.target.result.split(",")[1];
+                    try{
+                      const key=localStorage.getItem("nova_api_key");
+                      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1000,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:file.type||"image/jpeg",data:base64}},{type:"text",text:"Extract all text from this image exactly as written. Return only the text, no commentary."}]}]})});
+                      const data=await r.json();
+                      const txt=(data.content?.[0]?.text||"").trim();
+                      if(txt){setEssayResearch(txt);essayResearchRef.current=txt;}
+                    }catch{}
+                    setEssaySearching(false);
+                  };
+                  reader.readAsDataURL(file);
+                }}/>
+              📷 Scan Research Notes
+            </label>
+            {essaySearching&&<span style={{fontSize:11,color:"var(--blue)",fontWeight:700,marginLeft:8}}><span className="spin" style={{display:"inline-block"}}>◌</span> Reading image...</span>}
+            <textarea
+              key={essayResearch}
+              defaultValue={essayResearch}
+              onInput={e=>essayResearchRef.current=e.target.value}
+              onBlur={e=>{setEssayResearch(e.target.value);essayResearchRef.current=e.target.value;}}
+              placeholder="Paste your research notes, facts, or source material here..."
+              rows={5}
+              style={{width:"100%",padding:"11px 14px",borderRadius:10,border:"2px solid var(--border)",fontFamily:"var(--font)",fontSize:12,fontWeight:600,color:"var(--text)",resize:"vertical",outline:"none",lineHeight:1.7,background:"#fafafa"}}/>
+          </div>
+
+          {/* Highlights toggle */}
+          <div className="essay-config-card" style={{display:"flex",alignItems:"center",gap:14}}>
+            <div style={{flex:1}}>
+              <div className="essay-config-title" style={{marginBottom:2}}>🎨 Highlight key parts?</div>
+              <div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>Nova will colour-code the thesis, topic sentences, evidence, and transitions so you can see how the essay is structured.</div>
+            </div>
+            <button onClick={()=>setEssayHighlights(v=>!v)} style={{padding:"8px 16px",borderRadius:20,border:"none",background:essayHighlights?"var(--green)":"var(--border)",color:essayHighlights?"#fff":"var(--muted)",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer",flexShrink:0}}>
+              {essayHighlights?"ON ✓":"OFF"}
+            </button>
+          </div>
+
+          <button onClick={generateEssay} disabled={!essayTopic.trim()}
+            style={{width:"100%",padding:"14px",borderRadius:14,border:"none",background:essayTopic.trim()?"linear-gradient(135deg,#7c3aed,#4f46e5)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:14,fontWeight:900,cursor:essayTopic.trim()?"pointer":"not-allowed",boxShadow:essayTopic.trim()?"0 4px 18px rgba(124,58,237,.35)":"none"}}>
+            ✏️ Write My Essay
+          </button>
+        </>)}
+
+        {/* Loading */}
+        {essayLoading&&(
+          <div style={{textAlign:"center",padding:56,background:"#fff",borderRadius:18,border:"2px solid var(--border)"}}>
+            <div style={{fontSize:52,animation:"float 1s ease-in-out infinite",marginBottom:14}}>🦉</div>
+            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Nova is writing your essay...</div>
+            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Crafting a {essayLength} {essayType} essay about "{essayTopic}"</div>
+          </div>
+        )}
+
+        {/* Output */}
+        {essayOutput&&!essayLoading&&(
+          <>
+            <div className="essay-output-wrap">
+              <div className="essay-output-title">{essayOutput.topic}</div>
+              <div className="essay-output-meta">
+                <span>📝 {essayOutput.type}</span>
+                <span>📏 {essayOutput.wordCount} words</span>
+                <span>🎓 {profile?.grade} grade</span>
+                <span>{new Date(essayOutput.date).toLocaleDateString()}</span>
+              </div>
+              {essayHighlights&&essayOutput.highlights&&Object.keys(essayOutput.highlights).length>0&&(
+                <div className="essay-legend">
+                  {[{cls:"essay-highlight-thesis",col:"#fef9c3",label:"Thesis"},{cls:"essay-highlight-topic",col:"#dbeafe",label:"Topic Sentences"},{cls:"essay-highlight-evidence",col:"#dcfce7",label:"Evidence"},{cls:"essay-highlight-transition",col:"#f3e8ff",label:"Transitions"}].map(l=>(
+                    <div key={l.cls} className="essay-legend-item">
+                      <div className="essay-legend-dot" style={{background:l.col,border:"1px solid rgba(0,0,0,.1)"}}/>
+                      {l.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{lineHeight:1.9,fontSize:13,fontWeight:600,whiteSpace:"pre-wrap"}}>
+                {essayHighlights?renderHighlightedEssay(essayOutput.body,essayOutput.highlights):<span>{essayOutput.body}</span>}
+              </div>
+            </div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              <button onClick={printEssay}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:"linear-gradient(135deg,#1e293b,#334155)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+                🖨️ Print / Save PDF
+              </button>
+              <button onClick={downloadEssay}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--blue),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
+                ⬇️ Download .txt
+              </button>
+            </div>
+
+            {/* Revision box */}
+            <div className="essay-revision-box">
+              <div className="essay-revision-title">
+                ✏️ Request a Change
+                <span style={{fontSize:10,fontWeight:600,color:"#92400e",marginLeft:"auto"}}>Tell Nova what to add, remove, or change</span>
+              </div>
+              {essayRevisionHistory.length>0&&(
+                <div className="essay-revision-history">
+                  {essayRevisionHistory.map((msg,i)=>(
+                    <div key={i} className={"essay-revision-msg "+msg.role}>
+                      {msg.role==="user"&&<span style={{fontWeight:800,marginRight:4}}>{profile?.name}:</span>}
+                      {msg.role==="nova"&&<span style={{fontWeight:800,marginRight:4}}>🦉 Nova:</span>}
+                      {msg.text}
+                    </div>
+                  ))}
+                  {essayRevisionLoading&&(
+                    <div className="essay-revision-msg nova">
+                      <span className="spin" style={{display:"inline-block"}}>◌</span> Updating your essay...
+                    </div>
+                  )}
+                </div>
+              )}
+              <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
+                <textarea
+                  placeholder={`e.g. "Add a paragraph about recycling" · "Make it shorter" · "Remove the last sentence" · "Make the introduction more exciting"`}
+                  defaultValue={essayRevisionInput}
+                  onInput={e=>essayRevisionRef.current=e.target.value}
+                  onBlur={e=>{setEssayRevisionInput(e.target.value);essayRevisionRef.current=e.target.value;}}
+                  rows={3}
+                  disabled={essayRevisionLoading}
+                  style={{flex:1,padding:"10px 12px",borderRadius:10,border:"2px solid #fed7aa",fontFamily:"var(--font)",fontSize:12,fontWeight:600,color:"var(--text)",resize:"none",outline:"none",lineHeight:1.6,background:essayRevisionLoading?"#f8fafc":"#fffbeb"}}/>
+                <button
+                  onClick={reviseEssay}
+                  disabled={essayRevisionLoading||(essayRevisionRef.current||essayRevisionInput).trim().length===0}
+                  style={{padding:"10px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",flexShrink:0,alignSelf:"flex-end"}}>
+                  {essayRevisionLoading?<span className="spin" style={{display:"inline-block"}}>◌</span>:"Update →"}
+                </button>
+              </div>
+            </div>
+
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              <button onClick={()=>{setEssayOutput(null);setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";}}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--purple)"}}>
+                ✏️ Write New Essay
+              </button>
+              <button onClick={()=>{setScanText(essayOutput.body);scanTextRef.current=essayOutput.body;setScanTitle(essayOutput.topic);setScanIssues([]);setScanChoices([]);setShowRevisedEssay(false);setWritingScreen("scan");}}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--orange)",background:"#fff7ed",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--orange)"}}>
+                🔍 Scan for Feedback
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
   function WritingHome(){
     const done=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length,0);
     const total=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.length,0);
@@ -3210,14 +3784,20 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
 
         {/* Action buttons row */}
         <div style={{display:"flex",gap:12,maxWidth:600,margin:"0 auto",width:"100%",flexWrap:"wrap"}}>
-          <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setWritingScreen("scan");}}
-            style={{flex:1,minWidth:160,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#7c3aed,#4f46e5)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(124,58,237,.3)"}}>
+          <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setShowRevisedEssay(false);setWritingScreen("scan");}}
+            style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#7c3aed,#4f46e5)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(124,58,237,.3)"}}>
             <div style={{fontSize:28,marginBottom:6}}>📄</div>
             <div style={{fontSize:13,fontWeight:900}}>Scan My Essay</div>
-            <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Get interactive feedback on your writing</div>
+            <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Get interactive feedback</div>
+          </button>
+          <button onClick={()=>{setEssayOutput(null);setEssayTopic("");setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setWritingScreen("essaywriter");}}
+            style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(249,115,22,.3)"}}>
+            <div style={{fontSize:28,marginBottom:6}}>✏️</div>
+            <div style={{fontSize:13,fontWeight:900}}>Write My Essay</div>
+            <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Nova writes it for you</div>
           </button>
           <button onClick={()=>setWritingScreen("notes")}
-            style={{flex:1,minWidth:160,padding:"16px",borderRadius:16,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center"}}>
+            style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center"}}>
             <div style={{fontSize:28,marginBottom:6}}>📓</div>
             <div style={{fontSize:13,fontWeight:900,color:"var(--purple)"}}>Student Notes</div>
             <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2}}>{studentNotes.length} saved {studentNotes.length===1?"note":"notes"}</div>
@@ -3808,6 +4388,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             writingType?<WritingLessonPicker/>:
             writingScreen==="scan"?<ScanScreen/>:
             writingScreen==="notes"?<StudentNotes/>:
+            writingScreen==="essaywriter"?<EssayWriter/>:
             <WritingHome/>
           ):(
             <>
