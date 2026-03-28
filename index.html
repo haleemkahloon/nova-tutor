@@ -2857,14 +2857,18 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
   /* ── Generate essay using Claude ── */
   /* ── Revise essay based on student instruction ── */
   const reviseEssay=async()=>{
-    // Read directly from DOM — synchronous, always current, no onBlur needed
-    const instruction=(essayRevisionDomRef.current?.value||essayRevisionRef.current||essayRevisionInput).trim();
-    if(!instruction||!essayOutput)return;
-
-    // Immediately acknowledge — clear input and show user message BEFORE awaiting API
-    if(essayRevisionDomRef.current)essayRevisionDomRef.current.value="";
-    essayRevisionRef.current="";
-    setEssayRevisionInput("");
+    // Always read from DOM — the only reliable source on iPad
+    const instruction=(essayRevisionDomRef.current?.value||"").trim();
+    if(!instruction||!essayOutput){
+      // Flash the textarea border red briefly to signal it's empty
+      if(essayRevisionDomRef.current){
+        essayRevisionDomRef.current.style.borderColor="var(--red)";
+        essayRevisionDomRef.current.focus();
+        setTimeout(()=>{if(essayRevisionDomRef.current)essayRevisionDomRef.current.style.borderColor="#fed7aa";},1200);
+      }
+      return;
+    }
+    // Immediately show spinner and user message — no waiting
     setEssayRevisionLoading(true);
     setEssayRevisionHistory(prev=>[...prev,{role:"user",text:instruction}]);
 
@@ -4287,21 +4291,21 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
               )}
               <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
                 <textarea
-                  placeholder={`e.g. "Add a paragraph about recycling" · "Make it shorter" · "Remove the last sentence" · "Make the introduction more exciting"`}
+                  key={"rev-"+essayRevisionHistory.length}
+                  placeholder={`Type your change request here...\ne.g. "Add a paragraph about recycling" · "Make it shorter" · "Change the ending"`}
                   ref={essayRevisionDomRef}
-                  defaultValue={essayRevisionInput}
-                  onInput={e=>essayRevisionRef.current=e.target.value}
-                  onBlur={e=>{setEssayRevisionInput(e.target.value);essayRevisionRef.current=e.target.value;}}
                   rows={3}
                   disabled={essayRevisionLoading}
-                  style={{flex:1,padding:"10px 12px",borderRadius:10,border:"2px solid #fed7aa",fontFamily:"var(--font)",fontSize:12,fontWeight:600,color:"var(--text)",resize:"none",outline:"none",lineHeight:1.6,background:essayRevisionLoading?"#f8fafc":"#fffbeb"}}/>
+                  onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();reviseEssay();}}}
+                  style={{flex:1,padding:"10px 12px",borderRadius:10,border:"2px solid #fed7aa",fontFamily:"var(--font)",fontSize:12,fontWeight:600,color:"var(--text)",resize:"none",outline:"none",lineHeight:1.6,background:essayRevisionLoading?"#f8fafc":"#fffbeb",WebkitUserSelect:"text",userSelect:"text"}}/>
                 <button
                   onClick={reviseEssay}
-                  disabled={essayRevisionLoading||(essayRevisionRef.current||essayRevisionInput).trim().length===0}
-                  style={{padding:"10px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",flexShrink:0,alignSelf:"flex-end"}}>
+                  disabled={essayRevisionLoading}
+                  style={{padding:"12px 18px",borderRadius:10,border:"none",background:essayRevisionLoading?"var(--border)":"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:essayRevisionLoading?"not-allowed":"pointer",flexShrink:0,alignSelf:"flex-end",boxShadow:essayRevisionLoading?"none":"0 2px 8px rgba(249,115,22,.3)"}}>
                   {essayRevisionLoading?<span className="spin" style={{display:"inline-block"}}>◌</span>:"Update →"}
                 </button>
               </div>
+              {!essayRevisionLoading&&<div style={{fontSize:10,color:"#92400e",fontWeight:600,marginTop:5,opacity:.7}}>Press Enter to send · Shift+Enter for new line</div>}
             </div>
 
             <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
