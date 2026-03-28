@@ -1643,6 +1643,7 @@ function App(){
   const[essayWebStatus,setEssayWebStatus]=useState(null); // null|"ok"|"error"
   const[essayRevisionInput,setEssayRevisionInput]=useState("");
   const essayRevisionRef=useRef("");
+  const essayRevisionDomRef=useRef(null); // DOM ref — reads value synchronously on click
   const[essayRevisionLoading,setEssayRevisionLoading]=useState(false);
   const[essayRevisionHistory,setEssayRevisionHistory]=useState([]);
   const[essaySavedNoteId,setEssaySavedNoteId]=useState(null); // id of note if already saved
@@ -2856,14 +2857,16 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
   /* ── Generate essay using Claude ── */
   /* ── Revise essay based on student instruction ── */
   const reviseEssay=async()=>{
-    const instruction=essayRevisionRef.current||essayRevisionInput;
-    if(!instruction.trim()||!essayOutput)return;
-    setEssayRevisionLoading(true);
-    // Add user message to history
-    const userMsg={role:"user",text:instruction.trim()};
-    setEssayRevisionHistory(prev=>[...prev,userMsg]);
-    setEssayRevisionInput("");
+    // Read directly from DOM — synchronous, always current, no onBlur needed
+    const instruction=(essayRevisionDomRef.current?.value||essayRevisionRef.current||essayRevisionInput).trim();
+    if(!instruction||!essayOutput)return;
+
+    // Immediately acknowledge — clear input and show user message BEFORE awaiting API
+    if(essayRevisionDomRef.current)essayRevisionDomRef.current.value="";
     essayRevisionRef.current="";
+    setEssayRevisionInput("");
+    setEssayRevisionLoading(true);
+    setEssayRevisionHistory(prev=>[...prev,{role:"user",text:instruction}]);
 
     const highlightInstructions=essayHighlights?`
 After the revised essay, add a JSON block wrapped in <HIGHLIGHTS> tags:
@@ -3155,15 +3158,44 @@ Return a well-organized summary of what you found — include specific facts, nu
     const topicVal=(essayTopicRef.current||essayTopic).trim();if(!topicVal)return;
     setEssayLoading(true);
     setEssayOutput(null);
-    const lengthMap={short:"3 paragraphs (~200 words)",medium:"5 paragraphs (~400 words)",long:"7 paragraphs (~600 words)"};
-    const typeMap={opinion:"opinion/persuasive essay",informational:"informational/explanatory essay",narrative:"personal narrative",compare:"compare and contrast essay",research:"research-based essay"};
+    const lengthMap={short:"3 paragraphs (~200 words)",medium:"5 paragraphs (~400 words)",long:"7 paragraphs (~600 words)",speech_short:"2-minute speech (~250 words)",speech_medium:"5-minute speech (~600 words)",speech_long:"10-minute speech (~1200 words)"};
+    const typeMap={opinion:"opinion/persuasive essay",informational:"informational/explanatory essay",narrative:"personal narrative",compare:"compare and contrast essay",research:"research-based essay",speech:"speech"};
     const research=essayResearchRef.current||essayResearch;
-    const highlightInstructions=essayHighlights?`
+    const isSpeech=essayType==="speech";
+    const speechHighlightInstructions=essayHighlights?`
+After writing the speech, add a JSON block wrapped in <HIGHLIGHTS> tags:
+<HIGHLIGHTS>{"thesis":["opening hook sentence"],"topic":["main point 1","main point 2","main point 3"],"evidence":["key fact or story used"],"transition":["transition phrase used"]}</HIGHLIGHTS>`:"";
+    const essayHighlightInstructions=essayHighlights?`
 After writing the essay, add a JSON block at the very end (after the essay text) wrapped in <HIGHLIGHTS> tags like this:
 <HIGHLIGHTS>{"thesis":["exact thesis sentence"],"topic":["topic sentence 1","topic sentence 2","topic sentence 3"],"evidence":["key evidence phrase 1","key evidence phrase 2"],"transition":["transition phrase 1","transition phrase 2"]}</HIGHLIGHTS>
 These will be used to color-code the essay for the student.`:"";
+    const highlightInstructions=isSpeech?speechHighlightInstructions:essayHighlightInstructions;
 
-    const prompt=`You are Nova, an expert writing tutor. Write a ${typeMap[essayType]} for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${topicVal}"
+    const speechPrompt=`You are Nova, an expert speech coach. Write a speech for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${topicVal}"
+
+Length: ${lengthMap[essayLength]||lengthMap["speech_medium"]}
+Grade level: ${profile?.grade} grade — use clear, spoken language that sounds natural when read aloud
+${research?`Research material provided by the student:\n"""\n${research}\n"""\nUse this material to support the speech.`:"Use your knowledge to write an accurate, engaging speech."}
+
+Structure the speech like this:
+1. OPENING HOOK — Start with a surprising fact, question, story, or bold statement that grabs attention
+2. INTRODUCTION — State your main point or thesis clearly
+3. BODY (2-3 main points) — Each point gets its own paragraph with evidence or an example
+4. CALL TO ACTION or KEY MESSAGE — What do you want the audience to do or remember?
+5. MEMORABLE CLOSING — End with a strong statement that ties back to the opening
+
+Speech writing rules:
+- Write in first person ("I believe...", "We should...")
+- Use short sentences — easier to speak and understand
+- Include rhetorical questions to engage the audience
+- Add natural pauses with "..." where the speaker should pause for effect
+- Use repetition for emphasis ("We can do this. We must do this. We will do this.")
+- Label each section in brackets like [OPENING], [MAIN POINT 1], etc. so the student can follow along
+${highlightInstructions}
+
+Write the speech now:`;
+
+    const essayPrompt=`You are Nova, an expert writing tutor. Write a ${typeMap[essayType]} for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${topicVal}"
 
 Length: ${lengthMap[essayLength]}
 Grade level: ${profile?.grade} grade — use age-appropriate vocabulary and sentence structure
@@ -3173,6 +3205,8 @@ Write a complete, polished essay. Use proper paragraph breaks. Start with a stro
 ${highlightInstructions}
 
 Write the essay now:`;
+
+    const prompt=isSpeech?speechPrompt:essayPrompt;
 
     try{
       const key=localStorage.getItem("nova_api_key");
@@ -3192,7 +3226,7 @@ Write the essay now:`;
       const wc=bodyText.trim().split(/\s+/).length;
       setEssayOutput({body:bodyText,highlights,wordCount:wc,topic:topicVal,type:essayType,length:essayLength,date:new Date().toISOString()});
     }catch(err){
-      setEssayOutput({body:"Sorry, Nova had trouble writing the essay. Please try again.",highlights:{},wordCount:0,topic:topicVal,type:essayType,length:essayLength,date:new Date().toISOString()});
+      setEssayOutput({body:"Sorry, Nova had trouble writing. Please try again.",highlights:{},wordCount:0,topic:topicVal,type:essayType,length:essayLength,date:new Date().toISOString()});
     }
     setEssayLoading(false);
   };
@@ -3951,8 +3985,17 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
 
   /* ── Essay Writer Screen ── */
   function EssayWriter(){
-    const lengthOpts=[{k:"short",l:"Short",d:"~200 words · 3 paragraphs"},{k:"medium",l:"Medium",d:"~400 words · 5 paragraphs"},{k:"long",l:"Long",d:"~600 words · 7 paragraphs"}];
-    const typeOpts=[{k:"opinion",l:"Opinion",icon:"💬"},{k:"informational",l:"Informational",icon:"📚"},{k:"narrative",l:"Narrative",icon:"📖"},{k:"compare",l:"Compare & Contrast",icon:"⚖️"},{k:"research",l:"Research",icon:"🔬"}];
+    const lengthOpts=essayType==="speech"
+      ?[{k:"speech_short",l:"2-min Speech",d:"~250 words"},{k:"speech_medium",l:"5-min Speech",d:"~600 words"},{k:"speech_long",l:"10-min Speech",d:"~1200 words"}]
+      :[{k:"short",l:"Short",d:"~200 words · 3 paragraphs"},{k:"medium",l:"Medium",d:"~400 words · 5 paragraphs"},{k:"long",l:"Long",d:"~600 words · 7 paragraphs"}];
+    const typeOpts=[
+      {k:"opinion",l:"Opinion",icon:"💬",group:"essay"},
+      {k:"informational",l:"Informational",icon:"📚",group:"essay"},
+      {k:"narrative",l:"Narrative",icon:"📖",group:"essay"},
+      {k:"compare",l:"Compare & Contrast",icon:"⚖️",group:"essay"},
+      {k:"research",l:"Research",icon:"🔬",group:"essay"},
+      {k:"speech",l:"Speech",icon:"🎤",group:"speech"},
+    ];
     const wc=essayOutput?.wordCount||0;
     const downloadEssay=()=>{
       if(!essayOutput)return;
@@ -3966,9 +4009,9 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
       <div className="essay-writer-wrap fade-in">
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4,flexWrap:"wrap"}}>
           <button className="writing-back" onClick={()=>{setWritingScreen("home");setEssayOutput(null);}}>← Back</button>
-          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}> ✏️ Write My Essay</div>
+          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>{essayType==="speech"?"🎤 Write My Speech":"✏️ Write My Essay"}</div>
         </div>
-        <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:4}}>Tell Nova what to write about and how. Nova will write a full essay tailored to your grade level, with key parts highlighted.</div>
+        <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:4}}>{essayType==="speech"?"Tell Nova your speech topic. Nova will write a full speech with sections, rhetorical questions, and pause markers.":"Tell Nova what to write about and how. Nova will write a full essay tailored to your grade level, with key parts highlighted."}</div>
 
         {!essayOutput&&!essayLoading&&(<>
           {/* Topic */}
@@ -3987,13 +4030,31 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
 
           {/* Type */}
           <div className="essay-config-card">
-            <div className="essay-config-title">📝 What type of essay?</div>
-            <div className="essay-option-row">
-              {typeOpts.map(t=>(
-                <button key={t.k} className={"essay-option-pill"+(essayType===t.k?" active":"")} onClick={()=>setEssayType(t.k)}>
+            <div className="essay-config-title">{essayType==="speech"?"🎤 Speech Writing":"📝 Essay Writing"}</div>
+            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:10}}>Choose a format:</div>
+            {/* Essay types */}
+            <div style={{fontSize:9,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:5}}>Essays</div>
+            <div className="essay-option-row" style={{marginBottom:10}}>
+              {typeOpts.filter(t=>t.group==="essay").map(t=>(
+                <button key={t.k} className={"essay-option-pill"+(essayType===t.k?" active":"")}
+                  onClick={()=>{setEssayType(t.k);if(["speech_short","speech_medium","speech_long"].includes(essayLength))setEssayLength("medium");}}>
                   {t.icon} {t.l}
                 </button>
               ))}
+            </div>
+            {/* Speech */}
+            <div style={{fontSize:9,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:5}}>Speech</div>
+            <div className="essay-option-row">
+              <button className={"essay-option-pill"+(essayType==="speech"?" active":"")}
+                style={{borderColor:essayType==="speech"?"var(--orange)":"var(--border)",background:essayType==="speech"?"#fff7ed":"#fff",color:essayType==="speech"?"var(--orange)":"var(--muted)"}}
+                onClick={()=>{setEssayType("speech");setEssayLength("speech_medium");}}>
+                🎤 Speech
+              </button>
+              {essayType==="speech"&&(
+                <div style={{fontSize:10,fontWeight:600,color:"var(--orange)",padding:"7px 10px",borderRadius:10,background:"#fff7ed",border:"1px solid #fed7aa",lineHeight:1.5}}>
+                  Nova will write a speech with labeled sections (Opening, Main Points, Closing), rhetorical questions, and natural pause markers.
+                </div>
+              )}
             </div>
           </div>
 
@@ -4002,7 +4063,9 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             <div className="essay-config-title">📏 How long?</div>
             <div className="essay-option-row">
               {lengthOpts.map(l=>(
-                <button key={l.k} className={"essay-option-pill"+(essayLength===l.k?" active":"")} onClick={()=>setEssayLength(l.k)}>
+                <button key={l.k} className={"essay-option-pill"+(essayLength===l.k?" active":"")}
+                  style={essayType==="speech"&&essayLength===l.k?{borderColor:"var(--orange)",background:"#fff7ed",color:"var(--orange)"}:{}}
+                  onClick={()=>setEssayLength(l.k)}>
                   <div style={{fontWeight:900}}>{l.l}</div>
                   <div style={{fontSize:9,fontWeight:600,opacity:.8}}>{l.d}</div>
                 </button>
@@ -4139,8 +4202,8 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
           </div>
 
           <button onClick={generateEssay} disabled={!(essayTopicRef.current||essayTopic).trim()}
-            style={{width:"100%",padding:"14px",borderRadius:14,border:"none",background:(essayTopicRef.current||essayTopic).trim()?"linear-gradient(135deg,#7c3aed,#4f46e5)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:14,fontWeight:900,cursor:(essayTopicRef.current||essayTopic).trim()?"pointer":"not-allowed",boxShadow:(essayTopicRef.current||essayTopic).trim()?"0 4px 18px rgba(124,58,237,.35)":"none"}}>
-            ✏️ Write My Essay
+            style={{width:"100%",padding:"14px",borderRadius:14,border:"none",background:(essayTopicRef.current||essayTopic).trim()?essayType==="speech"?"linear-gradient(135deg,#f97316,#fbbf24)":"linear-gradient(135deg,#7c3aed,#4f46e5)":"var(--border)",color:"#fff",fontFamily:"var(--font)",fontSize:14,fontWeight:900,cursor:(essayTopicRef.current||essayTopic).trim()?"pointer":"not-allowed",boxShadow:(essayTopicRef.current||essayTopic).trim()?"0 4px 18px rgba(124,58,237,.35)":"none"}}>
+            {essayType==="speech"?"🎤 Write My Speech":"✏️ Write My Essay"}
           </button>
         </>)}
 
@@ -4148,8 +4211,8 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         {essayLoading&&(
           <div style={{textAlign:"center",padding:56,background:"#fff",borderRadius:18,border:"2px solid var(--border)"}}>
             <div style={{fontSize:52,animation:"float 1s ease-in-out infinite",marginBottom:14}}>🦉</div>
-            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Nova is writing your essay...</div>
-            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Crafting a {essayLength} {essayType} essay about "{essayTopic}"</div>
+            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>{essayType==="speech"?"Nova is writing your speech...":"Nova is writing your essay..."}</div>
+            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Crafting a {essayLength.startsWith("speech")?"speech":"essay"} about "{essayTopic}"</div>
           </div>
         )}
 
@@ -4225,6 +4288,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
               <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
                 <textarea
                   placeholder={`e.g. "Add a paragraph about recycling" · "Make it shorter" · "Remove the last sentence" · "Make the introduction more exciting"`}
+                  ref={essayRevisionDomRef}
                   defaultValue={essayRevisionInput}
                   onInput={e=>essayRevisionRef.current=e.target.value}
                   onBlur={e=>{setEssayRevisionInput(e.target.value);essayRevisionRef.current=e.target.value;}}
