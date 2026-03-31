@@ -690,6 +690,13 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 /* Tool extras */
 .sd-watercolor-preview{width:28px;height:28px;border-radius:50%;opacity:.6;filter:blur(3px);flex-shrink:0;cursor:pointer;border:3px solid transparent;transition:all .15s}
 .sd-watercolor-preview.active{border-color:var(--navy);transform:scale(1.2)}
+/* DRAWING ENGINE STYLES */
+.canvas-container{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.5s ease}
+.drawing-card{background:white;border-radius:32px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,0.15);border:6px solid var(--blue);position:relative}
+.main-canvas{background:#fdfaf3;border-radius:16px;cursor:crosshair;touch-action:none;box-shadow:inset 0 2px 10px rgba(0,0,0,0.05)}
+.canvas-toolbar{margin-top:20px;display:flex;gap:15px;justify-content:center}
+.tool-btn{width:50px;height:50px;border-radius:50%;border:2px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.2s}
+.tool-btn.active{background:var(--blue);color:white;border-color:var(--blue);transform:scale(1.1)}
 </style>
 </head>
 <body>
@@ -1584,6 +1591,72 @@ function buildPrompt(profile,subject,mode,isRem,remTopic){
   return "You are Nova, an enthusiastic and encouraging STEM tutor for "+name+", a "+grade+" grade student.\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None identified yet")+" | STRENGTHS: "+(strengths.join(", ")||"Still discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet — fresh start!")+"\n"+ic+fw+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"CURRENT FOCUS SUBJECT: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Always use "+name+"'s name. Connect every concept to their interests. Keep explanations to 4-8 sentences. Guide discovery — never just hand over answers. Use 🤔 Think About This!: blocks for challenges and ⭐ Fun Fact: for fascinating context.\nRESOURCES: After teaching a topic, end with a 📚 Practice Resources: block. Mention Khan Academy (with the specific grade/topic), Mathnasium for math, Code.org or Scratch for coding, NASA or Nat Geo Kids for science. Be specific — name the exact unit or activity they should try.";
 }
 
+/* ── DrawingEngine Component ── */
+const DrawingEngine=({onComplete})=>{
+  const canvasRef=React.useRef(null);
+  const contextRef=React.useRef(null);
+  const[isDrawing,setIsDrawing]=React.useState(false);
+  const[tool,setTool]=React.useState("pencil");
+  React.useEffect(()=>{
+    const canvas=canvasRef.current;
+    const dpr=window.devicePixelRatio||1;
+    canvas.style.width="500px";
+    canvas.style.height="400px";
+    canvas.width=500*dpr;
+    canvas.height=400*dpr;
+    const ctx=canvas.getContext("2d");
+    ctx.scale(dpr,dpr);
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
+    ctx.lineWidth=4;
+    ctx.strokeStyle="#1a2744";
+    contextRef.current=ctx;
+  },[]);
+  const getPos=(e)=>{
+    const rect=canvasRef.current.getBoundingClientRect();
+    return{x:(e.clientX||e.touches?.[0]?.clientX)-rect.left,y:(e.clientY||e.touches?.[0]?.clientY)-rect.top};
+  };
+  const startDrawing=(e)=>{
+    const{x,y}=getPos(e);
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(x,y);
+    setIsDrawing(true);
+  };
+  const draw=(e)=>{
+    if(!isDrawing)return;
+    const{x,y}=getPos(e);
+    contextRef.current.lineTo(x,y);
+    contextRef.current.stroke();
+  };
+  const toggleEraser=()=>{
+    setTool("eraser");
+    contextRef.current.strokeStyle="#fdfaf3";
+    contextRef.current.lineWidth=25;
+  };
+  const togglePencil=()=>{
+    setTool("pencil");
+    contextRef.current.strokeStyle="#1a2744";
+    contextRef.current.lineWidth=4;
+  };
+  return(
+    <div className="canvas-container">
+      <div className="drawing-card">
+        <canvas ref={canvasRef}
+          onMouseDown={startDrawing} onMouseMove={draw}
+          onMouseUp={()=>setIsDrawing(false)} onMouseLeave={()=>setIsDrawing(false)}
+          onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={()=>setIsDrawing(false)}
+          className="main-canvas"/>
+        <div className="canvas-toolbar">
+          <button className={`tool-btn ${tool==="pencil"?"active":""}`} onClick={togglePencil} title="Pencil">✏️</button>
+          <button className={`tool-btn ${tool==="eraser"?"active":""}`} onClick={toggleEraser} title="Eraser">🧼</button>
+          <button className="tool-btn" onClick={()=>contextRef.current.clearRect(0,0,1000,1000)} title="Clear">🗑️</button>
+          <button className="apikey-btn" style={{width:"auto",padding:"0 30px",marginLeft:"20px"}} onClick={onComplete}>Done! ➜</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ── App ── */
 function App(){
   const[apiKeyInput,setApiKeyInput]=useState("");
@@ -1597,7 +1670,7 @@ function App(){
   const[authErr,setAuthErr]=useState("");
   const[authLoading,setAuthLoading]=useState(false);
   const[syncStatus,setSyncStatus]=useState("idle");
-  const[screen,setScreen]=useState("loading");
+  const[screen,setScreen]=useState("loading"); // valid screens: loading|apikey|auth|onboard|tutor|parent-hub|DRAWING
   const[accountType,setAccountType]=useState(null);
   const[parentData,setParentData]=useState(null);
   const[selectedChild,setSelectedChild]=useState(null);
@@ -1708,6 +1781,8 @@ function App(){
 
   /* ── Scan & Review + Student Notes state ── */
   const[writingScreen,setWritingScreen]=useState("home"); // home|scan|notes|essaywriter
+  const[writingLevel,setWritingLevel]=useState("beginner");       // beginner|intermediate|expert
+  const[writingContentMode,setWritingContentMode]=useState("essay"); // essay|speech
   const[scanText,setScanText]=useState("");
   const scanTextRef=useRef("");
   const scanWrapRef=useRef(null);
@@ -2067,7 +2142,7 @@ function App(){
           if(pd._writingHistory){
             localStorage.setItem("nova_writing_"+u,JSON.stringify(pd._writingHistory));
           }
-          if(pd.setupComplete){setProfile(pd);ls.set("nova_profile",JSON.stringify({...pd,username:u}));setAuthLoading(false);setScreen("tutor");}
+          if(pd.setupComplete){setProfile(pd);ls.set("nova_profile",JSON.stringify({...pd,username:u}));setAuthLoading(false);setScreen("DRAWING");}
           else{setAuthLoading(false);setScreen("onboard");}
         }
       }
@@ -2755,6 +2830,12 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
   /* ── Screens ── */
   if(screen==="loading")return<div className="app" style={{alignItems:"center",justifyContent:"center"}}><span style={{fontSize:44,animation:"float 1s ease-in-out infinite"}}>🦉</span></div>;
 
+  if(screen==="DRAWING")return(
+    <div className="app">
+      <DrawingEngine onComplete={()=>setScreen("tutor")}/>
+    </div>
+  );
+
   if(screen==="apikey")return(
     <div className="app">
       <div className="apikey-wrap fade-in">
@@ -3262,6 +3343,51 @@ Return a well-organized summary of what you found — include specific facts, nu
     }
   };
 
+  /* ── Writing Level & Mode System Instructions ── */
+  const buildWritingSystemInstruction=()=>{
+    const levelInstructions={
+      beginner:[
+        "Use high-frequency, simple English words only. Avoid any word a 7-year-old would need to look up.",
+        "Write short sentences (under 15 words each). One idea per sentence.",
+        "Always provide 2-3 'Sentence Starters' the student can copy to begin each section (e.g. 'I think... / One reason is... / In my opinion...').",
+        "Use friendly, warm encouragement throughout.",
+        "Structure: clearly label Introduction, Body, and Conclusion with simple headings.",
+      ],
+      intermediate:[
+        "Use clear, age-appropriate English. Introduce one or two STEM/academic terms per section with a brief definition in parentheses.",
+        "Weave in transition words naturally: 'Furthermore', 'However', 'In addition', 'As a result', 'For example', 'On the other hand'.",
+        "Sentences can be compound or complex but must remain easy to follow.",
+        "Provide one 'Sentence Starter' per section as a scaffold.",
+        "Structure: label Introduction, Body paragraphs, and Conclusion.",
+      ],
+      expert:[
+        "Use professional, precise English. Do NOT use rare or obscure vocabulary — clarity over complexity.",
+        "Use sophisticated sentence structures: varied openings, subordinate clauses, parallel construction.",
+        "No sentence starters needed — the student can lead themselves.",
+        "Integrate transitions seamlessly into the flow without labelling them.",
+        "Maintain a confident, authoritative voice appropriate for formal writing.",
+      ],
+    };
+    const modeInstructions={
+      essay:[
+        "Structure: INTRODUCTION (hook + thesis statement) → BODY paragraphs (each with a topic sentence, evidence, and explanation) → CONCLUSION (restate thesis + broader significance).",
+        "Every body paragraph must have: a topic sentence, at least one piece of evidence or example, and a closing sentence.",
+      ],
+      speech:[
+        "Structure: HOOK (grab attention with a question, fact, or story) → STORYTELLING (personal or vivid narrative to connect emotionally) → MAIN POINTS (2-3 clear arguments with evidence) → CALL TO ACTION (tell the audience exactly what to do or think) → MEMORABLE CLOSE (echo the opening).",
+        "Write for the ear, not the eye. Short punchy sentences. Use repetition for impact.",
+        "Add pause markers '...' where the speaker should breathe. Label each section in [BRACKETS].",
+      ],
+    };
+    const level=levelInstructions[writingLevel]||levelInstructions.beginner;
+    const mode=modeInstructions[writingContentMode]||modeInstructions.essay;
+    return`WRITING LEVEL: ${writingLevel.toUpperCase()}
+${level.map((r,i)=>`${i+1}. ${r}`).join("\n")}
+
+WRITING MODE: ${writingContentMode.toUpperCase()}
+${mode.map((r,i)=>`${i+1}. ${r}`).join("\n")}`;
+  };
+
   const generateEssay=async()=>{
     const topicVal=(essayTopicRef.current||essayTopic).trim();if(!topicVal)return;
     setEssayLoading(true);
@@ -3270,6 +3396,7 @@ Return a well-organized summary of what you found — include specific facts, nu
     const typeMap={opinion:"opinion/persuasive essay",informational:"informational/explanatory essay",narrative:"personal narrative",compare:"compare and contrast essay",research:"research-based essay",speech:"speech"};
     const research=essayResearchRef.current||essayResearch;
     const isSpeech=essayType==="speech";
+    const systemInstruction=buildWritingSystemInstruction();
     const speechHighlightInstructions=essayHighlights?`
 After writing the speech, add a JSON block wrapped in <HIGHLIGHTS> tags:
 <HIGHLIGHTS>{"thesis":["opening hook sentence"],"topic":["main point 1","main point 2","main point 3"],"evidence":["key fact or story used"],"transition":["transition phrase used"]}</HIGHLIGHTS>`:"";
@@ -3280,6 +3407,10 @@ These will be used to color-code the essay for the student.`:"";
     const highlightInstructions=isSpeech?speechHighlightInstructions:essayHighlightInstructions;
 
     const speechPrompt=`You are Nova, an expert speech coach. Write a speech for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${topicVal}"
+
+--- SYSTEM INSTRUCTIONS ---
+${systemInstruction}
+--- END SYSTEM INSTRUCTIONS ---
 
 Length: ${lengthMap[essayLength]||lengthMap["speech_medium"]}
 Grade level: ${profile?.grade} grade — use clear, spoken language that sounds natural when read aloud
@@ -3304,6 +3435,10 @@ ${highlightInstructions}
 Write the speech now:`;
 
     const essayPrompt=`You are Nova, an expert writing tutor. Write a ${typeMap[essayType]} for ${profile?.name}, a ${profile?.grade} grade student, on this topic: "${topicVal}"
+
+--- SYSTEM INSTRUCTIONS ---
+${systemInstruction}
+--- END SYSTEM INSTRUCTIONS ---
 
 Length: ${lengthMap[essayLength]}
 Grade level: ${profile?.grade} grade — use age-appropriate vocabulary and sentence structure
@@ -3488,7 +3623,12 @@ Please extract ALL the text you can see in the image, exactly as written.
     setScanLoading(true);
     setScanIssues([]);
     setScanChoices({});
+    const systemInstruction=buildWritingSystemInstruction();
     const prompt=`You are Nova, a warm and encouraging writing coach reviewing ${profile?.name}'s writing. ${profile?.name} is a ${profile?.grade} grade student.
+
+--- SYSTEM INSTRUCTIONS ---
+${systemInstruction}
+--- END SYSTEM INSTRUCTIONS ---
 
 Here is their writing to review:
 """
@@ -3572,7 +3712,12 @@ Rules:
 
   const getWritingFeedback=async(lesson,draft,isRevision=false)=>{
     setWritingLoading(true);
+    const systemInstruction=buildWritingSystemInstruction();
     const prompt=`You are Nova, an experienced and warm elementary school writing coach for ${profile?.name}, a ${profile?.grade} grade student.
+
+--- SYSTEM INSTRUCTIONS ---
+${systemInstruction}
+--- END SYSTEM INSTRUCTIONS ---
 
 The student just completed this writing exercise:
 SKILL FOCUS: ${lesson.skillFocus} (${lesson.ccss})
@@ -3815,8 +3960,8 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
               {/* Revised Essay toggle */}
               {choicesMade>0&&(
                 <button onClick={()=>setShowRevisedEssay(v=>!v)}
-                  style={{width:"100%",padding:"12px",borderRadius:12,border:"2px solid "+(showRevisedEssay?"var(--green)":"var(--purple)"),background:showRevisedEssay?"#f0fdf4":"#f5f3ff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:showRevisedEssay?"var(--green)":"var(--purple)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                  {showRevisedEssay?"📄 Hide Revised Essay":"📝 Show Revised Essay with Changes"}
+                  style={{width:"100%",padding:"13px",borderRadius:12,border:"none",background:choicesMade===totalFixable?"linear-gradient(135deg,var(--green),var(--teal))":showRevisedEssay?"linear-gradient(135deg,var(--green),var(--teal))":"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:choicesMade===totalFixable?"0 4px 14px rgba(34,197,94,.35)":"0 4px 14px rgba(139,92,246,.3)",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                  {showRevisedEssay?"📄 Hide Revised Essay":choicesMade===totalFixable?"🎉 See Your Improved Essay!":"📝 Preview Revised Essay ("+choicesMade+" changes)"}
                 </button>
               )}
 
@@ -4032,61 +4177,85 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
       <div className="notes-wrap fade-in">
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
           <button className="writing-back" onClick={()=>setWritingScreen("home")}>← Writing</button>
-          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}> 📓 My Student Notes</div>
+          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}> 📓 Student Notes</div>
           <button onClick={()=>setWritingScreen("scan")} style={{marginLeft:"auto",padding:"6px 14px",borderRadius:20,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer"}}>+ Scan Essay</button>
         </div>
         {studentNotes.length===0?(
           <div style={{textAlign:"center",padding:40,background:"#fff",borderRadius:18,border:"2px dashed var(--border)"}}>
             <div style={{fontSize:40,marginBottom:12}}>📓</div>
             <div style={{fontSize:14,fontWeight:900,color:"var(--navy)",marginBottom:8}}>No notes yet!</div>
-            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:16}}>Scan an essay and Nova will save your feedback and chosen revisions here.</div>
+            <div style={{fontSize:12,color:"var(--muted)",fontWeight:600,marginBottom:16}}>Scan an essay or write one with Nova — it'll be saved here.</div>
             <button onClick={()=>setWritingScreen("scan")} style={{padding:"11px 24px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:"pointer"}}>📄 Scan My First Essay</button>
           </div>
-        ):(
-          <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            {studentNotes.map(n=>{
-              const isEssay=n.type==="essay";
-              const chosen=isEssay?0:Object.keys(n.choices||{}).length;
-              const total=isEssay?0:(n.issues||[]).length;
-              const improvements=isEssay?0:(n.issues||[]).filter(i=>i.type!=="strength").length;
-              return(
-                <div key={n.id} className="note-card" style={{cursor:"pointer",transition:"all .15s",borderLeft:"4px solid "+(isEssay?"var(--purple)":"var(--blue)")}}
-                  onClick={()=>setViewingNote(n.id)}>
-                  <div className="note-card-header">
-                    <div style={{display:"flex",alignItems:"center",gap:7}}>
-                      <span style={{fontSize:16}}>{isEssay?"✏️":"📄"}</span>
-                      <div>
-                        <div className="note-title">{n.title}</div>
-                        <span style={{fontSize:9,fontWeight:800,padding:"1px 7px",borderRadius:10,background:isEssay?"#f5f3ff":"#eff6ff",color:isEssay?"var(--purple)":"var(--blue)"}}>{isEssay?"ESSAY":"SCAN"}</span>
+        ):(()=>{
+          // Filter tabs
+          const tabs=[{k:"all",l:"All",count:studentNotes.length},{k:"essay",l:"✏️ Essays",count:studentNotes.filter(n=>n.type==="essay").length},{k:"scan",l:"📄 Scans",count:studentNotes.filter(n=>n.type!=="essay"&&n.type!=="drawing").length},{k:"drawing",l:"🎨 Drawings",count:studentNotes.filter(n=>n.type==="drawing").length}].filter(t=>t.count>0);
+          const[activeTab,setActiveTab]=React.useState("all");
+          const filtered=activeTab==="all"?studentNotes:studentNotes.filter(n=>activeTab==="essay"?n.type==="essay":activeTab==="drawing"?n.type==="drawing":n.type!=="essay"&&n.type!=="drawing");
+          return(
+            <div style={{display:"flex",flexDirection:"column",gap:10}}>
+              {/* Filter tabs */}
+              {tabs.length>1&&(
+                <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                  {tabs.map(t=>(
+                    <button key={t.k} onClick={()=>setActiveTab(t.k)}
+                      style={{padding:"5px 12px",borderRadius:20,border:"2px solid "+(activeTab===t.k?"var(--purple)":"var(--border)"),background:activeTab===t.k?"#f5f3ff":"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:activeTab===t.k?"var(--purple)":"var(--muted)"}}>
+                      {t.l} ({t.count})
+                    </button>
+                  ))}
+                </div>
+              )}
+              {filtered.length===0&&(
+                <div style={{textAlign:"center",padding:24,color:"var(--muted)",fontSize:12,fontWeight:600}}>No {activeTab} notes yet.</div>
+              )}
+              {filtered.map(n=>{
+                const isEssay=n.type==="essay";
+                const isDrawing=n.type==="drawing";
+                const borderColor=isEssay?"var(--purple)":isDrawing?"var(--teal)":"var(--blue)";
+                const badgeBg=isEssay?"#f5f3ff":isDrawing?"#f0fdfa":"#eff6ff";
+                const badgeColor=isEssay?"var(--purple)":isDrawing?"var(--teal)":"var(--blue)";
+                const label=isEssay?"ESSAY":isDrawing?"DRAWING":"SCAN";
+                const icon=isEssay?"✏️":isDrawing?"🎨":"📄";
+                const chosen=isEssay||isDrawing?0:Object.keys(n.choices||{}).length;
+                const total=isEssay||isDrawing?0:(n.issues||[]).length;
+                return(
+                  <div key={n.id} className="note-card" style={{cursor:"pointer",borderLeft:"4px solid "+borderColor}}
+                    onClick={()=>setViewingNote(n.id)}>
+                    <div className="note-card-header">
+                      <div style={{display:"flex",alignItems:"center",gap:7}}>
+                        {isDrawing&&n.imageData
+                          ?<img src={n.imageData} alt="Drawing" style={{width:40,height:40,borderRadius:8,objectFit:"cover",flexShrink:0}}/>
+                          :<span style={{fontSize:16,flexShrink:0}}>{icon}</span>}
+                        <div>
+                          <div className="note-title">{n.title}</div>
+                          <span style={{fontSize:9,fontWeight:800,padding:"1px 7px",borderRadius:10,background:badgeBg,color:badgeColor}}>{label}</span>
+                        </div>
+                      </div>
+                      <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                        {!isDrawing&&<button onClick={e=>{e.stopPropagation();downloadNote(n);}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"var(--blue)",color:"#fff",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>⬇️</button>}
+                        <button onClick={e=>{e.stopPropagation();const updated=studentNotes.filter(x=>x.id!==n.id);setStudentNotes(updated);const u=localStorage.getItem("nova_user")||"";localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));if(u)syncSave(u,"_studentNotes",updated);}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"#fef2f2",color:"var(--red)",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>🗑️</button>
                       </div>
                     </div>
-                    <div style={{display:"flex",gap:6,alignItems:"center"}}>
-                      <button onClick={e=>{e.stopPropagation();downloadNote(n);}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"var(--blue)",color:"#fff",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>⬇️</button>
-                      <button onClick={e=>{e.stopPropagation();const updated=studentNotes.filter(x=>x.id!==n.id);setStudentNotes(updated);const u=localStorage.getItem("nova_user")||"";localStorage.setItem("nova_notes_"+u,JSON.stringify(updated));}} style={{padding:"4px 10px",borderRadius:20,border:"none",background:"#fef2f2",color:"var(--red)",fontFamily:"var(--font)",fontSize:9,fontWeight:800,cursor:"pointer"}}>🗑️</button>
-                    </div>
-                  </div>
-                  <div className="note-date">{new Date(n.date).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"})}{n.updatedAt&&<span style={{color:"var(--green)",marginLeft:6}}>· updated {new Date(n.updatedAt).toLocaleDateString()}</span>}</div>
-                  <div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}>
-                    {isEssay?(
-                      <>
+                    <div className="note-date">{new Date(n.date).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"})}{n.updatedAt&&<span style={{color:"var(--green)",marginLeft:6}}>· updated {new Date(n.updatedAt).toLocaleDateString()}</span>}</div>
+                    <div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}>
+                      {isEssay&&<>
                         <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{n.wordCount||0} words</span>
                         <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{(n.revisionHistory||[]).filter(m=>m.role==="user").length} revisions</span>
                         {(n.sources||[]).length>0&&<span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#eff6ff",color:"var(--blue)"}}>{n.sources.length} sources</span>}
-                      </>
-                    ):(
-                      <>
+                      </>}
+                      {!isEssay&&!isDrawing&&<>
                         <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{total} annotations</span>
-                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{chosen} revisions chosen</span>
-                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#eff6ff",color:"var(--blue)"}}>{improvements} improvements</span>
-                      </>
-                    )}
+                        <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{chosen} chosen</span>
+                      </>}
+                      {isDrawing&&n.score&&<span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>⭐ {n.score}/10</span>}
+                    </div>
+                    {!isDrawing&&<div style={{marginTop:8,fontSize:11,color:"var(--muted)",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{isEssay?(n.body||"").slice(0,120):(n.original||"").slice(0,120)}...</div>}
                   </div>
-                  <div style={{marginTop:8,fontSize:11,color:"var(--muted)",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{isEssay?(n.body||"").slice(0,120):(n.original||"").slice(0,120)}...</div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          );
+        })()}
       </div>
     );
   }
@@ -4122,6 +4291,53 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:4}}>{essayType==="speech"?"Tell Nova your speech topic. Nova will write a full speech with sections, rhetorical questions, and pause markers.":"Tell Nova what to write about and how. Nova will write a full essay tailored to your grade level, with key parts highlighted."}</div>
 
         {!essayOutput&&!essayLoading&&(<>
+          {/* Level & Mode Selector — uses --blue active, --navy text, .pop animation */}
+          <div className="essay-config-card pop" style={{borderColor:"var(--blue)",background:"linear-gradient(135deg,#f0f9ff,#eff6ff)"}}>
+            <div className="essay-config-title" style={{color:"var(--navy)"}}>🎯 Writing Level & Mode</div>
+            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginBottom:12}}>These settings control how Nova writes — vocabulary level, structure, and style.</div>
+
+            {/* Level selector */}
+            <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--navy)",marginBottom:7}}>Level</div>
+            <div style={{display:"flex",gap:8,marginBottom:14,flexWrap:"wrap"}}>
+              {[
+                {k:"beginner",l:"🌱 Beginner",d:"Simple words + sentence starters"},
+                {k:"intermediate",l:"🌿 Intermediate",d:"Transitions + STEM terms"},
+                {k:"expert",l:"🌳 Expert",d:"Sophisticated structure"},
+              ].map(lvl=>(
+                <button key={lvl.k} onClick={()=>setWritingLevel(lvl.k)}
+                  style={{flex:1,minWidth:120,padding:"10px 12px",borderRadius:12,border:"2px solid "+(writingLevel===lvl.k?"var(--blue)":"var(--border)"),background:writingLevel===lvl.k?"var(--blue)":"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"left",transition:"all .15s",boxShadow:writingLevel===lvl.k?"0 2px 8px rgba(59,130,246,.3)":"none"}}>
+                  <div style={{fontSize:12,fontWeight:900,color:writingLevel===lvl.k?"#fff":"var(--navy)"}}>{lvl.l}</div>
+                  <div style={{fontSize:9,fontWeight:600,color:writingLevel===lvl.k?"rgba(255,255,255,.8)":"var(--muted)",marginTop:2}}>{lvl.d}</div>
+                </button>
+              ))}
+            </div>
+
+            {/* Mode selector */}
+            <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--navy)",marginBottom:7}}>Mode</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {[
+                {k:"essay",l:"📄 Essay Mode",d:"Intro · Body · Conclusion"},
+                {k:"speech",l:"🎤 Speech Mode",d:"Hook · Story · Call to Action"},
+              ].map(mode=>(
+                <button key={mode.k} onClick={()=>{setWritingContentMode(mode.k);if(mode.k==="speech"&&essayType!=="speech"){setEssayType("speech");setEssayLength("speech_medium");}if(mode.k==="essay"&&essayType==="speech"){setEssayType("opinion");setEssayLength("medium");}}}
+                  style={{flex:1,minWidth:140,padding:"10px 12px",borderRadius:12,border:"2px solid "+(writingContentMode===mode.k?"var(--blue)":"var(--border)"),background:writingContentMode===mode.k?"var(--blue)":"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"left",transition:"all .15s",boxShadow:writingContentMode===mode.k?"0 2px 8px rgba(59,130,246,.3)":"none"}}>
+                  <div style={{fontSize:12,fontWeight:900,color:writingContentMode===mode.k?"#fff":"var(--navy)"}}>{mode.l}</div>
+                  <div style={{fontSize:9,fontWeight:600,color:writingContentMode===mode.k?"rgba(255,255,255,.8)":"var(--muted)",marginTop:2}}>{mode.d}</div>
+                </button>
+              ))}
+            </div>
+
+            {/* Live preview of what this means */}
+            <div style={{marginTop:12,padding:"10px 14px",borderRadius:10,background:"rgba(59,130,246,.08)",border:"1px solid rgba(59,130,246,.2)",fontSize:11,fontWeight:700,color:"var(--navy)",lineHeight:1.6}}>
+              {writingLevel==="beginner"&&"🌱 Nova will use simple everyday words and give you sentence starters to help you begin each section."}
+              {writingLevel==="intermediate"&&"🌿 Nova will use transition words like 'Furthermore' and 'However', and introduce key academic terms with explanations."}
+              {writingLevel==="expert"&&"🌳 Nova will use sophisticated sentence structures and formal writing style — no rare words, just precise and powerful English."}
+              {" "}
+              {writingContentMode==="essay"&&"The essay will be structured around Introduction, Body paragraphs, and Conclusion."}
+              {writingContentMode==="speech"&&"The speech will be built around a Hook, Storytelling section, and Call to Action."}
+            </div>
+          </div>
+
           {/* Topic */}
           <div className="essay-config-card">
             <div className="essay-config-title">📌 What's your essay topic?</div>
@@ -5417,36 +5633,52 @@ Respond ONLY with valid JSON (no markdown, no preamble):
   }
 
   function WritingHome(){
-    const done=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length,0);
-    const total=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.length,0);
+    const totalLessonsDone=WRITING_TYPES.reduce((a,wt)=>a+wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length,0);
+    const notesCount=studentNotes.length;
     return(
       <div className="writing-home fade-in">
         <div className="writing-home-title">✍️ Writing Workshop</div>
-        <div className="writing-home-sub">Learn step by step, then scan your own writing for instant feedback.</div>
+        <div className="writing-home-sub">Choose a mode below — Nova can write for you, or coach you as you write.</div>
 
-        {/* Action buttons row */}
-        <div style={{display:"flex",gap:12,maxWidth:600,margin:"0 auto",width:"100%",flexWrap:"wrap"}}>
-          <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setShowRevisedEssay(false);setWritingScreen("scan");}}
-            style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#7c3aed,#4f46e5)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(124,58,237,.3)"}}>
-            <div style={{fontSize:28,marginBottom:6}}>📄</div>
-            <div style={{fontSize:13,fontWeight:900}}>Scan My Essay</div>
-            <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Get interactive feedback</div>
-          </button>
-          <button onClick={()=>{setEssayOutput(null);setEssayTopic("");essayTopicRef.current="";setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");essayUrlRef.current="";setEssayUrlStatus(null);setEssayWebQuery("");essayWebQueryRef.current="";setEssayWebStatus(null);setEssaySavedNoteId(null);setWritingScreen("essaywriter");}}
-            style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center",boxShadow:"0 4px 14px rgba(249,115,22,.3)"}}>
-            <div style={{fontSize:28,marginBottom:6}}>✏️</div>
-            <div style={{fontSize:13,fontWeight:900}}>Write My Essay</div>
-            <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2}}>Nova writes it for you</div>
-          </button>
-          <button onClick={()=>setWritingScreen("notes")}
-            style={{flex:1,minWidth:140,padding:"16px",borderRadius:16,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center"}}>
-            <div style={{fontSize:28,marginBottom:6}}>📓</div>
-            <div style={{fontSize:13,fontWeight:900,color:"var(--purple)"}}>Student Notes</div>
-            <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2}}>{studentNotes.length} saved {studentNotes.length===1?"note":"notes"}</div>
-          </button>
+        {/* Mode A — Nova writes for the student */}
+        <div style={{maxWidth:600,margin:"0 auto",width:"100%"}}>
+          <div style={{fontSize:10,fontWeight:900,letterSpacing:"1.5px",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>🤖 Nova writes it for you</div>
+          <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:20}}>
+            <button onClick={()=>{setEssayOutput(null);setEssayTopic("");essayTopicRef.current="";setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");essayUrlRef.current="";setEssayUrlStatus(null);setEssayWebQuery("");essayWebQueryRef.current="";setEssayWebStatus(null);setEssaySavedNoteId(null);setEssayType("opinion");setEssayLength("medium");setWritingScreen("essaywriter");}}
+              style={{flex:1,minWidth:140,padding:"16px 14px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"left",boxShadow:"0 4px 14px rgba(249,115,22,.3)"}}>
+              <div style={{fontSize:26,marginBottom:6}}>✏️</div>
+              <div style={{fontSize:13,fontWeight:900}}>Write My Essay</div>
+              <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2,lineHeight:1.4}}>Pick a topic + type. Nova writes a full essay with highlights.</div>
+            </button>
+            <button onClick={()=>{setEssayOutput(null);setEssayTopic("");essayTopicRef.current="";setEssayResearch("");essayResearchRef.current="";setEssayRevisionHistory([]);setEssayRevisionInput("");essayRevisionRef.current="";setEssaySources([]);setEssayUrlInput("");essayUrlRef.current="";setEssayUrlStatus(null);setEssayWebQuery("");essayWebQueryRef.current="";setEssayWebStatus(null);setEssaySavedNoteId(null);setEssayType("speech");setEssayLength("speech_medium");setWritingScreen("essaywriter");}}
+              style={{flex:1,minWidth:140,padding:"16px 14px",borderRadius:16,border:"none",background:"linear-gradient(135deg,#7c3aed,#4f46e5)",color:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"left",boxShadow:"0 4px 14px rgba(124,58,237,.3)"}}>
+              <div style={{fontSize:26,marginBottom:6}}>🎤</div>
+              <div style={{fontSize:13,fontWeight:900}}>Write My Speech</div>
+              <div style={{fontSize:10,fontWeight:600,opacity:.85,marginTop:2,lineHeight:1.4}}>Nova writes a full speech with sections, pauses + rhetorical questions.</div>
+            </button>
+          </div>
+
+          {/* Mode B — Student writes, Nova coaches */}
+          <div style={{fontSize:10,fontWeight:900,letterSpacing:"1.5px",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>📝 You write, Nova coaches</div>
+          <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:20}}>
+            <button onClick={()=>{setScanIssues([]);setScanChoices({});setScanText("");scanTextRef.current="";setScanTitle("");setShowRevisedEssay(false);setScanImagePreview(null);setWritingScreen("scan");}}
+              style={{flex:1,minWidth:140,padding:"16px 14px",borderRadius:16,border:"2px solid #7c3aed",background:"#f5f3ff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"left"}}>
+              <div style={{fontSize:26,marginBottom:6}}>📄</div>
+              <div style={{fontSize:13,fontWeight:900,color:"#7c3aed"}}>Scan My Writing</div>
+              <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2,lineHeight:1.4}}>Upload or photograph your essay. Nova finds issues and offers fixes.</div>
+            </button>
+            <button onClick={()=>setWritingScreen("notes")}
+              style={{flex:1,minWidth:140,padding:"16px 14px",borderRadius:16,border:"2px solid var(--teal)",background:"#f0fdfa",fontFamily:"var(--font)",cursor:"pointer",textAlign:"left"}}>
+              <div style={{fontSize:26,marginBottom:6}}>📓</div>
+              <div style={{fontSize:13,fontWeight:900,color:"var(--teal)"}}>Student Notes</div>
+              <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2,lineHeight:1.4}}>{notesCount} saved {notesCount===1?"note":"notes"} — essays, scans, drawings.</div>
+            </button>
+          </div>
+
+          {/* Structured lessons */}
+          <div style={{fontSize:10,fontWeight:900,letterSpacing:"1.5px",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>📚 Guided lessons — learn step by step</div>
         </div>
 
-        <div style={{maxWidth:600,margin:"4px auto",width:"100%",fontSize:11,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)"}}>📚 Lessons</div>
         <div className="writing-type-grid">
           {WRITING_TYPES.map(wt=>{
             const done=wt.lessons.filter(l=>writingHistory[l.id]&&writingHistory[l.id].score>=6).length;
@@ -5459,28 +5691,29 @@ Respond ONLY with valid JSON (no markdown, no preamble):
                 <div className="writing-type-icon">{wt.icon}</div>
                 <div className="writing-type-name" style={{color:wt.color}}>{wt.name}</div>
                 <div className="writing-type-desc">{wt.desc}</div>
-                <div style={{marginTop:8,fontSize:10,fontWeight:700,color:wt.color}}>{done}/{total} lessons complete {pct>0&&`· ${pct}%`}</div>
+                <div style={{marginTop:8,fontSize:10,fontWeight:700,color:wt.color}}>{done}/{total} lessons {pct>0&&`· ${pct}%`}</div>
                 {pct>0&&<div style={{height:4,background:"rgba(0,0,0,.1)",borderRadius:4,marginTop:6,overflow:"hidden"}}><div style={{height:"100%",background:wt.color,borderRadius:4,width:pct+"%"}}/></div>}
                 <div className="writing-type-skills">
-                  {wt.skills.slice(0,4).map(s=><span key={s} className="writing-skill-tag">{s}</span>)}
+                  {wt.skills.slice(0,3).map(s=><span key={s} className="writing-skill-tag">{s}</span>)}
                 </div>
               </div>
             );
           })}
         </div>
-        {Object.keys(writingHistory).length>0&&(
+
+        {totalLessonsDone>0&&(
           <div style={{maxWidth:600,margin:"0 auto",width:"100%"}}>
-            <div style={{fontSize:11,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:10}}>📈 Your Writing Progress</div>
+            <div style={{fontSize:11,fontWeight:800,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:10}}>📈 Your Progress</div>
             {WRITING_TYPES.map(wt=>{
               const myLessons=wt.lessons.filter(l=>writingHistory[l.id]);
               if(!myLessons.length)return null;
-              const avgScore=Math.round(myLessons.reduce((a,l)=>a+(writingHistory[l.id]?.score||0),0)/myLessons.length);
+              const avg=Math.round(myLessons.reduce((a,l)=>a+(writingHistory[l.id]?.score||0),0)/myLessons.length);
               return(
                 <div key={wt.id} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",borderRadius:10,background:"#fff",marginBottom:6,border:"1px solid var(--border)"}}>
                   <span>{wt.icon}</span>
                   <span style={{fontSize:12,fontWeight:800,flex:1}}>{wt.name}</span>
-                  <div style={{width:80,height:5,background:"var(--border)",borderRadius:3,overflow:"hidden"}}><div style={{height:"100%",background:wt.color,width:(avgScore*10)+"%",borderRadius:3}}/></div>
-                  <span style={{fontSize:11,fontWeight:800,color:wt.color}}>{avgScore}/10</span>
+                  <div style={{width:80,height:5,background:"var(--border)",borderRadius:3,overflow:"hidden"}}><div style={{height:"100%",background:wt.color,width:(avg*10)+"%",borderRadius:3}}/></div>
+                  <span style={{fontSize:11,fontWeight:800,color:wt.color}}>{avg}/10</span>
                 </div>
               );
             })}
@@ -5489,6 +5722,7 @@ Respond ONLY with valid JSON (no markdown, no preamble):
       </div>
     );
   }
+
 
   function WritingLessonPicker(){
     if(!writingType)return null;
