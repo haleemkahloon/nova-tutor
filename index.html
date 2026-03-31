@@ -612,19 +612,60 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .alert-item:last-child{border-bottom:none}
 .no-child-state{flex:1;display:flex;align-items:center;justify-content:center;padding:40px}
 .no-child-card{background:#fff;border-radius:20px;padding:40px;max-width:420px;width:100%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-/* ── Drawing Module ── */
+/* ── Simply Draw Module ── */
+.sd-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;background:#f8fafc}
+.sd-home{padding:20px;display:flex;flex-direction:column;gap:16px;max-width:780px;margin:0 auto;width:100%}
+.sd-hero{background:linear-gradient(135deg,#1e293b,#1e3a5f);border-radius:20px;padding:28px;color:#fff;position:relative;overflow:hidden}
+.sd-hero-title{font-size:22px;font-weight:900;margin-bottom:6px}
+.sd-hero-sub{font-size:13px;font-weight:600;opacity:.8;line-height:1.6}
+.sd-section-title{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.sd-cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.sd-cat-card{background:#fff;border-radius:14px;padding:16px 12px;border:2px solid var(--border);cursor:pointer;text-align:center;transition:all .2s}
+.sd-cat-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.sd-cat-card.active{border-width:3px}
+.sd-cat-icon{font-size:32px;margin-bottom:6px}
+.sd-cat-name{font-size:12px;font-weight:900;color:var(--navy)}
+.sd-cat-count{font-size:10px;font-weight:600;color:var(--muted);margin-top:2px}
+.sd-tut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.sd-tut-card{background:#fff;border-radius:14px;overflow:hidden;border:2px solid var(--border);cursor:pointer;transition:all .2s}
+.sd-tut-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.1);border-color:var(--purple)}
+.sd-tut-thumb{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,#f8fafc,#e2e8f0)}
+.sd-tut-body{padding:10px 12px}
+.sd-tut-name{font-size:12px;font-weight:900;color:var(--navy);margin-bottom:4px}
+.sd-tut-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.sd-level-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px}
+.sd-level-beginner{background:#f0fdf4;color:var(--green)}
+.sd-level-intermediate{background:#fff7ed;color:var(--orange)}
+.sd-level-advanced{background:#fef2f2;color:var(--red)}
+.sd-done-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;background:#f0fdf4;color:var(--green)}
+/* Tutorial screen */
+.sd-tut-wrap{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;max-width:780px;margin:0 auto;width:100%}
+.sd-step-card{background:#fff;border-radius:14px;padding:18px;border:2px solid var(--border)}
+.sd-step-num{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--purple);margin-bottom:6px}
+.sd-step-title{font-size:14px;font-weight:900;color:var(--navy);margin-bottom:8px}
+.sd-step-body{font-size:13px;font-weight:600;color:var(--text);line-height:1.8;white-space:pre-wrap}
+.sd-tip-box{background:#f5f3ff;border-radius:10px;padding:10px 14px;border-left:3px solid var(--purple);font-size:12px;font-weight:700;color:#5b21b6;line-height:1.6;margin-top:8px}
+/* Canvas tool */
 .draw-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f8fafc}
 .draw-toolbar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:#fff;border-bottom:2px solid var(--border);flex-wrap:wrap;flex-shrink:0}
 .draw-tool-btn{width:38px;height:38px;border-radius:10px;border:2px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .15s;flex-shrink:0}
 .draw-tool-btn:hover{border-color:var(--purple);background:#f5f3ff}
 .draw-tool-btn.active{border-color:var(--purple);background:#f5f3ff;box-shadow:0 0 0 2px rgba(139,92,246,.3)}
-.draw-color-swatch{width:30px;height:30px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:all .15s;flex-shrink:0}
+.draw-color-swatch{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:all .15s;flex-shrink:0}
 .draw-color-swatch.active{border-color:var(--navy);transform:scale(1.2);box-shadow:0 2px 6px rgba(0,0,0,.25)}
 .draw-size-btn{padding:4px 10px;border-radius:20px;border:2px solid var(--border);background:#fff;cursor:pointer;font-family:var(--font);font-size:10px;font-weight:800;color:var(--muted);transition:all .15s;flex-shrink:0}
 .draw-size-btn.active{border-color:var(--purple);background:#f5f3ff;color:var(--purple)}
 .draw-canvas-wrap{flex:1;overflow:hidden;position:relative;touch-action:none}
 .draw-canvas{cursor:crosshair;display:block;touch-action:none}
 .draw-actions{display:flex;gap:8px;padding:10px 14px;background:#fff;border-top:2px solid var(--border);flex-shrink:0;flex-wrap:wrap;align-items:center}
+/* Feedback */
+.sd-feedback-card{background:#fff;border-radius:14px;padding:18px;border:2px solid var(--green)}
+.sd-fb-score{font-size:28px;font-weight:900;color:var(--navy)}
+.sd-fb-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:12px}
+.sd-fb-section{margin-bottom:10px}
+.sd-fb-section-title{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.sd-progress-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px}
+.sd-progress-fill{height:100%;border-radius:4px;transition:width .6s}
 </style>
 </head>
 <body>
@@ -1601,6 +1642,19 @@ function App(){
   /* ── Writing Module State ── */
   const[writingMode,setWritingMode]=useState(false);
   const[drawingMode,setDrawingMode]=useState(false);
+  const[drawScreen,setDrawScreen]=useState("home");   // home|tutorial|canvas|feedback
+  const[drawCategory,setDrawCategory]=useState(null);
+  const[drawTutorial,setDrawTutorial]=useState(null); // selected tutorial object
+  const[drawSteps,setDrawSteps]=useState([]);          // AI-generated steps
+  const[drawStepsLoading,setDrawStepsLoading]=useState(false);
+  const[drawStepIdx,setDrawStepIdx]=useState(0);
+  const[drawFeedback,setDrawFeedback]=useState(null);
+  const[drawFeedbackLoading,setDrawFeedbackLoading]=useState(false);
+  const[drawHistory,setDrawHistory]=useState(()=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const p=localStorage.getItem("nova_draw_"+u);
+    return p?JSON.parse(p):{};  // {tutorialId: {done,date,score}}
+  });
   const[writingType,setWritingType]=useState(null);
   const[writingLesson,setWritingLesson]=useState(null);
   const[writingStep,setWritingStep]=useState(0);
@@ -4345,6 +4399,409 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
   /* ══════════════════════════════════════
      DRAWING BOARD — Simply Draw style
   ══════════════════════════════════════ */
+  /* ═══════════════════════════════════════════
+     SIMPLY DRAW — Tutorial data & AI functions
+  ═══════════════════════════════════════════ */
+  const SD_CATEGORIES=[
+    {id:"animals",name:"Animals",icon:"🐾",color:"#f97316",bg:"#fff7ed",tutorials:["Cat","Dog","Bunny","Bird","Fox","Elephant","Lion","Panda","Owl","Dolphin","Horse","Turtle","Frog","Butterfly","Fish"]},
+    {id:"nature",name:"Nature",icon:"🌿",color:"#22c55e",bg:"#f0fdf4",tutorials:["Sunflower","Tree","Mountain","Ocean Wave","Cactus","Mushroom","Leaf","Rainbow","Sunset","Waterfall","Cloud","Rose","Dandelion","Pine Tree","Starry Sky"]},
+    {id:"characters",name:"Characters",icon:"🧑‍🎨",color:"#8b5cf6",bg:"#f5f3ff",tutorials:["Anime Face","Cartoon Girl","Superhero","Wizard","Knight","Princess","Robot","Astronaut","Pirate","Fairy","Dragon","Mermaid","Ninja","Alien","Ghost"]},
+    {id:"food",name:"Food & Objects",icon:"🍎",color:"#ef4444",bg:"#fef2f2",tutorials:["Apple","Pizza Slice","Ice Cream","Cupcake","Strawberry","Donut","Coffee Cup","Gift Box","Star","Heart","Diamond","Rocket","House","Castle","Lantern"]},
+    {id:"vehicles",name:"Vehicles",icon:"🚀",color:"#3b82f6",bg:"#eff6ff",tutorials:["Car","Spaceship","Sailboat","Hot Air Balloon","Bicycle","Train","Helicopter","Submarine","Fire Truck","Skateboard","Airplane","Bus","Motorcycle","Tractor","Yacht"]},
+    {id:"art",name:"Art Techniques",icon:"🎨",color:"#14b8a6",bg:"#f0fdfa",tutorials:["Shading Basics","Perspective Drawing","Drawing Eyes","Drawing Hands","Zentangle Patterns","Watercolor Effect","Crosshatching","Stippling","Gesture Drawing","Contour Drawing","One-Point Perspective","Still Life","Portrait Basics","Colour Theory","Composition Rules"]},
+  ];
+
+  const SD_LEVELS=["Beginner","Beginner","Intermediate","Beginner","Intermediate","Advanced","Beginner","Intermediate","Beginner","Intermediate","Advanced","Beginner","Intermediate","Advanced","Intermediate"];
+
+  const getTutorialLevel=(idx)=>SD_LEVELS[idx%SD_LEVELS.length];
+  const getTutorialEmoji=(name)=>{
+    const map={Cat:"🐱",Dog:"🐶",Bunny:"🐰",Bird:"🐦",Fox:"🦊",Elephant:"🐘",Lion:"🦁",Panda:"🐼",Owl:"🦉",Dolphin:"🐬",Horse:"🐴",Turtle:"🐢",Frog:"🐸",Butterfly:"🦋",Fish:"🐟",Sunflower:"🌻",Tree:"🌳",Mountain:"⛰️",Cactus:"🌵",Mushroom:"🍄",Leaf:"🍃",Rainbow:"🌈",Sunset:"🌅",Waterfall:"💧",Cloud:"☁️",Rose:"🌹",Dandelion:"🌼","Pine Tree":"🌲","Starry Sky":"⭐","Ocean Wave":"🌊","Anime Face":"😊","Cartoon Girl":"👧",Superhero:"🦸",Wizard:"🧙",Knight:"⚔️",Princess:"👸",Robot:"🤖",Astronaut:"👨‍🚀",Pirate:"🏴‍☠️",Fairy:"🧚",Dragon:"🐉",Mermaid:"🧜",Ninja:"🥷",Alien:"👽",Ghost:"👻",Apple:"🍎","Pizza Slice":"🍕","Ice Cream":"🍦",Cupcake:"🧁",Strawberry:"🍓",Donut:"🍩","Coffee Cup":"☕","Gift Box":"🎁",Star:"⭐",Heart:"❤️",Diamond:"💎",Rocket:"🚀",House:"🏠",Castle:"🏰",Lantern:"🏮",Car:"🚗",Spaceship:"🛸",Sailboat:"⛵","Hot Air Balloon":"🎈",Bicycle:"🚲",Train:"🚂",Helicopter:"🚁",Submarine:"🤿","Fire Truck":"🚒",Skateboard:"🛹",Airplane:"✈️",Bus:"🚌",Motorcycle:"🏍️",Tractor:"🚜",Yacht:"⛵","Shading Basics":"✏️","Perspective Drawing":"📐","Drawing Eyes":"👁️","Drawing Hands":"✋","Zentangle Patterns":"🔮","Watercolor Effect":"🎨",Crosshatching:"📝",Stippling:"🔵","Gesture Drawing":"🤸","Contour Drawing":"〰️","One-Point Perspective":"🚇","Still Life":"🍶","Portrait Basics":"👤","Colour Theory":"🌈","Composition Rules":"🖼️"};
+    return map[name]||"✏️";
+  };
+
+  const saveDrawHistory=(tutId,entry)=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const updated={...drawHistory,[tutId]:entry};
+    setDrawHistory(updated);
+    localStorage.setItem("nova_draw_"+u,JSON.stringify(updated));
+  };
+
+  /* Generate tutorial steps via Claude */
+  const loadTutorialSteps=async(tutorial,category)=>{
+    setDrawStepsLoading(true);
+    setDrawSteps([]);
+    const levelStr=getTutorialLevel(category.tutorials.indexOf(tutorial.name));
+    const prompt=`You are an expert drawing teacher for ${profile?.name}, a ${profile?.grade} grade student (skill level: ${levelStr}).
+
+Create a step-by-step drawing tutorial for: "${tutorial.name}"
+
+Return ONLY a valid JSON array of 5-7 steps (no markdown, no explanation):
+[
+  {
+    "step": 1,
+    "title": "Short step title",
+    "instruction": "Clear, friendly instruction (2-3 sentences). Start with an action verb. Be encouraging and specific about WHERE and HOW to draw.",
+    "tip": "A helpful artist tip or trick for this step (1 sentence)",
+    "shape": "main geometric shape used in this step (circle/oval/rectangle/triangle/line/curve/none)"
+  }
+]
+
+Rules:
+- Each step builds on the previous
+- Start with basic shapes (circles, ovals, rectangles)
+- Use simple language for a ${profile?.grade} grader
+- Be encouraging and fun
+- Tip should be a real artist secret or shortcut`;
+
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:1500,messages:[{role:"user",content:prompt}]})});
+      const data=await r.json();
+      const raw=(data.content?.[0]?.text||"[]").replace(/```json|```/g,"").trim();
+      const steps=JSON.parse(raw);
+      setDrawSteps(steps);
+    }catch{
+      setDrawSteps([{step:1,title:"Start Simple",instruction:"Begin by drawing the basic outline shapes. Use light pencil strokes so you can erase easily.",tip:"Artists always start with light lines!",shape:"circle"}]);
+    }
+    setDrawStepsLoading(false);
+  };
+
+  /* AI Feedback on submitted drawing */
+  const getDrawingFeedback=async(imageData,tutorialName)=>{
+    setDrawFeedbackLoading(true);
+    setDrawFeedback(null);
+    const base64=imageData.split(",")[1];
+    const mediaType="image/png";
+    const prompt=`You are Nova, a warm and encouraging drawing coach reviewing ${profile?.name}'s attempt at drawing "${tutorialName}".
+
+Look at this drawing and give specific, helpful feedback.
+
+Respond ONLY with valid JSON (no markdown):
+{
+  "score": <number 1-10>,
+  "scoreLabel": "Keep Practicing|Good Start|Looking Great|Excellent Work|Masterpiece",
+  "praise": "2-3 sentences praising specific things you can actually see in the drawing. Be specific and warm.",
+  "technique": "1-2 sentences on the strongest technique used.",
+  "improve": "1-2 gentle, actionable suggestions to make it even better next time.",
+  "nextChallenge": "Suggest one specific thing to try in the next drawing (e.g. add shading, try adding a background)",
+  "badges": ["array of 0-2 earned badges from: First Drawing, Brave Beginner, Shape Master, Detail King, Colour Star, Line Control, Creative Twist, Level Up"]
+}`;
+
+    try{
+      const key=localStorage.getItem("nova_api_key");
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:600,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:mediaType,data:base64}},{type:"text",text:prompt}]}]})});
+      const data=await r.json();
+      const raw=(data.content?.[0]?.text||"{}").replace(/```json|```/g,"").trim();
+      const fb=JSON.parse(raw);
+      setDrawFeedback(fb);
+      // Save completion
+      if(drawTutorial){
+        saveDrawHistory(drawTutorial.id,{done:true,score:fb.score,date:new Date().toISOString(),badges:fb.badges||[]});
+      }
+    }catch{
+      setDrawFeedback({score:7,scoreLabel:"Good Start",praise:"You made a drawing! That takes courage and creativity.",technique:"You used lines confidently.",improve:"Try adding more detail to the outline.",nextChallenge:"Try shading one area lightly.",badges:["Brave Beginner"]});
+    }
+    setDrawFeedbackLoading(false);
+  };
+
+  /* ── Simply Draw Home ── */
+  function DrawHome(){
+    const totalDone=Object.keys(drawHistory).filter(k=>drawHistory[k].done).length;
+    const recommended=[];
+    SD_CATEGORIES.forEach(cat=>{
+      cat.tutorials.forEach((name,i)=>{
+        const id=cat.id+"_"+i;
+        if(!drawHistory[id]?.done)recommended.push({id,name,cat,emoji:getTutorialEmoji(name),level:getTutorialLevel(i)});
+      });
+    });
+    const nextUp=recommended.slice(0,4);
+
+    return(
+      <div className="sd-home">
+        {/* Hero */}
+        <div className="sd-hero">
+          <div style={{fontSize:48,marginBottom:8}}>🎨</div>
+          <div className="sd-hero-title">Simply Draw</div>
+          <div className="sd-hero-sub">Your personal drawing coach. Learn step by step, get AI feedback, and watch your art improve every day!</div>
+          {totalDone>0&&(
+            <div style={{marginTop:14,display:"flex",gap:10,flexWrap:"wrap"}}>
+              <div style={{background:"rgba(255,255,255,.15)",borderRadius:10,padding:"8px 14px",fontSize:12,fontWeight:800}}>🏆 {totalDone} tutorials completed</div>
+              <div style={{background:"rgba(255,255,255,.15)",borderRadius:10,padding:"8px 14px",fontSize:12,fontWeight:800}}>⭐ {Object.values(drawHistory).reduce((a,h)=>a+(h.score||0),0)} total score</div>
+            </div>
+          )}
+        </div>
+
+        {/* Skill level quick-start */}
+        {totalDone===0&&(
+          <div>
+            <div className="sd-section-title">🚀 Start here — pick your level</div>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              {[{l:"Complete Beginner",d:"Never drawn before",e:"🌱",cat:"animals",idx:0},{l:"Some Experience",d:"I've drawn a little",e:"🌿",cat:"nature",idx:0},{l:"Intermediate",d:"I draw regularly",e:"🌳",cat:"art",idx:0}].map(s=>(
+                <button key={s.l} onClick={()=>{
+                  const cat=SD_CATEGORIES.find(c=>c.id===s.cat);
+                  const name=cat.tutorials[s.idx];
+                  const tut={id:s.cat+"_"+s.idx,name,emoji:getTutorialEmoji(name),level:getTutorialLevel(s.idx),cat};
+                  setDrawTutorial(tut);setDrawStepIdx(0);setDrawFeedback(null);
+                  loadTutorialSteps(tut,cat);setDrawScreen("tutorial");
+                }} style={{flex:1,minWidth:140,padding:"14px",borderRadius:14,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center"}}>
+                  <div style={{fontSize:28,marginBottom:6}}>{s.e}</div>
+                  <div style={{fontSize:12,fontWeight:900,color:"var(--navy)"}}>{s.l}</div>
+                  <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2}}>{s.d}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recommended next */}
+        {nextUp.length>0&&(
+          <div>
+            <div className="sd-section-title">⚡ Recommended for you</div>
+            <div className="sd-tut-grid">
+              {nextUp.map(t=>(
+                <div key={t.id} className="sd-tut-card" onClick={()=>{
+                  setDrawTutorial(t);setDrawStepIdx(0);setDrawFeedback(null);
+                  loadTutorialSteps(t,t.cat);setDrawScreen("tutorial");
+                }}>
+                  <div className="sd-tut-thumb" style={{background:t.cat.bg||"#f8fafc"}}>{t.emoji}</div>
+                  <div className="sd-tut-body">
+                    <div className="sd-tut-name">{t.name}</div>
+                    <div className="sd-tut-meta">
+                      <span className={"sd-level-badge sd-level-"+t.level.toLowerCase()}>{t.level}</span>
+                      <span style={{fontSize:9,color:"var(--muted)",fontWeight:600}}>{t.cat.name}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* All categories */}
+        <div>
+          <div className="sd-section-title">📚 All Categories — 90+ Tutorials</div>
+          <div className="sd-cat-grid">
+            {SD_CATEGORIES.map(cat=>{
+              const done=cat.tutorials.filter((_,i)=>drawHistory[cat.id+"_"+i]?.done).length;
+              return(
+                <div key={cat.id} className={"sd-cat-card"+(drawCategory?.id===cat.id?" active":"")}
+                  style={{borderColor:drawCategory?.id===cat.id?cat.color:"var(--border)",background:drawCategory?.id===cat.id?cat.bg:"#fff"}}
+                  onClick={()=>setDrawCategory(drawCategory?.id===cat.id?null:cat)}>
+                  <div className="sd-cat-icon">{cat.icon}</div>
+                  <div className="sd-cat-name" style={{color:drawCategory?.id===cat.id?cat.color:"var(--navy)"}}>{cat.name}</div>
+                  <div className="sd-cat-count">{done}/{cat.tutorials.length} done</div>
+                  {done>0&&<div style={{marginTop:6,height:4,background:"rgba(0,0,0,.1)",borderRadius:4,overflow:"hidden"}}><div style={{height:"100%",background:cat.color,borderRadius:4,width:((done/cat.tutorials.length)*100)+"%"}}/></div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Tutorials for selected category */}
+        {drawCategory&&(
+          <div>
+            <div className="sd-section-title" style={{color:drawCategory.color}}>{drawCategory.icon} {drawCategory.name} Tutorials</div>
+            <div className="sd-tut-grid">
+              {drawCategory.tutorials.map((name,i)=>{
+                const id=drawCategory.id+"_"+i;
+                const done=drawHistory[id]?.done;
+                const score=drawHistory[id]?.score;
+                const level=getTutorialLevel(i);
+                const emoji=getTutorialEmoji(name);
+                return(
+                  <div key={id} className="sd-tut-card" onClick={()=>{
+                    const tut={id,name,emoji,level,cat:drawCategory};
+                    setDrawTutorial(tut);setDrawStepIdx(0);setDrawFeedback(null);
+                    loadTutorialSteps(tut,drawCategory);setDrawScreen("tutorial");
+                  }}>
+                    <div className="sd-tut-thumb" style={{background:drawCategory.bg}}>
+                      {emoji}
+                      {done&&<div style={{position:"absolute",top:6,right:6,background:"var(--green)",borderRadius:"50%",width:20,height:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>✓</div>}
+                    </div>
+                    <div className="sd-tut-body">
+                      <div className="sd-tut-name">{name}</div>
+                      <div className="sd-tut-meta">
+                        <span className={"sd-level-badge sd-level-"+level.toLowerCase()}>{level}</span>
+                        {done&&<span className="sd-done-badge">✓ {score}/10</span>}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Weekly new tutorials notice */}
+        <div style={{background:"linear-gradient(135deg,#f0f9ff,#e0f2fe)",borderRadius:14,padding:"16px 18px",border:"2px solid var(--blue)"}}>
+          <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📅 New tutorials every week!</div>
+          <div style={{fontSize:11,fontWeight:600,color:"var(--muted)"}}>Nova adds fresh drawing sessions weekly — animals, characters, techniques, and more. Keep checking back!</div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Tutorial Step-by-Step Screen ── */
+  function DrawTutorial(){
+    if(!drawTutorial)return null;
+    const step=drawSteps[drawStepIdx];
+    const total=drawSteps.length;
+    const shapeGuide={circle:"Draw a circle — imagine drawing around a coin 🪙",oval:"Draw an oval — like a stretched circle 🥚",rectangle:"Draw a rectangle — like a door or window 🚪",triangle:"Draw a triangle — three straight lines ▲",line:"Draw a straight line — use your whole arm, not just your wrist ✏️",curve:"Draw a smooth curve — move slowly and steadily 〰️"};
+
+    return(
+      <div className="sd-tut-wrap">
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+          <button className="writing-back" onClick={()=>setDrawScreen("home")}>← Back</button>
+          <div style={{flex:1}}>
+            <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>{drawTutorial.emoji} {drawTutorial.name}</div>
+            <div style={{fontSize:10,fontWeight:700,color:"var(--muted)"}}>{drawTutorial.cat?.name} · {drawTutorial.level}</div>
+          </div>
+          <button onClick={()=>setDrawScreen("canvas")}
+            style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
+            🎨 Open Canvas
+          </button>
+        </div>
+
+        {/* Progress bar */}
+        <div style={{background:"var(--border)",borderRadius:6,height:6,overflow:"hidden"}}>
+          <div style={{height:"100%",background:"linear-gradient(90deg,var(--purple),var(--blue))",borderRadius:6,width:((drawStepIdx+1)/Math.max(total,1)*100)+"%",transition:"width .4s"}}/>
+        </div>
+
+        {/* Loading */}
+        {drawStepsLoading&&(
+          <div style={{textAlign:"center",padding:40,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
+            <div style={{fontSize:40,animation:"float 1s ease-in-out infinite",marginBottom:10}}>🎨</div>
+            <div style={{fontSize:13,fontWeight:900,color:"var(--navy)"}}>Nova is preparing your tutorial...</div>
+          </div>
+        )}
+
+        {/* Steps */}
+        {!drawStepsLoading&&step&&(
+          <>
+            <div className="sd-step-card">
+              <div className="sd-step-num">Step {step.step} of {total}</div>
+              <div className="sd-step-title">{step.title}</div>
+              <div className="sd-step-body">{step.instruction}</div>
+              {step.shape&&step.shape!=="none"&&shapeGuide[step.shape]&&(
+                <div style={{marginTop:10,padding:"8px 12px",borderRadius:8,background:"#eff6ff",border:"1px solid var(--blue)",fontSize:11,fontWeight:700,color:"var(--blue)"}}>
+                  💡 Shape guide: {shapeGuide[step.shape]}
+                </div>
+              )}
+              {step.tip&&<div className="sd-tip-box">🎨 Artist tip: {step.tip}</div>}
+            </div>
+
+            {/* All steps overview */}
+            <div style={{background:"#fff",borderRadius:14,padding:16,border:"2px solid var(--border)"}}>
+              <div style={{fontSize:11,fontWeight:900,color:"var(--muted)",marginBottom:10,letterSpacing:"1px",textTransform:"uppercase"}}>All Steps</div>
+              {drawSteps.map((s,i)=>(
+                <div key={i} onClick={()=>setDrawStepIdx(i)}
+                  style={{display:"flex",alignItems:"center",gap:10,padding:"8px 10px",borderRadius:10,cursor:"pointer",marginBottom:4,background:i===drawStepIdx?"#f5f3ff":"transparent",border:i===drawStepIdx?"1px solid var(--purple)":"1px solid transparent"}}>
+                  <div style={{width:24,height:24,borderRadius:"50%",background:i<drawStepIdx?"var(--green)":i===drawStepIdx?"var(--purple)":"var(--border)",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:900,flexShrink:0}}>
+                    {i<drawStepIdx?"✓":i+1}
+                  </div>
+                  <div style={{fontSize:12,fontWeight:700,color:i===drawStepIdx?"var(--purple)":"var(--text)"}}>{s.title}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigation */}
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={()=>setDrawStepIdx(i=>Math.max(0,i-1))} disabled={drawStepIdx===0}
+                style={{flex:1,padding:"11px",borderRadius:12,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:drawStepIdx===0?"not-allowed":"pointer",color:drawStepIdx===0?"var(--muted)":"var(--navy)"}}>
+                ← Previous
+              </button>
+              {drawStepIdx<total-1?(
+                <button onClick={()=>setDrawStepIdx(i=>i+1)}
+                  style={{flex:2,padding:"11px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
+                  Next Step →
+                </button>
+              ):(
+                <button onClick={()=>setDrawScreen("canvas")}
+                  style={{flex:2,padding:"11px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--green),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
+                  🎨 Draw It Now!
+                </button>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  /* ── AI Feedback Screen ── */
+  function DrawFeedback(){
+    const fb=drawFeedback;
+    if(!fb&&!drawFeedbackLoading)return null;
+    const scoreColors=["","var(--red)","var(--red)","var(--red)","var(--orange)","var(--orange)","var(--orange)","var(--blue)","var(--blue)","var(--green)","var(--green)"];
+    return(
+      <div className="sd-tut-wrap">
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <button className="writing-back" onClick={()=>setDrawScreen("canvas")}>← Back to Canvas</button>
+          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>🎨 Nova's Feedback</div>
+        </div>
+
+        {drawFeedbackLoading&&(
+          <div style={{textAlign:"center",padding:48,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
+            <div style={{fontSize:48,animation:"float 1s ease-in-out infinite",marginBottom:12}}>🦉</div>
+            <div style={{fontSize:14,fontWeight:900,color:"var(--navy)"}}>Nova is looking at your drawing...</div>
+            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:4}}>Giving you real feedback on your artwork!</div>
+          </div>
+        )}
+
+        {fb&&!drawFeedbackLoading&&(
+          <>
+            <div className="sd-feedback-card">
+              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14}}>
+                <div>
+                  <div className="sd-fb-score" style={{color:scoreColors[Math.min(10,Math.max(1,fb.score||5))]}}>{fb.score}/10</div>
+                  <div className="sd-fb-label">{fb.scoreLabel}</div>
+                </div>
+                <div style={{flex:1}}>
+                  <div className="sd-progress-bar"><div className="sd-progress-fill" style={{width:((fb.score||5)*10)+"%",background:scoreColors[Math.min(10,Math.max(1,fb.score||5))]}}/></div>
+                  <div style={{fontSize:10,fontWeight:700,color:"var(--muted)",marginTop:4}}>{drawTutorial?.name} drawing</div>
+                </div>
+              </div>
+
+              {(fb.badges||[]).length>0&&(
+                <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
+                  {fb.badges.map((b,i)=><span key={i} style={{padding:"4px 10px",borderRadius:20,background:"linear-gradient(135deg,var(--yellow),var(--orange))",color:"#fff",fontSize:10,fontWeight:900}}>🏅 {b}</span>)}
+                </div>
+              )}
+
+              <div className="sd-fb-section">
+                <div className="sd-fb-section-title" style={{color:"var(--green)"}}>⭐ What you did great</div>
+                <div style={{fontSize:12,fontWeight:600,color:"#166534",lineHeight:1.6}}>{fb.praise}</div>
+              </div>
+              <div className="sd-fb-section">
+                <div className="sd-fb-section-title" style={{color:"var(--blue)"}}>🎨 Strongest technique</div>
+                <div style={{fontSize:12,fontWeight:600,color:"var(--navy)",lineHeight:1.6}}>{fb.technique}</div>
+              </div>
+              <div className="sd-fb-section">
+                <div className="sd-fb-section-title" style={{color:"var(--orange)"}}>💡 Make it even better</div>
+                <div style={{fontSize:12,fontWeight:600,color:"#92400e",lineHeight:1.6}}>{fb.improve}</div>
+              </div>
+              <div style={{padding:"10px 14px",borderRadius:10,background:"#f5f3ff",border:"1px solid var(--purple)",fontSize:12,fontWeight:700,color:"var(--purple)"}}>
+                🎯 Next challenge: {fb.nextChallenge}
+              </div>
+            </div>
+
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              <button onClick={()=>{setDrawScreen("canvas");setDrawFeedback(null);}}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--purple)"}}>
+                🎨 Draw Again
+              </button>
+              <button onClick={()=>{setDrawScreen("home");setDrawFeedback(null);}}
+                style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
+                📚 More Tutorials
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
   function DrawingBoard(){
     const canvasRef=useRef(null);
     const ctxRef=useRef(null);
@@ -4614,6 +5071,12 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
 
         {/* Bottom actions */}
         <div className="draw-actions">
+          {drawTutorial&&(
+            <button onClick={()=>setDrawScreen("tutorial")}
+              style={{padding:"8px 12px",borderRadius:10,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"var(--purple)"}}>
+              📋 Steps
+            </button>
+          )}
           <button onClick={undo} disabled={!canUndo}
             style={{padding:"8px 14px",borderRadius:10,border:"2px solid var(--border)",background:canUndo?"#fff":"#f8fafc",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:canUndo?"pointer":"not-allowed",color:canUndo?"var(--navy)":"var(--muted)"}}>
             ↩ Undo
@@ -4626,29 +5089,32 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
             style={{padding:"8px 14px",borderRadius:10,border:"2px solid #fecaca",background:"#fef2f2",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"var(--red)"}}>
             🗑️ Clear
           </button>
-
-          {/* Background colour */}
           <label style={{display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:10,border:"2px solid var(--border)",background:"#fff",cursor:"pointer",fontSize:11,fontWeight:800,color:"var(--muted)"}}>
             <div style={{width:16,height:16,borderRadius:4,background:bgColor,border:"1px solid #e2e8f0"}}/>
             BG
-            <input type="color" value={bgColor}
-              onChange={e=>{
-                const newBg=e.target.value;
-                setBgColor(newBg);
-              }}
-              style={{opacity:0,width:0,height:0,position:"absolute"}}/>
+            <input type="color" value={bgColor} onChange={e=>setBgColor(e.target.value)} style={{opacity:0,width:0,height:0,position:"absolute"}}/>
           </label>
-
           <div style={{flex:1}}/>
-
           <button onClick={saveToNotes}
-            style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
-            📓 Save to Notes
+            style={{padding:"8px 14px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
+            📓 Notes
           </button>
           <button onClick={saveDrawing}
-            style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--green),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
-            ⬇️ Save PNG
+            style={{padding:"8px 14px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--teal),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
+            ⬇️ PNG
           </button>
+          {drawTutorial&&(
+            <button onClick={()=>{
+              const canvas=canvasRef.current;
+              if(!canvas)return;
+              const imageData=canvas.toDataURL("image/png");
+              setDrawScreen("feedback");
+              getDrawingFeedback(imageData,drawTutorial.name);
+            }}
+              style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--orange),var(--yellow))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
+              🦉 Get Feedback
+            </button>
+          )}
         </div>
       </div>
     );
@@ -5158,7 +5624,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
           </button>
         )}
         {drawingMode&&(
-          <button onClick={()=>setDrawingMode(false)}
+          <button onClick={()=>{setDrawingMode(false);setDrawScreen("home");}}
             style={{width:"100%",padding:"7px",borderRadius:9,border:"2px solid var(--teal)",background:"#f0fdfa",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"var(--teal)",marginBottom:8}}>
             ← Back to STEM
           </button>
@@ -5277,7 +5743,10 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         <LearnSidebar/>
         <div className="learn-main">
           {drawingMode?(
-            <DrawingBoard/>
+            drawScreen==="tutorial"?<DrawTutorial/>:
+            drawScreen==="canvas"?<DrawingBoard/>:
+            drawScreen==="feedback"?<DrawFeedback/>:
+            <DrawHome/>
           ):writingMode?(
             writingLesson?<WritingLessonScreen/>:
             writingType?<WritingLessonPicker/>:
