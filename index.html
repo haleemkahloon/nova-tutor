@@ -666,6 +666,30 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .sd-fb-section-title{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 .sd-progress-bar{height:6px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:6px}
 .sd-progress-fill{height:100%;border-radius:4px;transition:width .6s}
+/* Streak & XP */
+.sd-streak{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;background:linear-gradient(135deg,#ff6b35,#f97316);color:#fff;font-family:var(--font);font-size:13px;font-weight:900}
+.sd-xp-pill{padding:4px 12px;border-radius:20px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff;font-size:11px;font-weight:900;font-family:var(--font)}
+/* Daily challenge */
+.sd-daily{background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:16px;padding:18px;color:#fff;position:relative;overflow:hidden}
+.sd-daily-badge{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,.2);padding:3px 9px;border-radius:20px;margin-bottom:8px;display:inline-block}
+/* Filter pills */
+.sd-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sd-filter-pill{padding:5px 13px;border-radius:20px;border:2px solid var(--border);background:#fff;font-family:var(--font);font-size:10px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0}
+.sd-filter-pill.active{border-color:var(--purple);background:#f5f3ff;color:var(--purple)}
+/* Trophy shelf */
+.sd-trophy{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:10px 14px;border-radius:12px;background:#fff;border:2px solid #fbbf24;min-width:70px}
+.sd-trophy-icon{font-size:28px}
+.sd-trophy-name{font-size:9px;font-weight:800;color:var(--navy);text-align:center;line-height:1.3}
+/* Video-style step animation */
+@keyframes slideIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.sd-step-animated{animation:slideIn .3s ease-out}
+.sd-step-timer{height:4px;background:rgba(255,255,255,.3);border-radius:4px;overflow:hidden;margin-top:10px}
+.sd-step-timer-fill{height:100%;background:#fff;border-radius:4px;transition:width linear}
+/* Tracing overlay */
+.sd-trace-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:140px;opacity:.08;user-select:none}
+/* Tool extras */
+.sd-watercolor-preview{width:28px;height:28px;border-radius:50%;opacity:.6;filter:blur(3px);flex-shrink:0;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.sd-watercolor-preview.active{border-color:var(--navy);transform:scale(1.2)}
 </style>
 </head>
 <body>
@@ -1642,18 +1666,30 @@ function App(){
   /* ── Writing Module State ── */
   const[writingMode,setWritingMode]=useState(false);
   const[drawingMode,setDrawingMode]=useState(false);
-  const[drawScreen,setDrawScreen]=useState("home");   // home|tutorial|canvas|feedback
+  const[drawScreen,setDrawScreen]=useState("home");
   const[drawCategory,setDrawCategory]=useState(null);
-  const[drawTutorial,setDrawTutorial]=useState(null); // selected tutorial object
-  const[drawSteps,setDrawSteps]=useState([]);          // AI-generated steps
+  const[drawTutorial,setDrawTutorial]=useState(null);
+  const[drawSteps,setDrawSteps]=useState([]);
   const[drawStepsLoading,setDrawStepsLoading]=useState(false);
   const[drawStepIdx,setDrawStepIdx]=useState(0);
   const[drawFeedback,setDrawFeedback]=useState(null);
   const[drawFeedbackLoading,setDrawFeedbackLoading]=useState(false);
+  const[drawFilter,setDrawFilter]=useState("All");        // All|Beginner|Intermediate|Advanced
+  const[drawTraceMode,setDrawTraceMode]=useState(false);  // show ghost outline
+  const[drawAutoPlay,setDrawAutoPlay]=useState(false);    // video-style auto-advance
   const[drawHistory,setDrawHistory]=useState(()=>{
     const u=localStorage.getItem("nova_user")||"";
     const p=localStorage.getItem("nova_draw_"+u);
-    return p?JSON.parse(p):{};  // {tutorialId: {done,date,score}}
+    return p?JSON.parse(p):{};
+  });
+  const[drawStreak,setDrawStreak]=useState(()=>{
+    const u=localStorage.getItem("nova_user")||"";
+    const p=localStorage.getItem("nova_streak_"+u);
+    return p?JSON.parse(p):{count:0,lastDate:null};
+  });
+  const[drawXp,setDrawXp]=useState(()=>{
+    const u=localStorage.getItem("nova_user")||"";
+    return parseInt(localStorage.getItem("nova_draw_xp_"+u)||"0");
   });
   const[writingType,setWritingType]=useState(null);
   const[writingLesson,setWritingLesson]=useState(null);
@@ -4424,34 +4460,52 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
     const updated={...drawHistory,[tutId]:entry};
     setDrawHistory(updated);
     localStorage.setItem("nova_draw_"+u,JSON.stringify(updated));
+    // Update streak
+    const today=new Date().toDateString();
+    const s=drawStreak;
+    const newStreak=s.lastDate===today
+      ?s
+      :{count:s.lastDate===new Date(Date.now()-86400000).toDateString()?s.count+1:1,lastDate:today};
+    setDrawStreak(newStreak);
+    localStorage.setItem("nova_streak_"+u,JSON.stringify(newStreak));
+    // Award drawing XP (score * 10, bonus for first completion)
+    const xpEarned=(entry.score||5)*10 + (drawHistory[tutId]?.done?0:25);
+    const newXp=drawXp+xpEarned;
+    setDrawXp(newXp);
+    localStorage.setItem("nova_draw_xp_"+u,String(newXp));
+    // Also add to Nova STEM XP
+    if(profile)saveProfile({...profile,xp:(profile.xp||0)+xpEarned});
   };
 
   /* Generate tutorial steps via Claude */
   const loadTutorialSteps=async(tutorial,category)=>{
     setDrawStepsLoading(true);
     setDrawSteps([]);
-    const levelStr=getTutorialLevel(category.tutorials.indexOf(tutorial.name));
+    const levelStr=tutorial.level||getTutorialLevel(category.tutorials?category.tutorials.indexOf(tutorial.name):0);
+    const skillList=(tutorial.skills||[]).join(", ")||"basic shapes, proportions, line control";
     const prompt=`You are an expert drawing teacher for ${profile?.name}, a ${profile?.grade} grade student (skill level: ${levelStr}).
 
 Create a step-by-step drawing tutorial for: "${tutorial.name}"
+Skills to teach: ${skillList}
 
-Return ONLY a valid JSON array of 5-7 steps (no markdown, no explanation):
+Return ONLY a valid JSON array of 5-6 steps (no markdown, no explanation):
 [
   {
     "step": 1,
-    "title": "Short step title",
-    "instruction": "Clear, friendly instruction (2-3 sentences). Start with an action verb. Be encouraging and specific about WHERE and HOW to draw.",
-    "tip": "A helpful artist tip or trick for this step (1 sentence)",
-    "shape": "main geometric shape used in this step (circle/oval/rectangle/triangle/line/curve/none)"
+    "title": "Short action title (3-5 words)",
+    "instruction": "Clear, friendly instruction (2-3 sentences). Start with an action verb. Tell them EXACTLY where and how to draw. Use simple language for a ${profile?.grade} grader. Be encouraging.",
+    "tip": "One real artist trick or secret for this step (1 sentence — something specific, not generic)",
+    "shape": "main geometric shape used: circle|oval|rectangle|triangle|line|curve|none"
   }
 ]
 
 Rules:
-- Each step builds on the previous
-- Start with basic shapes (circles, ovals, rectangles)
-- Use simple language for a ${profile?.grade} grader
-- Be encouraging and fun
-- Tip should be a real artist secret or shortcut`;
+- Step 1 ALWAYS starts with the biggest/most basic shape
+- Each step builds directly on the previous
+- Steps 1-2: just basic shapes, no details
+- Steps 3-4: add the main features
+- Step 5-6: final details and finishing touches
+- Tips must be specific and actionable (e.g. "draw the circle with one smooth motion, not lots of tiny strokes")`;
 
     try{
       const key=localStorage.getItem("nova_api_key");
@@ -4467,378 +4521,648 @@ Rules:
   };
 
   /* AI Feedback on submitted drawing */
-  const getDrawingFeedback=async(imageData,tutorialName)=>{
+  const getDrawingFeedback=async(imageData,tutorialName,tutorialId)=>{
     setDrawFeedbackLoading(true);
     setDrawFeedback(null);
+    // Detect media type from data URL
+    const mimeMatch=imageData.match(/^data:(image\/[^;]+);/);
+    const mediaType=(mimeMatch?mimeMatch[1]:"image/jpeg");
     const base64=imageData.split(",")[1];
-    const mediaType="image/png";
-    const prompt=`You are Nova, a warm and encouraging drawing coach reviewing ${profile?.name}'s attempt at drawing "${tutorialName}".
+    const skills=(drawTutorial?.skills||[]).join(", ");
+    const prompt=`You are Nova, a warm and encouraging drawing coach for ${profile?.name} (${profile?.grade} grade student). They just drew "${tutorialName}" following a step-by-step tutorial.
 
-Look at this drawing and give specific, helpful feedback.
+Skills they were practicing: ${skills||"basic shapes, line control, proportions"}
 
-Respond ONLY with valid JSON (no markdown):
+Look carefully at their actual drawing and give specific, personalized feedback based on what you can see.
+
+Respond ONLY with valid JSON (no markdown, no preamble):
 {
   "score": <number 1-10>,
   "scoreLabel": "Keep Practicing|Good Start|Looking Great|Excellent Work|Masterpiece",
-  "praise": "2-3 sentences praising specific things you can actually see in the drawing. Be specific and warm.",
-  "technique": "1-2 sentences on the strongest technique used.",
-  "improve": "1-2 gentle, actionable suggestions to make it even better next time.",
-  "nextChallenge": "Suggest one specific thing to try in the next drawing (e.g. add shading, try adding a background)",
-  "badges": ["array of 0-2 earned badges from: First Drawing, Brave Beginner, Shape Master, Detail King, Colour Star, Line Control, Creative Twist, Level Up"]
+  "praise": "2-3 sentences praising SPECIFIC things visible in the drawing — mention shapes, lines, or details you can actually see. Start with the student's name. Be warm and genuine.",
+  "technique": "1 sentence about the strongest technical skill shown (e.g. line confidence, shape accuracy, proportions, shading).",
+  "improve": "1-2 gentle, actionable suggestions. Focus on ONE specific thing to practice next time (e.g. 'Try making the ears a bit more rounded' not just 'keep practicing').",
+  "nextChallenge": "One exciting specific challenge for next time — something achievable and concrete (e.g. 'Add a simple background', 'Try shading the belly darker', 'Draw it again from memory without the guide').",
+  "badges": ["0-2 badges from: First Drawing, Brave Beginner, Shape Master, Detail King, Colour Star, Line Control, Creative Twist, Level Up, Texture Explorer, Shadow Master"]
 }`;
 
     try{
       const key=localStorage.getItem("nova_api_key");
-      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:600,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:mediaType,data:base64}},{type:"text",text:prompt}]}]})});
+      const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:700,messages:[{role:"user",content:[{type:"image",source:{type:"base64",media_type:mediaType,data:base64}},{type:"text",text:prompt}]}]})});
       const data=await r.json();
       const raw=(data.content?.[0]?.text||"{}").replace(/```json|```/g,"").trim();
       const fb=JSON.parse(raw);
       setDrawFeedback(fb);
-      // Save completion
-      if(drawTutorial){
-        saveDrawHistory(drawTutorial.id,{done:true,score:fb.score,date:new Date().toISOString(),badges:fb.badges||[]});
+      // Save to draw history — including the photo for the art journal
+      const id=tutorialId||drawTutorial?.id;
+      if(id){
+        saveDrawHistory(id,{done:true,score:fb.score,date:new Date().toISOString(),badges:fb.badges||[],imageData});
+        // Also save to student notes as a drawing entry
+        saveStudentNote({id:Date.now(),type:"drawing",date:new Date().toISOString(),title:"Drawing: "+tutorialName,imageData,score:fb.score,feedback:fb,studentName:profile?.name,grade:profile?.grade});
       }
     }catch{
-      setDrawFeedback({score:7,scoreLabel:"Good Start",praise:"You made a drawing! That takes courage and creativity.",technique:"You used lines confidently.",improve:"Try adding more detail to the outline.",nextChallenge:"Try shading one area lightly.",badges:["Brave Beginner"]});
+      setDrawFeedback({score:7,scoreLabel:"Good Start",praise:(profile?.name||"You")+" made a drawing! That takes real courage and creativity. The shapes look solid!",technique:"Confident line work throughout.",improve:"Try slowing down on the curves — smooth curves take practice!",nextChallenge:"Draw it again from memory without looking at the guide.",badges:["Brave Beginner"]});
     }
     setDrawFeedbackLoading(false);
   };
 
   /* ── Simply Draw Home ── */
+  /* ══════════════════════════════════════════════════════
+     SIMPLY DRAW — Rebuilt to match Simply Draw app UX
+     - Path selection (Animals/Nature/Characters)
+     - Sequential unlockable lessons
+     - Guided tutorial with reference image visible
+     - Draw on paper → photograph → AI feedback
+     - OR draw on canvas
+     - Art journal with all past drawings
+  ══════════════════════════════════════════════════════ */
+
+  const SD_PATHS=[
+    {
+      id:"animals",name:"Animals",icon:"🐾",color:"#f97316",bg:"#fff7ed",
+      goal:"Draw any animal from memory",
+      desc:"Start with basic shapes to build adorable animals — from fish to lions!",
+      lessons:[
+        {id:"a1",name:"Fish",icon:"🐟",level:"Beginner",time:"10 min",skills:["Basic oval shape","Adding fins","Simple eye"]},
+        {id:"a2",name:"Cat",icon:"🐱",level:"Beginner",time:"12 min",skills:["Circle head","Triangle ears","Curved body"]},
+        {id:"a3",name:"Dog",icon:"🐶",level:"Beginner",time:"12 min",skills:["Round shapes","Floppy ears","Wagging tail"]},
+        {id:"a4",name:"Bunny",icon:"🐰",level:"Beginner",time:"10 min",skills:["Long oval ears","Fluffy body","Simple face"]},
+        {id:"a5",name:"Bird",icon:"🐦",level:"Intermediate",time:"15 min",skills:["Wing curves","Feather details","Beak shape"]},
+        {id:"a6",name:"Fox",icon:"🦊",level:"Intermediate",time:"15 min",skills:["Angular face","Bushy tail","Color contrast"]},
+        {id:"a7",name:"Elephant",icon:"🐘",level:"Intermediate",time:"18 min",skills:["Large oval body","Trunk curves","Wrinkle texture"]},
+        {id:"a8",name:"Lion",icon:"🦁",level:"Intermediate",time:"20 min",skills:["Mane shading","Proud face","Muscular body"]},
+        {id:"a9",name:"Owl",icon:"🦉",level:"Intermediate",time:"15 min",skills:["Large eyes","Feather patterns","Branch perch"]},
+        {id:"a10",name:"Horse",icon:"🐴",level:"Advanced",time:"25 min",skills:["Leg proportions","Flowing mane","Dynamic pose"]},
+      ]
+    },
+    {
+      id:"nature",name:"Nature",icon:"🌿",color:"#22c55e",bg:"#f0fdf4",
+      goal:"Draw a full nature landscape",
+      desc:"From simple flowers to mountain landscapes — discover the beauty of nature drawing.",
+      lessons:[
+        {id:"n1",name:"Sunflower",icon:"🌻",level:"Beginner",time:"10 min",skills:["Petal arrangement","Center detail","Stem & leaves"]},
+        {id:"n2",name:"Tree",icon:"🌳",level:"Beginner",time:"12 min",skills:["Branch structure","Leaf clusters","Root suggestion"]},
+        {id:"n3",name:"Cloud",icon:"☁️",level:"Beginner",time:"8 min",skills:["Fluffy curves","Overlapping shapes","Shading depth"]},
+        {id:"n4",name:"Mushroom",icon:"🍄",level:"Beginner",time:"10 min",skills:["Cap dome","Spotted pattern","Ground shadow"]},
+        {id:"n5",name:"Rose",icon:"🌹",level:"Intermediate",time:"18 min",skills:["Spiral center","Layered petals","Thorn detail"]},
+        {id:"n6",name:"Ocean Wave",icon:"🌊",level:"Intermediate",time:"15 min",skills:["Curved motion","Foam detail","Depth shading"]},
+        {id:"n7",name:"Mountain",icon:"⛰️",level:"Intermediate",time:"20 min",skills:["Peak shapes","Snow cap","Perspective layers"]},
+        {id:"n8",name:"Waterfall",icon:"💧",level:"Intermediate",time:"20 min",skills:["Flow lines","Mist effect","Rock texture"]},
+        {id:"n9",name:"Sunset",icon:"🌅",level:"Intermediate",time:"15 min",skills:["Horizon line","Color gradients","Silhouette"]},
+        {id:"n10",name:"Starry Sky",icon:"⭐",level:"Advanced",time:"25 min",skills:["Star patterns","Moon shading","Atmosphere depth"]},
+      ]
+    },
+    {
+      id:"characters",name:"Characters",icon:"🧑‍🎨",color:"#8b5cf6",bg:"#f5f3ff",
+      goal:"Draw a full character portrait",
+      desc:"Learn to draw expressive faces, characters, and creative figures step by step.",
+      lessons:[
+        {id:"c1",name:"Simple Face",icon:"😊",level:"Beginner",time:"12 min",skills:["Face oval","Eye placement","Simple smile"]},
+        {id:"c2",name:"Cartoon Eyes",icon:"👁️",level:"Beginner",time:"10 min",skills:["Eye shapes","Iris & pupil","Eyelash detail"]},
+        {id:"c3",name:"Hair Styles",icon:"💇",level:"Beginner",time:"12 min",skills:["Hairline flow","Strand grouping","Volume shading"]},
+        {id:"c4",name:"Cartoon Girl",icon:"👧",level:"Beginner",time:"15 min",skills:["Face proportions","Cute features","Hair style"]},
+        {id:"c5",name:"Superhero",icon:"🦸",level:"Intermediate",time:"20 min",skills:["Strong pose","Cape flow","Heroic expression"]},
+        {id:"c6",name:"Wizard",icon:"🧙",level:"Intermediate",time:"18 min",skills:["Robe folds","Hat details","Long beard"]},
+        {id:"c7",name:"Robot",icon:"🤖",level:"Intermediate",time:"15 min",skills:["Geometric shapes","Panel lines","Mechanical detail"]},
+        {id:"c8",name:"Dragon",icon:"🐉",level:"Intermediate",time:"25 min",skills:["Wing structure","Scale texture","Fierce expression"]},
+        {id:"c9",name:"Portrait",icon:"👤",level:"Advanced",time:"30 min",skills:["Realistic proportions","Light & shadow","Expression depth"]},
+        {id:"c10",name:"Full Character",icon:"🎭",level:"Advanced",time:"35 min",skills:["Full body pose","Clothing folds","Character personality"]},
+      ]
+    },
+  ];
+
+  const SD_TECHNIQUE_TIPS=[
+    "Lock your wrist and move your whole arm for smoother curves 💪",
+    "Start every drawing with very light pencil strokes — you can always go darker! ✏️",
+    "Squint your eyes at your reference to see the basic shapes more clearly 👀",
+    "Every complex shape is just circles, ovals, and rectangles combined 🔵▭",
+    "Artists make mistakes — just keep going, mistakes make the drawing unique! 🎨",
+    "Hold your pencil like you're holding a chopstick for loose, flowing lines 🥢",
+    "Draw the outline first, add details second — always big to small! 📐",
+    "Shading trick: press lightly for light areas, harder for dark areas 🌓",
+    "Take a break and look at your drawing upside down to spot mistakes 🙃",
+    "Real artists trace sometimes! Tracing is a great way to learn shapes 📋",
+  ];
+
+  // Daily challenge — changes every day, deterministic
+  const getDailyChallenge=()=>{
+    const allLessons=SD_PATHS.flatMap(p=>p.lessons.map(l=>({...l,cat:p})));
+    const dayIdx=Math.floor(Date.now()/86400000)%allLessons.length;
+    const bonus=["Add a simple background","Use only curved lines","Draw it extra tiny","Add a funny expression","Use only 30 seconds per step","Draw it without lifting your pencil"];
+    const bonusIdx=Math.floor(Date.now()/86400000)%bonus.length;
+    return{lesson:allLessons[dayIdx],bonus:bonus[bonusIdx],date:new Date().toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"})};
+  };
+
+  const DRAW_LEVELS=[
+    {name:"Sketcher",minXp:0,icon:"✏️"},
+    {name:"Doodler",minXp:100,icon:"🖊️"},
+    {name:"Artist",minXp:300,icon:"🎨"},
+    {name:"Illustrator",minXp:600,icon:"🖼️"},
+    {name:"Master Artist",minXp:1000,icon:"🏆"},
+  ];
+  const getDrawLevel=(xp)=>DRAW_LEVELS.filter(l=>xp>=l.minXp).pop()||DRAW_LEVELS[0];
+  const getNextDrawLevel=(xp)=>DRAW_LEVELS.find(l=>xp<l.minXp)||null;
+
   function DrawHome(){
-    const totalDone=Object.keys(drawHistory).filter(k=>drawHistory[k].done).length;
-    const recommended=[];
-    SD_CATEGORIES.forEach(cat=>{
-      cat.tutorials.forEach((name,i)=>{
-        const id=cat.id+"_"+i;
-        if(!drawHistory[id]?.done)recommended.push({id,name,cat,emoji:getTutorialEmoji(name),level:getTutorialLevel(i)});
-      });
-    });
-    const nextUp=recommended.slice(0,4);
+    const totalDone=Object.keys(drawHistory).filter(k=>drawHistory[k]?.done).length;
+    const daily=getDailyChallenge();
+    const drawLevel=getDrawLevel(drawXp);
+    const nextLevel=getNextDrawLevel(drawXp);
+    const xpToNext=nextLevel?nextLevel.minXp-drawXp:0;
+    const todayDone=Object.values(drawHistory).some(h=>h.date&&new Date(h.date).toDateString()===new Date().toDateString());
+    const allBadges=[...new Set(Object.values(drawHistory).flatMap(h=>h.badges||[]))];
+
+    // Filtered lessons for each path
+    const filterLessons=(lessons)=>drawFilter==="All"?lessons:lessons.filter(l=>l.level===drawFilter);
 
     return(
-      <div className="sd-home">
-        {/* Hero */}
-        <div className="sd-hero">
-          <div style={{fontSize:48,marginBottom:8}}>🎨</div>
-          <div className="sd-hero-title">Simply Draw</div>
-          <div className="sd-hero-sub">Your personal drawing coach. Learn step by step, get AI feedback, and watch your art improve every day!</div>
-          {totalDone>0&&(
-            <div style={{marginTop:14,display:"flex",gap:10,flexWrap:"wrap"}}>
-              <div style={{background:"rgba(255,255,255,.15)",borderRadius:10,padding:"8px 14px",fontSize:12,fontWeight:800}}>🏆 {totalDone} tutorials completed</div>
-              <div style={{background:"rgba(255,255,255,.15)",borderRadius:10,padding:"8px 14px",fontSize:12,fontWeight:800}}>⭐ {Object.values(drawHistory).reduce((a,h)=>a+(h.score||0),0)} total score</div>
+      <div className="sd-wrap">
+        <div className="sd-home">
+          {/* Clean hero — level + streak */}
+          <div style={{background:"linear-gradient(135deg,#0f172a,#1e3a5f)",borderRadius:20,padding:22,color:"#fff"}}>
+            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:14}}>
+              <div style={{fontSize:44}}>{drawLevel.icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:18,fontWeight:900}}>{drawLevel.name}</div>
+                <div style={{fontSize:11,opacity:.7,fontWeight:600}}>{profile?.name} · {drawXp} XP</div>
+                {nextLevel&&(
+                  <div style={{marginTop:6}}>
+                    <div style={{height:5,background:"rgba(255,255,255,.2)",borderRadius:4,overflow:"hidden"}}>
+                      <div style={{height:"100%",background:"linear-gradient(90deg,#fbbf24,#f97316)",borderRadius:4,width:((drawXp-getDrawLevel(drawXp).minXp)/(nextLevel.minXp-getDrawLevel(drawXp).minXp)*100)+"%",transition:"width .6s"}}/>
+                    </div>
+                    <div style={{fontSize:9,opacity:.6,fontWeight:700,marginTop:3}}>{xpToNext} XP to {nextLevel.name} {nextLevel.icon}</div>
+                  </div>
+                )}
+              </div>
+              <div style={{textAlign:"center"}}>
+                <div style={{fontSize:28}}>🔥</div>
+                <div style={{fontSize:16,fontWeight:900}}>{drawStreak.count}</div>
+                <div style={{fontSize:9,opacity:.7,fontWeight:700}}>day streak</div>
+              </div>
+            </div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              <div style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"6px 12px",fontSize:11,fontWeight:800}}>🏆 {totalDone} lessons done</div>
+              {todayDone&&<div style={{background:"rgba(34,197,94,.3)",borderRadius:10,padding:"6px 12px",fontSize:11,fontWeight:800}}>✅ Drew today!</div>}
+            </div>
+          </div>
+
+          {/* Daily Challenge */}
+          <div className="sd-daily">
+            <div className="sd-daily-badge">⚡ DAILY CHALLENGE — {daily.date}</div>
+            <div style={{display:"flex",alignItems:"center",gap:12}}>
+              <div style={{fontSize:52}}>{daily.lesson.icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:16,fontWeight:900,marginBottom:2}}>Draw a {daily.lesson.name}</div>
+                <div style={{fontSize:11,opacity:.8,fontWeight:600,marginBottom:8}}>Bonus challenge: {daily.bonus}</div>
+                <div style={{display:"flex",gap:6}}>
+                  <span style={{background:"rgba(255,255,255,.2)",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:800}}>{daily.lesson.cat.name}</span>
+                  <span style={{background:"rgba(255,255,255,.2)",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:800}}>{daily.lesson.level}</span>
+                  <span style={{background:"rgba(255,255,255,.2)",padding:"3px 10px",borderRadius:20,fontSize:10,fontWeight:800}}>+50 XP bonus</span>
+                </div>
+              </div>
+            </div>
+            <button onClick={()=>{
+              setDrawTutorial({...daily.lesson,cat:daily.lesson.cat,isDaily:true});
+              setDrawStepIdx(0);setDrawFeedback(null);
+              loadTutorialSteps(daily.lesson,daily.lesson.cat);
+              setDrawScreen("tutorial");
+            }} style={{width:"100%",marginTop:14,padding:"12px",borderRadius:12,border:"none",background:"rgba(255,255,255,.2)",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",backdropFilter:"blur(4px)"}}>
+              🎯 Start Today's Challenge →
+            </button>
+          </div>
+
+          {/* Trophy shelf */}
+          {allBadges.length>0&&(
+            <div>
+              <div className="sd-section-title">🏅 Your Trophies</div>
+              <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                {allBadges.map((b,i)=>(
+                  <div key={i} className="sd-trophy">
+                    <div className="sd-trophy-icon">{b.includes("Beginner")?"🌱":b.includes("Shape")?"🔵":b.includes("Detail")?"🔍":b.includes("Colour")?"🌈":b.includes("Line")?"📏":b.includes("Level")?"⬆️":b.includes("Master")?"👑":b.includes("Texture")?"🎭":b.includes("Shadow")?"🌑":"🏅"}</div>
+                    <div className="sd-trophy-name">{b}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Skill level quick-start */}
-        {totalDone===0&&(
-          <div>
-            <div className="sd-section-title">🚀 Start here — pick your level</div>
-            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              {[{l:"Complete Beginner",d:"Never drawn before",e:"🌱",cat:"animals",idx:0},{l:"Some Experience",d:"I've drawn a little",e:"🌿",cat:"nature",idx:0},{l:"Intermediate",d:"I draw regularly",e:"🌳",cat:"art",idx:0}].map(s=>(
-                <button key={s.l} onClick={()=>{
-                  const cat=SD_CATEGORIES.find(c=>c.id===s.cat);
-                  const name=cat.tutorials[s.idx];
-                  const tut={id:s.cat+"_"+s.idx,name,emoji:getTutorialEmoji(name),level:getTutorialLevel(s.idx),cat};
-                  setDrawTutorial(tut);setDrawStepIdx(0);setDrawFeedback(null);
-                  loadTutorialSteps(tut,cat);setDrawScreen("tutorial");
-                }} style={{flex:1,minWidth:140,padding:"14px",borderRadius:14,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",cursor:"pointer",textAlign:"center"}}>
-                  <div style={{fontSize:28,marginBottom:6}}>{s.e}</div>
-                  <div style={{fontSize:12,fontWeight:900,color:"var(--navy)"}}>{s.l}</div>
-                  <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginTop:2}}>{s.d}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Recommended next */}
-        {nextUp.length>0&&(
-          <div>
-            <div className="sd-section-title">⚡ Recommended for you</div>
-            <div className="sd-tut-grid">
-              {nextUp.map(t=>(
-                <div key={t.id} className="sd-tut-card" onClick={()=>{
-                  setDrawTutorial(t);setDrawStepIdx(0);setDrawFeedback(null);
-                  loadTutorialSteps(t,t.cat);setDrawScreen("tutorial");
-                }}>
-                  <div className="sd-tut-thumb" style={{background:t.cat.bg||"#f8fafc"}}>{t.emoji}</div>
-                  <div className="sd-tut-body">
-                    <div className="sd-tut-name">{t.name}</div>
-                    <div className="sd-tut-meta">
-                      <span className={"sd-level-badge sd-level-"+t.level.toLowerCase()}>{t.level}</span>
-                      <span style={{fontSize:9,color:"var(--muted)",fontWeight:600}}>{t.cat.name}</span>
+          {/* Art journal */}
+          {Object.values(drawHistory).some(h=>h.imageData)&&(
+            <div>
+              <div className="sd-section-title">📓 Art Journal</div>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:8}}>
+                {Object.entries(drawHistory).filter(([,v])=>v.imageData).slice(0,6).map(([id,entry])=>{
+                  const lesson=SD_PATHS.flatMap(p=>p.lessons).find(l=>l.id===id);
+                  return(
+                    <div key={id} style={{background:"#fff",borderRadius:12,overflow:"hidden",border:"2px solid var(--border)",boxShadow:"0 2px 8px rgba(0,0,0,.06)"}}>
+                      <img src={entry.imageData} alt={lesson?.name||"Drawing"} style={{width:"100%",aspectRatio:"4/3",objectFit:"cover"}}/>
+                      <div style={{padding:"7px 9px"}}>
+                        <div style={{fontSize:11,fontWeight:900,color:"var(--navy)"}}>{lesson?.name||"Drawing"}</div>
+                        <div style={{fontSize:10,fontWeight:700,color:"var(--green)"}}>⭐ {entry.score}/10</div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Level filter */}
+          <div>
+            <div className="sd-section-title">📚 Drawing Paths</div>
+            <div className="sd-filter-row">
+              {["All","Beginner","Intermediate","Advanced"].map(f=>(
+                <button key={f} className={"sd-filter-pill"+(drawFilter===f?" active":"")} onClick={()=>setDrawFilter(f)}>{f}</button>
               ))}
             </div>
-          </div>
-        )}
 
-        {/* All categories */}
-        <div>
-          <div className="sd-section-title">📚 All Categories — 90+ Tutorials</div>
-          <div className="sd-cat-grid">
-            {SD_CATEGORIES.map(cat=>{
-              const done=cat.tutorials.filter((_,i)=>drawHistory[cat.id+"_"+i]?.done).length;
+            {SD_PATHS.map(path=>{
+              const filtered=filterLessons(path.lessons);
+              if(!filtered.length)return null;
+              const done=path.lessons.filter(l=>drawHistory[l.id]?.done).length;
+              const nextIdx=path.lessons.findIndex(l=>!drawHistory[l.id]?.done);
               return(
-                <div key={cat.id} className={"sd-cat-card"+(drawCategory?.id===cat.id?" active":"")}
-                  style={{borderColor:drawCategory?.id===cat.id?cat.color:"var(--border)",background:drawCategory?.id===cat.id?cat.bg:"#fff"}}
-                  onClick={()=>setDrawCategory(drawCategory?.id===cat.id?null:cat)}>
-                  <div className="sd-cat-icon">{cat.icon}</div>
-                  <div className="sd-cat-name" style={{color:drawCategory?.id===cat.id?cat.color:"var(--navy)"}}>{cat.name}</div>
-                  <div className="sd-cat-count">{done}/{cat.tutorials.length} done</div>
-                  {done>0&&<div style={{marginTop:6,height:4,background:"rgba(0,0,0,.1)",borderRadius:4,overflow:"hidden"}}><div style={{height:"100%",background:cat.color,borderRadius:4,width:((done/cat.tutorials.length)*100)+"%"}}/></div>}
+                <div key={path.id} style={{background:"#fff",borderRadius:16,padding:16,border:"2px solid "+(drawCategory?.id===path.id?path.color:"var(--border)"),marginBottom:12,cursor:"pointer"}}
+                  onClick={()=>setDrawCategory(drawCategory?.id===path.id?null:path)}>
+                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                    <div style={{width:48,height:48,borderRadius:12,background:path.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0}}>{path.icon}</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:14,fontWeight:900,color:"var(--navy)"}}>{path.name}</div>
+                      <div style={{fontSize:10,fontWeight:600,color:"var(--muted)",marginBottom:5}}>{path.desc}</div>
+                      <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                        <span style={{fontSize:10,fontWeight:800,color:path.color}}>{done}/{path.lessons.length} done</span>
+                        <span style={{fontSize:10,color:"var(--muted)",fontWeight:600}}>· Goal: {path.goal}</span>
+                      </div>
+                      {done>0&&<div style={{height:4,background:"rgba(0,0,0,.08)",borderRadius:4,marginTop:5,overflow:"hidden"}}><div style={{height:"100%",background:path.color,borderRadius:4,width:((done/path.lessons.length)*100)+"%",transition:"width .6s"}}/></div>}
+                    </div>
+                    <div style={{fontSize:18,color:path.color}}>{drawCategory?.id===path.id?"▲":"▽"}</div>
+                  </div>
+
+                  {drawCategory?.id===path.id&&(
+                    <div style={{marginTop:12,borderTop:"1px solid var(--border)",paddingTop:12,display:"flex",flexDirection:"column",gap:5}}>
+                      {filtered.map((lesson,i)=>{
+                        const globalIdx=path.lessons.indexOf(lesson);
+                        const isDone=drawHistory[lesson.id]?.done;
+                        const isLocked=globalIdx>0&&!drawHistory[path.lessons[globalIdx-1].id]?.done&&drawFilter==="All";
+                        const score=drawHistory[lesson.id]?.score;
+                        return(
+                          <div key={lesson.id} onClick={e=>{
+                            e.stopPropagation();
+                            if(isLocked)return;
+                            setDrawTutorial({...lesson,cat:path});
+                            setDrawStepIdx(0);setDrawFeedback(null);
+                            loadTutorialSteps(lesson,path);
+                            setDrawScreen("tutorial");
+                          }} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",borderRadius:10,background:isDone?"#f0fdf4":isLocked?"#f8fafc":"#fafafa",border:"1px solid "+(isDone?"var(--green)":isLocked?"var(--border)":"var(--border)"),cursor:isLocked?"not-allowed":"pointer",opacity:isLocked?.5:1}}>
+                            <div style={{width:34,height:34,borderRadius:9,background:isDone?"var(--green)":isLocked?"var(--border)":path.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0,color:isDone?"#fff":"inherit"}}>
+                              {isLocked?"🔒":isDone?"✓":lesson.icon}
+                            </div>
+                            <div style={{flex:1}}>
+                              <div style={{fontSize:12,fontWeight:900,color:isLocked?"var(--muted)":"var(--navy)"}}>{globalIdx+1}. {lesson.name}</div>
+                              <div style={{fontSize:9,color:"var(--muted)",fontWeight:700}}>{lesson.level} · {lesson.time} · {lesson.skills.slice(0,2).join(", ")}</div>
+                            </div>
+                            {isDone&&<span style={{fontSize:11,fontWeight:900,color:"var(--green)"}}>⭐{score}/10</span>}
+                            {!isDone&&!isLocked&&<span style={{fontSize:11,fontWeight:800,color:path.color,flexShrink:0}}>→</span>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
-        </div>
 
-        {/* Tutorials for selected category */}
-        {drawCategory&&(
-          <div>
-            <div className="sd-section-title" style={{color:drawCategory.color}}>{drawCategory.icon} {drawCategory.name} Tutorials</div>
-            <div className="sd-tut-grid">
-              {drawCategory.tutorials.map((name,i)=>{
-                const id=drawCategory.id+"_"+i;
-                const done=drawHistory[id]?.done;
-                const score=drawHistory[id]?.score;
-                const level=getTutorialLevel(i);
-                const emoji=getTutorialEmoji(name);
-                return(
-                  <div key={id} className="sd-tut-card" onClick={()=>{
-                    const tut={id,name,emoji,level,cat:drawCategory};
-                    setDrawTutorial(tut);setDrawStepIdx(0);setDrawFeedback(null);
-                    loadTutorialSteps(tut,drawCategory);setDrawScreen("tutorial");
-                  }}>
-                    <div className="sd-tut-thumb" style={{background:drawCategory.bg}}>
-                      {emoji}
-                      {done&&<div style={{position:"absolute",top:6,right:6,background:"var(--green)",borderRadius:"50%",width:20,height:20,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>✓</div>}
-                    </div>
-                    <div className="sd-tut-body">
-                      <div className="sd-tut-name">{name}</div>
-                      <div className="sd-tut-meta">
-                        <span className={"sd-level-badge sd-level-"+level.toLowerCase()}>{level}</span>
-                        {done&&<span className="sd-done-badge">✓ {score}/10</span>}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          {/* Tip */}
+          <div style={{background:"linear-gradient(135deg,#f5f3ff,#eff6ff)",borderRadius:14,padding:"14px 18px",border:"2px solid rgba(139,92,246,.2)"}}>
+            <div style={{fontSize:11,fontWeight:900,color:"var(--purple)",marginBottom:4}}>🎨 Artist Tip</div>
+            <div style={{fontSize:12,fontWeight:700,color:"var(--navy)",lineHeight:1.6}}>{SD_TECHNIQUE_TIPS[new Date().getDay()%SD_TECHNIQUE_TIPS.length]}</div>
           </div>
-        )}
-
-        {/* Weekly new tutorials notice */}
-        <div style={{background:"linear-gradient(135deg,#f0f9ff,#e0f2fe)",borderRadius:14,padding:"16px 18px",border:"2px solid var(--blue)"}}>
-          <div style={{fontSize:13,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📅 New tutorials every week!</div>
-          <div style={{fontSize:11,fontWeight:600,color:"var(--muted)"}}>Nova adds fresh drawing sessions weekly — animals, characters, techniques, and more. Keep checking back!</div>
         </div>
       </div>
     );
   }
 
-  /* ── Tutorial Step-by-Step Screen ── */
+  /* ── Tutorial Screen — Step-by-step guided drawing ── */
+
   function DrawTutorial(){
     if(!drawTutorial)return null;
     const step=drawSteps[drawStepIdx];
     const total=drawSteps.length;
-    const shapeGuide={circle:"Draw a circle — imagine drawing around a coin 🪙",oval:"Draw an oval — like a stretched circle 🥚",rectangle:"Draw a rectangle — like a door or window 🚪",triangle:"Draw a triangle — three straight lines ▲",line:"Draw a straight line — use your whole arm, not just your wrist ✏️",curve:"Draw a smooth curve — move slowly and steadily 〰️"};
+    const path=drawTutorial.cat;
+    const[photoPreview,setPhotoPreview]=React.useState(null);
+    const[photoLoading,setPhotoLoading]=React.useState(false);
+    const autoPlayRef=React.useRef(null);
+
+    // Auto-play timer — video-style step advance
+    React.useEffect(()=>{
+      if(!drawAutoPlay||!total||drawStepsLoading)return;
+      autoPlayRef.current=setInterval(()=>{
+        setDrawStepIdx(i=>{
+          if(i>=total-1){setDrawAutoPlay(false);clearInterval(autoPlayRef.current);return i;}
+          return i+1;
+        });
+      },8000);
+      return()=>clearInterval(autoPlayRef.current);
+    },[drawAutoPlay,total,drawStepsLoading]);
+
+    const handlePhoto=async(file)=>{
+      if(!file)return;
+      setPhotoLoading(true);
+      const reader=new FileReader();
+      reader.onload=ev=>{setPhotoPreview(ev.target.result);setPhotoLoading(false);};
+      reader.readAsDataURL(file);
+    };
+
+    const xpEarned=(drawTutorial.isDaily?75:50);
 
     return(
-      <div className="sd-tut-wrap">
-        {/* Header */}
-        <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
-          <button className="writing-back" onClick={()=>setDrawScreen("home")}>← Back</button>
-          <div style={{flex:1}}>
-            <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>{drawTutorial.emoji} {drawTutorial.name}</div>
-            <div style={{fontSize:10,fontWeight:700,color:"var(--muted)"}}>{drawTutorial.cat?.name} · {drawTutorial.level}</div>
+      <div className="sd-wrap">
+        <div className="sd-tut-wrap">
+          {/* Header */}
+          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+            <button className="writing-back" onClick={()=>{setDrawAutoPlay(false);setDrawScreen("home");}}>← Back</button>
+            <div style={{flex:1}}>
+              <div style={{fontSize:15,fontWeight:900,color:"var(--navy)"}}>{drawTutorial.icon} {drawTutorial.name}</div>
+              <div style={{fontSize:10,fontWeight:700,color:"var(--muted)"}}>{path?.name} · {drawTutorial.level} · +{xpEarned} XP on completion</div>
+            </div>
+            {/* Auto-play toggle */}
+            <button onClick={()=>setDrawAutoPlay(v=>!v)}
+              style={{padding:"6px 12px",borderRadius:10,border:"none",background:drawAutoPlay?"var(--red)":"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:900,cursor:"pointer"}}>
+              {drawAutoPlay?"⏹ Stop":"▶ Auto-Play"}
+            </button>
+            <button onClick={()=>setDrawScreen("canvas")}
+              style={{padding:"6px 12px",borderRadius:10,border:"2px solid var(--teal)",background:"#f0fdfa",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--teal)"}}>
+              🎨 Canvas
+            </button>
           </div>
-          <button onClick={()=>setDrawScreen("canvas")}
-            style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
-            🎨 Open Canvas
-          </button>
-        </div>
 
-        {/* Progress bar */}
-        <div style={{background:"var(--border)",borderRadius:6,height:6,overflow:"hidden"}}>
-          <div style={{height:"100%",background:"linear-gradient(90deg,var(--purple),var(--blue))",borderRadius:6,width:((drawStepIdx+1)/Math.max(total,1)*100)+"%",transition:"width .4s"}}/>
-        </div>
+          {/* Step progress dots */}
+          {total>0&&(
+            <div style={{display:"flex",gap:4}}>
+              {drawSteps.map((_,i)=>(
+                <div key={i} onClick={()=>{setDrawAutoPlay(false);setDrawStepIdx(i);}}
+                  style={{flex:1,height:6,borderRadius:4,cursor:"pointer",background:i<drawStepIdx?"var(--green)":i===drawStepIdx?(path?.color||"var(--purple)"):"var(--border)",transition:"background .3s"}}/>
+              ))}
+            </div>
+          )}
 
-        {/* Loading */}
-        {drawStepsLoading&&(
-          <div style={{textAlign:"center",padding:40,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
-            <div style={{fontSize:40,animation:"float 1s ease-in-out infinite",marginBottom:10}}>🎨</div>
-            <div style={{fontSize:13,fontWeight:900,color:"var(--navy)"}}>Nova is preparing your tutorial...</div>
+          {/* Technique tip */}
+          <div style={{background:"linear-gradient(135deg,#1e293b,#1e3a5f)",borderRadius:12,padding:"10px 16px",display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:18}}>💡</span>
+            <div style={{fontSize:11,fontWeight:700,color:"#fff",lineHeight:1.5}}>{SD_TECHNIQUE_TIPS[drawStepIdx%SD_TECHNIQUE_TIPS.length]}</div>
           </div>
-        )}
 
-        {/* Steps */}
-        {!drawStepsLoading&&step&&(
-          <>
-            <div className="sd-step-card">
-              <div className="sd-step-num">Step {step.step} of {total}</div>
-              <div className="sd-step-title">{step.title}</div>
+          {/* Loading */}
+          {drawStepsLoading&&(
+            <div style={{textAlign:"center",padding:40,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
+              <div style={{fontSize:56,animation:"float 1s ease-in-out infinite",marginBottom:10}}>{drawTutorial.icon}</div>
+              <div style={{fontSize:14,fontWeight:900,color:"var(--navy)"}}>Nova is building your tutorial...</div>
+            </div>
+          )}
+
+          {/* Step card — animated + reference always visible */}
+          {!drawStepsLoading&&step&&(
+            <div key={drawStepIdx} className="sd-step-card sd-step-animated" style={{borderColor:path?.color||"var(--purple)",borderWidth:2}}>
+              {/* Sticky reference image */}
+              <div style={{display:"flex",gap:14,marginBottom:14,alignItems:"flex-start"}}>
+                <div style={{width:90,height:90,borderRadius:14,background:path?.bg||"#f8fafc",display:"flex",alignItems:"center",justifyContent:"center",fontSize:52,flexShrink:0,border:"2px solid rgba(0,0,0,.06)"}}>
+                  {drawTutorial.icon}
+                </div>
+                <div style={{flex:1}}>
+                  <div className="sd-step-num" style={{color:path?.color,marginBottom:4}}>Step {step.step} of {total}</div>
+                  <div className="sd-step-title">{step.title}</div>
+                  {/* Auto-play timer bar */}
+                  {drawAutoPlay&&(
+                    <div className="sd-step-timer">
+                      <div className="sd-step-timer-fill" style={{width:"100%",animation:"none",transition:"width 8s linear",transitionDelay:"0s"}}
+                        ref={el=>{if(el){setTimeout(()=>{if(el)el.style.width="0%";},50);}}}/>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="sd-step-body">{step.instruction}</div>
-              {step.shape&&step.shape!=="none"&&shapeGuide[step.shape]&&(
-                <div style={{marginTop:10,padding:"8px 12px",borderRadius:8,background:"#eff6ff",border:"1px solid var(--blue)",fontSize:11,fontWeight:700,color:"var(--blue)"}}>
-                  💡 Shape guide: {shapeGuide[step.shape]}
+              {step.shape&&step.shape!=="none"&&(
+                <div style={{marginTop:8,padding:"7px 12px",borderRadius:8,background:"#eff6ff",fontSize:11,fontWeight:700,color:"var(--blue)"}}>
+                  📐 Key shape: <strong>{step.shape}</strong>
                 </div>
               )}
-              {step.tip&&<div className="sd-tip-box">🎨 Artist tip: {step.tip}</div>}
+              {step.tip&&<div className="sd-tip-box" style={{borderLeftColor:path?.color||"var(--purple)"}}>✏️ Artist tip: {step.tip}</div>}
             </div>
+          )}
 
-            {/* All steps overview */}
-            <div style={{background:"#fff",borderRadius:14,padding:16,border:"2px solid var(--border)"}}>
-              <div style={{fontSize:11,fontWeight:900,color:"var(--muted)",marginBottom:10,letterSpacing:"1px",textTransform:"uppercase"}}>All Steps</div>
+          {/* All steps mini-list */}
+          {!drawStepsLoading&&drawSteps.length>0&&(
+            <div style={{background:"#fff",borderRadius:14,padding:14,border:"2px solid var(--border)"}}>
+              <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--muted)",marginBottom:8}}>All Steps</div>
               {drawSteps.map((s,i)=>(
-                <div key={i} onClick={()=>setDrawStepIdx(i)}
-                  style={{display:"flex",alignItems:"center",gap:10,padding:"8px 10px",borderRadius:10,cursor:"pointer",marginBottom:4,background:i===drawStepIdx?"#f5f3ff":"transparent",border:i===drawStepIdx?"1px solid var(--purple)":"1px solid transparent"}}>
-                  <div style={{width:24,height:24,borderRadius:"50%",background:i<drawStepIdx?"var(--green)":i===drawStepIdx?"var(--purple)":"var(--border)",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:900,flexShrink:0}}>
+                <div key={i} onClick={()=>{setDrawAutoPlay(false);setDrawStepIdx(i);}}
+                  style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",borderRadius:9,cursor:"pointer",marginBottom:3,background:i===drawStepIdx?(path?.bg||"#f5f3ff"):"transparent",border:i===drawStepIdx?"1px solid "+(path?.color||"var(--purple)"):"1px solid transparent"}}>
+                  <div style={{width:22,height:22,borderRadius:"50%",background:i<drawStepIdx?"var(--green)":i===drawStepIdx?(path?.color||"var(--purple)"):"var(--border)",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:900,flexShrink:0}}>
                     {i<drawStepIdx?"✓":i+1}
                   </div>
-                  <div style={{fontSize:12,fontWeight:700,color:i===drawStepIdx?"var(--purple)":"var(--text)"}}>{s.title}</div>
+                  <div style={{fontSize:11,fontWeight:700,color:i===drawStepIdx?(path?.color||"var(--purple)"):"var(--text)"}}>{s.title}</div>
                 </div>
               ))}
             </div>
+          )}
 
-            {/* Navigation */}
+          {/* Nav buttons */}
+          {!drawStepsLoading&&(
             <div style={{display:"flex",gap:10}}>
-              <button onClick={()=>setDrawStepIdx(i=>Math.max(0,i-1))} disabled={drawStepIdx===0}
+              <button onClick={()=>{setDrawAutoPlay(false);setDrawStepIdx(i=>Math.max(0,i-1));}} disabled={drawStepIdx===0}
                 style={{flex:1,padding:"11px",borderRadius:12,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:800,cursor:drawStepIdx===0?"not-allowed":"pointer",color:drawStepIdx===0?"var(--muted)":"var(--navy)"}}>
-                ← Previous
+                ← Prev
               </button>
               {drawStepIdx<total-1?(
-                <button onClick={()=>setDrawStepIdx(i=>i+1)}
-                  style={{flex:2,padding:"11px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
+                <button onClick={()=>{setDrawAutoPlay(false);setDrawStepIdx(i=>i+1);}}
+                  style={{flex:2,padding:"11px",borderRadius:12,border:"none",background:path?.color||"var(--purple)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
                   Next Step →
                 </button>
               ):(
-                <button onClick={()=>setDrawScreen("canvas")}
+                <button onClick={()=>{setDrawAutoPlay(false);const el=document.getElementById("sd-submit");if(el)el.scrollIntoView({behavior:"smooth"});}}
                   style={{flex:2,padding:"11px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--green),var(--teal))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
-                  🎨 Draw It Now!
+                  ✅ Ready! Submit Drawing ↓
                 </button>
               )}
             </div>
-          </>
-        )}
+          )}
+
+          {/* Submit drawing section */}
+          <div id="sd-submit" style={{background:"#fff",borderRadius:16,padding:20,border:"3px dashed var(--green)"}}>
+            <div style={{fontSize:14,fontWeight:900,color:"var(--navy)",marginBottom:4}}>📷 Submit Your Drawing</div>
+            <div style={{fontSize:11,fontWeight:600,color:"var(--muted)",marginBottom:14,lineHeight:1.6}}>
+              Draw on real paper following the steps — then photograph it! Nova will give you coaching just like a real art teacher. Earn <strong>+{xpEarned} XP</strong>{drawTutorial.isDaily?" + daily bonus!":"!"}
+            </div>
+            <div style={{display:"flex",gap:10,marginBottom:14,flexWrap:"wrap"}}>
+              <label style={{flex:1,minWidth:110,display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:"14px",borderRadius:14,border:"2px solid var(--green)",background:"#f0fdf4",cursor:"pointer"}}>
+                <input type="file" accept="image/*" capture="environment" style={{display:"none"}} onChange={e=>e.target.files[0]&&handlePhoto(e.target.files[0])}/>
+                <span style={{fontSize:32}}>📷</span>
+                <span style={{fontSize:11,fontWeight:900,color:"var(--green)"}}>Take Photo</span>
+                <span style={{fontSize:9,fontWeight:600,color:"var(--muted)",textAlign:"center"}}>Open camera — point at your paper</span>
+              </label>
+              <label style={{flex:1,minWidth:110,display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:"14px",borderRadius:14,border:"2px solid var(--blue)",background:"#eff6ff",cursor:"pointer"}}>
+                <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files[0]&&handlePhoto(e.target.files[0])}/>
+                <span style={{fontSize:32}}>🖼️</span>
+                <span style={{fontSize:11,fontWeight:900,color:"var(--blue)"}}>Upload Photo</span>
+                <span style={{fontSize:9,fontWeight:600,color:"var(--muted)",textAlign:"center"}}>From your photo library</span>
+              </label>
+              <div style={{flex:1,minWidth:110,display:"flex",flexDirection:"column",alignItems:"center",gap:7,padding:"14px",borderRadius:14,border:"2px dashed var(--purple)",background:"#f5f3ff",cursor:"pointer"}}
+                onClick={()=>{setDrawAutoPlay(false);setDrawTraceMode(false);setDrawScreen("canvas");}}>
+                <span style={{fontSize:32}}>✏️</span>
+                <span style={{fontSize:11,fontWeight:900,color:"var(--purple)"}}>Draw on Screen</span>
+                <span style={{fontSize:9,fontWeight:600,color:"var(--muted)",textAlign:"center"}}>Digital canvas with trace guide</span>
+              </div>
+            </div>
+            {photoLoading&&<div style={{fontSize:12,color:"var(--green)",fontWeight:700,marginBottom:10}}><span className="spin" style={{display:"inline-block"}}>◌</span> Loading...</div>}
+            {photoPreview&&(
+              <div>
+                <img src={photoPreview} alt="Your drawing" style={{width:"100%",maxHeight:260,objectFit:"contain",borderRadius:12,border:"2px solid var(--border)",marginBottom:10}}/>
+                <button onClick={()=>{setDrawScreen("feedback");getDrawingFeedback(photoPreview,drawTutorial.name,drawTutorial.id);}}
+                  style={{width:"100%",padding:"13px",borderRadius:12,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",fontSize:13,fontWeight:900,cursor:"pointer",boxShadow:"0 4px 14px rgba(249,115,22,.3)"}}>
+                  🦉 Get Nova's Feedback!
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
 
   /* ── AI Feedback Screen ── */
+
   function DrawFeedback(){
     const fb=drawFeedback;
-    if(!fb&&!drawFeedbackLoading)return null;
-    const scoreColors=["","var(--red)","var(--red)","var(--red)","var(--orange)","var(--orange)","var(--orange)","var(--blue)","var(--blue)","var(--green)","var(--green)"];
+    const path=drawTutorial?.cat;
+    const scoreColors={1:"var(--red)",2:"var(--red)",3:"var(--red)",4:"var(--orange)",5:"var(--orange)",6:"var(--orange)",7:"var(--blue)",8:"var(--blue)",9:"var(--green)",10:"var(--green)"};
+    const sc=Math.min(10,Math.max(1,fb?.score||5));
+
     return(
-      <div className="sd-tut-wrap">
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <button className="writing-back" onClick={()=>setDrawScreen("canvas")}>← Back to Canvas</button>
-          <div style={{fontSize:16,fontWeight:900,color:"var(--navy)"}}>🎨 Nova's Feedback</div>
-        </div>
-
-        {drawFeedbackLoading&&(
-          <div style={{textAlign:"center",padding:48,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
-            <div style={{fontSize:48,animation:"float 1s ease-in-out infinite",marginBottom:12}}>🦉</div>
-            <div style={{fontSize:14,fontWeight:900,color:"var(--navy)"}}>Nova is looking at your drawing...</div>
-            <div style={{fontSize:11,color:"var(--muted)",fontWeight:600,marginTop:4}}>Giving you real feedback on your artwork!</div>
+      <div className="sd-wrap">
+        <div className="sd-tut-wrap">
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <button className="writing-back" onClick={()=>setDrawScreen("tutorial")}>← Back to Tutorial</button>
+            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)"}}>🦉 Nova's Art Review</div>
           </div>
-        )}
 
-        {fb&&!drawFeedbackLoading&&(
-          <>
-            <div className="sd-feedback-card">
-              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:14}}>
-                <div>
-                  <div className="sd-fb-score" style={{color:scoreColors[Math.min(10,Math.max(1,fb.score||5))]}}>{fb.score}/10</div>
-                  <div className="sd-fb-label">{fb.scoreLabel}</div>
-                </div>
-                <div style={{flex:1}}>
-                  <div className="sd-progress-bar"><div className="sd-progress-fill" style={{width:((fb.score||5)*10)+"%",background:scoreColors[Math.min(10,Math.max(1,fb.score||5))]}}/></div>
-                  <div style={{fontSize:10,fontWeight:700,color:"var(--muted)",marginTop:4}}>{drawTutorial?.name} drawing</div>
-                </div>
-              </div>
-
-              {(fb.badges||[]).length>0&&(
-                <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
-                  {fb.badges.map((b,i)=><span key={i} style={{padding:"4px 10px",borderRadius:20,background:"linear-gradient(135deg,var(--yellow),var(--orange))",color:"#fff",fontSize:10,fontWeight:900}}>🏅 {b}</span>)}
-                </div>
-              )}
-
-              <div className="sd-fb-section">
-                <div className="sd-fb-section-title" style={{color:"var(--green)"}}>⭐ What you did great</div>
-                <div style={{fontSize:12,fontWeight:600,color:"#166534",lineHeight:1.6}}>{fb.praise}</div>
-              </div>
-              <div className="sd-fb-section">
-                <div className="sd-fb-section-title" style={{color:"var(--blue)"}}>🎨 Strongest technique</div>
-                <div style={{fontSize:12,fontWeight:600,color:"var(--navy)",lineHeight:1.6}}>{fb.technique}</div>
-              </div>
-              <div className="sd-fb-section">
-                <div className="sd-fb-section-title" style={{color:"var(--orange)"}}>💡 Make it even better</div>
-                <div style={{fontSize:12,fontWeight:600,color:"#92400e",lineHeight:1.6}}>{fb.improve}</div>
-              </div>
-              <div style={{padding:"10px 14px",borderRadius:10,background:"#f5f3ff",border:"1px solid var(--purple)",fontSize:12,fontWeight:700,color:"var(--purple)"}}>
-                🎯 Next challenge: {fb.nextChallenge}
-              </div>
+          {drawFeedbackLoading&&(
+            <div style={{textAlign:"center",padding:52,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
+              <div style={{fontSize:56,animation:"float 1s ease-in-out infinite",marginBottom:14}}>🦉</div>
+              <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Nova is studying your drawing...</div>
+              <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Looking at your lines, shapes, shading, and proportions</div>
             </div>
+          )}
 
-            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-              <button onClick={()=>{setDrawScreen("canvas");setDrawFeedback(null);}}
-                style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--purple)"}}>
-                🎨 Draw Again
-              </button>
-              <button onClick={()=>{setDrawScreen("home");setDrawFeedback(null);}}
-                style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
-                📚 More Tutorials
-              </button>
-            </div>
-          </>
-        )}
+          {fb&&!drawFeedbackLoading&&(
+            <>
+              {/* Score card */}
+              <div className="sd-feedback-card">
+                <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
+                  <div style={{textAlign:"center"}}>
+                    <div style={{fontSize:48,fontWeight:900,color:scoreColors[sc],lineHeight:1}}>{sc}</div>
+                    <div style={{fontSize:11,fontWeight:700,color:"var(--muted)"}}>/10</div>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:4}}>{fb.scoreLabel}</div>
+                    <div style={{height:8,background:"var(--border)",borderRadius:6,overflow:"hidden"}}>
+                      <div style={{height:"100%",background:scoreColors[sc],borderRadius:6,width:(sc*10)+"%",transition:"width .8s"}}/>
+                    </div>
+                    <div style={{fontSize:10,fontWeight:700,color:"var(--muted)",marginTop:4}}>{drawTutorial?.name} · {path?.name}</div>
+                  </div>
+                </div>
+
+                {(fb.badges||[]).length>0&&(
+                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
+                    {fb.badges.map((b,i)=>(
+                      <span key={i} style={{padding:"5px 12px",borderRadius:20,background:"linear-gradient(135deg,#fbbf24,#f97316)",color:"#fff",fontSize:11,fontWeight:900,boxShadow:"0 2px 6px rgba(249,115,22,.3)"}}>🏅 {b}</span>
+                    ))}
+                  </div>
+                )}
+
+                <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                  <div>
+                    <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--green)",marginBottom:4}}>⭐ What you did great</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"#166534",lineHeight:1.7,padding:"10px 14px",background:"#f0fdf4",borderRadius:10}}>{fb.praise}</div>
+                  </div>
+                  <div>
+                    <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--blue)",marginBottom:4}}>🎨 Your strongest technique</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"var(--navy)",lineHeight:1.7,padding:"10px 14px",background:"#eff6ff",borderRadius:10}}>{fb.technique}</div>
+                  </div>
+                  <div>
+                    <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--orange)",marginBottom:4}}>💡 To make it even better next time</div>
+                    <div style={{fontSize:13,fontWeight:600,color:"#92400e",lineHeight:1.7,padding:"10px 14px",background:"#fff7ed",borderRadius:10}}>{fb.improve}</div>
+                  </div>
+                  <div style={{padding:"12px 14px",borderRadius:10,background:"#f5f3ff",border:"2px solid var(--purple)"}}>
+                    <div style={{fontSize:10,fontWeight:900,letterSpacing:"1px",textTransform:"uppercase",color:"var(--purple)",marginBottom:4}}>🎯 Your next challenge</div>
+                    <div style={{fontSize:13,fontWeight:700,color:"var(--purple)",lineHeight:1.6}}>{fb.nextChallenge}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+                <button onClick={()=>{setDrawFeedback(null);setDrawScreen("tutorial");}}
+                  style={{flex:1,padding:"12px",borderRadius:12,border:"2px solid var(--border)",background:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer",color:"var(--navy)"}}>
+                  ↩ Try Again
+                </button>
+                <button onClick={()=>{setDrawFeedback(null);setDrawScreen("home");}}
+                  style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:path?.color||"var(--purple)",color:"#fff",fontFamily:"var(--font)",fontSize:12,fontWeight:900,cursor:"pointer"}}>
+                  Next Lesson →
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     );
   }
 
+  /* ── Drawing Canvas ── full tool set + trace overlay ── */
   function DrawingBoard(){
     const canvasRef=useRef(null);
     const ctxRef=useRef(null);
     const isDrawingRef=useRef(false);
     const lastPosRef=useRef({x:0,y:0});
-    const historyRef=useRef([]); // array of ImageData snapshots
+    const historyRef=useRef([]);
     const redoRef=useRef([]);
+    const shapeStartRef=useRef(null);
+    const shapeSnapRef=useRef(null);
 
-    const [tool,setTool]=React.useState("pen");     // pen|eraser|fill|line|rect|circle
-    const [color,setColor]=React.useState("#1e293b");
-    const [size,setSize]=React.useState(4);
-    const [bgColor,setBgColor]=React.useState("#ffffff");
-    const [canUndo,setCanUndo]=React.useState(false);
-    const [canRedo,setCanRedo]=React.useState(false);
+    const[tool,setTool]=React.useState("pen");
+    const[color,setColor]=React.useState("#1e293b");
+    const[size,setSize]=React.useState(4);
+    const[bgColor,setBgColor]=React.useState("#ffffff");
+    const[canUndo,setCanUndo]=React.useState(false);
+    const[canRedo,setCanRedo]=React.useState(false);
+    const[pattern,setPattern]=React.useState("none"); // none|dots|lines|cross
 
     const COLORS=["#1e293b","#ef4444","#f97316","#eab308","#22c55e","#14b8a6","#3b82f6","#8b5cf6","#ec4899","#ffffff","#94a3b8","#713f12"];
     const SIZES=[{v:2,l:"XS"},{v:4,l:"S"},{v:8,l:"M"},{v:16,l:"L"},{v:28,l:"XL"}];
-    const TOOLS=[{k:"pen",i:"✏️",l:"Pen"},{k:"eraser",i:"⚪",l:"Eraser"},{k:"line",i:"╱",l:"Line"},{k:"rect",i:"▭",l:"Rect"},{k:"circle",i:"○",l:"Circle"},{k:"fill",i:"🪣",l:"Fill"}];
+    const TOOLS=[
+      {k:"pen",i:"✏️",l:"Pen"},
+      {k:"eraser",i:"⚪",l:"Eraser"},
+      {k:"watercolor",i:"💧",l:"Watercolor"},
+      {k:"spray",i:"🌫️",l:"Spray"},
+      {k:"line",i:"╱",l:"Line"},
+      {k:"rect",i:"▭",l:"Rect"},
+      {k:"circle",i:"○",l:"Circle"},
+      {k:"fill",i:"🪣",l:"Fill"},
+    ];
+    const PATTERNS=[{k:"none",l:"None"},{k:"dots",l:"Dots"},{k:"lines",l:"Lines"},{k:"cross",l:"Cross"}];
 
-    // Initialise canvas
     React.useEffect(()=>{
       const canvas=canvasRef.current;
       if(!canvas)return;
       const resize=()=>{
         const wrap=canvas.parentElement;
-        const snapshot=ctxRef.current?ctxRef.current.getImageData(0,0,canvas.width,canvas.height):null;
+        const snap=ctxRef.current?ctxRef.current.getImageData(0,0,canvas.width,canvas.height):null;
         canvas.width=wrap.clientWidth;
         canvas.height=wrap.clientHeight;
         const ctx=canvas.getContext("2d");
-        ctx.fillStyle=bgColor;
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        if(snapshot&&snapshot.width===canvas.width&&snapshot.height===canvas.height){
-          ctx.putImageData(snapshot,0,0);
-        }
+        ctx.fillStyle=bgColor;ctx.fillRect(0,0,canvas.width,canvas.height);
+        if(snap&&snap.width===canvas.width&&snap.height===canvas.height)ctx.putImageData(snap,0,0);
         ctxRef.current=ctx;
-        ctx.lineCap="round";
-        ctx.lineJoin="round";
+        ctx.lineCap="round";ctx.lineJoin="round";
       };
       resize();
       window.addEventListener("resize",resize);
@@ -4848,85 +5172,70 @@ Respond ONLY with valid JSON (no markdown):
     const getPos=(e)=>{
       const canvas=canvasRef.current;
       const rect=canvas.getBoundingClientRect();
-      const scaleX=canvas.width/rect.width;
-      const scaleY=canvas.height/rect.height;
-      if(e.touches){
-        return{x:(e.touches[0].clientX-rect.left)*scaleX,y:(e.touches[0].clientY-rect.top)*scaleY};
-      }
-      return{x:(e.clientX-rect.left)*scaleX,y:(e.clientY-rect.top)*scaleY};
+      const sx=canvas.width/rect.width,sy=canvas.height/rect.height;
+      if(e.touches)return{x:(e.touches[0].clientX-rect.left)*sx,y:(e.touches[0].clientY-rect.top)*sy};
+      return{x:(e.clientX-rect.left)*sx,y:(e.clientY-rect.top)*sy};
     };
 
     const saveSnapshot=()=>{
-      const canvas=canvasRef.current;
-      const ctx=ctxRef.current;
-      if(!canvas||!ctx)return;
+      const canvas=canvasRef.current,ctx=ctxRef.current;if(!canvas||!ctx)return;
       historyRef.current.push(ctx.getImageData(0,0,canvas.width,canvas.height));
-      if(historyRef.current.length>40)historyRef.current.shift();
-      redoRef.current=[];
-      setCanUndo(true);setCanRedo(false);
+      if(historyRef.current.length>50)historyRef.current.shift();
+      redoRef.current=[];setCanUndo(true);setCanRedo(false);
     };
 
     const undo=()=>{
-      const canvas=canvasRef.current;const ctx=ctxRef.current;
-      if(!historyRef.current.length||!ctx)return;
+      const canvas=canvasRef.current,ctx=ctxRef.current;if(!historyRef.current.length||!ctx)return;
       redoRef.current.push(ctx.getImageData(0,0,canvas.width,canvas.height));
       ctx.putImageData(historyRef.current.pop(),0,0);
       setCanUndo(historyRef.current.length>0);setCanRedo(true);
     };
-
     const redo=()=>{
-      const canvas=canvasRef.current;const ctx=ctxRef.current;
-      if(!redoRef.current.length||!ctx)return;
+      const canvas=canvasRef.current,ctx=ctxRef.current;if(!redoRef.current.length||!ctx)return;
       historyRef.current.push(ctx.getImageData(0,0,canvas.width,canvas.height));
       ctx.putImageData(redoRef.current.pop(),0,0);
       setCanUndo(true);setCanRedo(redoRef.current.length>0);
     };
-
     const clearCanvas=()=>{
-      const canvas=canvasRef.current;const ctx=ctxRef.current;if(!ctx)return;
-      saveSnapshot();
-      ctx.fillStyle=bgColor;ctx.fillRect(0,0,canvas.width,canvas.height);
+      const canvas=canvasRef.current,ctx=ctxRef.current;if(!ctx)return;
+      saveSnapshot();ctx.fillStyle=bgColor;ctx.fillRect(0,0,canvas.width,canvas.height);
     };
 
-    // Flood fill implementation
-    const floodFill=(x,y,fillColor)=>{
-      const canvas=canvasRef.current;const ctx=ctxRef.current;if(!ctx)return;
+    const hexToRgb=(hex)=>{const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);return r?{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}:null;};
+
+    const floodFill=(x,y,fc)=>{
+      const canvas=canvasRef.current,ctx=ctxRef.current;if(!ctx)return;
       saveSnapshot();
-      const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
-      const data=imageData.data;
-      const w=canvas.width;const h=canvas.height;
+      const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+      const data=img.data,w=canvas.width,h=canvas.height;
       const idx=(px,py)=>(py*w+px)*4;
       const tx=Math.round(x),ty=Math.round(y);
       if(tx<0||tx>=w||ty<0||ty>=h)return;
       const ti=idx(tx,ty);
-      const tr=data[ti],tg=data[ti+1],tb=data[ti+2],ta=data[ti+3];
-      const fc=hexToRgb(fillColor);
-      if(!fc)return;
-      if(tr===fc.r&&tg===fc.g&&tb===fc.b)return;
-      const match=(i)=>Math.abs(data[i]-tr)<30&&Math.abs(data[i+1]-tg)<30&&Math.abs(data[i+2]-tb)<30&&Math.abs(data[i+3]-ta)<30;
-      const stack=[[tx,ty]];
-      const visited=new Uint8Array(w*h);
+      const tr=data[ti],tg=data[ti+1],tb=data[ti+2];
+      const rgb=hexToRgb(fc);if(!rgb||tr===rgb.r&&tg===rgb.g&&tb===rgb.b)return;
+      const match=i=>Math.abs(data[i]-tr)<30&&Math.abs(data[i+1]-tg)<30&&Math.abs(data[i+2]-tb)<30;
+      const stack=[[tx,ty]],vis=new Uint8Array(w*h);
       while(stack.length){
-        const [cx,cy]=stack.pop();
+        const[cx,cy]=stack.pop();
         if(cx<0||cx>=w||cy<0||cy>=h)continue;
         const ci=idx(cx,cy);
-        if(visited[cy*w+cx])continue;
-        if(!match(ci))continue;
-        visited[cy*w+cx]=1;
-        data[ci]=fc.r;data[ci+1]=fc.g;data[ci+2]=fc.b;data[ci+3]=255;
+        if(vis[cy*w+cx]||!match(ci))continue;
+        vis[cy*w+cx]=1;data[ci]=rgb.r;data[ci+1]=rgb.g;data[ci+2]=rgb.b;data[ci+3]=255;
         stack.push([cx+1,cy],[cx-1,cy],[cx,cy+1],[cx,cy-1]);
       }
-      ctx.putImageData(imageData,0,0);
+      ctx.putImageData(img,0,0);
     };
 
-    const hexToRgb=(hex)=>{
-      const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return r?{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}:null;
+    const drawPattern=(ctx,x,y,sz)=>{
+      if(pattern==="none")return;
+      const rgb=hexToRgb(color);if(!rgb)return;
+      ctx.save();ctx.globalAlpha=.4;
+      if(pattern==="dots"){for(let i=-sz;i<=sz;i+=6){for(let j=-sz;j<=sz;j+=6){if(i*i+j*j<=sz*sz){ctx.beginPath();ctx.arc(x+i,y+j,1,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}}}}
+      else if(pattern==="lines"){for(let i=-sz;i<=sz;i+=5){ctx.beginPath();ctx.moveTo(x-sz,y+i);ctx.lineTo(x+sz,y+i);ctx.strokeStyle=color;ctx.lineWidth=1;ctx.stroke();}}
+      else if(pattern==="cross"){for(let i=-sz;i<=sz;i+=6){ctx.beginPath();ctx.moveTo(x-sz,y+i);ctx.lineTo(x+sz,y+i);ctx.strokeStyle=color;ctx.lineWidth=1;ctx.stroke();ctx.beginPath();ctx.moveTo(x+i,y-sz);ctx.lineTo(x+i,y+sz);ctx.stroke();}}
+      ctx.restore();
     };
-
-    // Shape preview snapshot
-    const shapeStartRef=useRef(null);
-    const shapeSnapRef=useRef(null);
 
     const startDraw=(e)=>{
       e.preventDefault();
@@ -4934,27 +5243,35 @@ Respond ONLY with valid JSON (no markdown):
       isDrawingRef.current=true;
       lastPosRef.current=pos;
       const ctx=ctxRef.current;if(!ctx)return;
-
-      if(tool==="fill"){
-        floodFill(pos.x,pos.y,color);
-        isDrawingRef.current=false;
-        return;
-      }
+      if(tool==="fill"){floodFill(pos.x,pos.y,color);isDrawingRef.current=false;return;}
       if(tool==="line"||tool==="rect"||tool==="circle"){
-        saveSnapshot();
-        shapeStartRef.current=pos;
-        shapeSnapRef.current=ctx.getImageData(0,0,canvasRef.current.width,canvasRef.current.height);
-        return;
+        saveSnapshot();shapeStartRef.current=pos;
+        shapeSnapRef.current=ctx.getImageData(0,0,canvasRef.current.width,canvasRef.current.height);return;
       }
       saveSnapshot();
-      ctx.beginPath();
-      ctx.moveTo(pos.x,pos.y);
-      // Draw a dot for single tap
-      ctx.strokeStyle=tool==="eraser"?bgColor:color;
-      ctx.lineWidth=tool==="eraser"?size*3:size;
-      ctx.lineCap="round";ctx.lineJoin="round";
-      ctx.lineTo(pos.x+0.1,pos.y+0.1);
-      ctx.stroke();
+      if(tool==="spray"){drawSpray(ctx,pos.x,pos.y);}
+      else{
+        ctx.beginPath();ctx.moveTo(pos.x,pos.y);
+        ctx.strokeStyle=tool==="eraser"?bgColor:color;
+        ctx.lineWidth=tool==="eraser"?size*3:size;
+        ctx.globalAlpha=tool==="watercolor"?.35:1;
+        ctx.lineTo(pos.x+.1,pos.y+.1);ctx.stroke();
+        ctx.globalAlpha=1;
+        if(pattern!=="none")drawPattern(ctx,pos.x,pos.y,size*2);
+      }
+    };
+
+    const drawSpray=(ctx,x,y)=>{
+      ctx.save();
+      const density=size*8;
+      for(let i=0;i<density;i++){
+        const r=size*2*Math.random();
+        const a=Math.random()*Math.PI*2;
+        ctx.fillStyle=color;
+        ctx.globalAlpha=Math.random()*.6;
+        ctx.fillRect(x+r*Math.cos(a),y+r*Math.sin(a),1.5,1.5);
+      }
+      ctx.restore();
     };
 
     const draw=(e)=>{
@@ -4962,159 +5279,130 @@ Respond ONLY with valid JSON (no markdown):
       if(!isDrawingRef.current)return;
       const ctx=ctxRef.current;if(!ctx)return;
       const pos=getPos(e);
-
       if(tool==="line"||tool==="rect"||tool==="circle"){
         if(!shapeSnapRef.current||!shapeStartRef.current)return;
         ctx.putImageData(shapeSnapRef.current,0,0);
-        ctx.strokeStyle=color;ctx.lineWidth=size;ctx.lineCap="round";ctx.lineJoin="round";
         const sx=shapeStartRef.current.x,sy=shapeStartRef.current.y;
+        ctx.strokeStyle=color;ctx.lineWidth=size;ctx.lineCap="round";ctx.lineJoin="round";
         ctx.beginPath();
         if(tool==="line"){ctx.moveTo(sx,sy);ctx.lineTo(pos.x,pos.y);}
         else if(tool==="rect"){ctx.strokeRect(sx,sy,pos.x-sx,pos.y-sy);}
-        else if(tool==="circle"){
-          const rx=Math.abs(pos.x-sx)/2,ry=Math.abs(pos.y-sy)/2;
-          ctx.ellipse(sx+(pos.x-sx)/2,sy+(pos.y-sy)/2,rx,ry,0,0,Math.PI*2);
-        }
-        ctx.stroke();
-        lastPosRef.current=pos;return;
+        else{const rx=Math.abs(pos.x-sx)/2,ry=Math.abs(pos.y-sy)/2;ctx.ellipse(sx+(pos.x-sx)/2,sy+(pos.y-sy)/2,rx,ry,0,0,Math.PI*2);}
+        ctx.stroke();lastPosRef.current=pos;return;
       }
-
-      ctx.beginPath();
-      ctx.moveTo(lastPosRef.current.x,lastPosRef.current.y);
-      ctx.lineTo(pos.x,pos.y);
+      if(tool==="spray"){drawSpray(ctx,pos.x,pos.y);lastPosRef.current=pos;return;}
+      ctx.beginPath();ctx.moveTo(lastPosRef.current.x,lastPosRef.current.y);ctx.lineTo(pos.x,pos.y);
       ctx.strokeStyle=tool==="eraser"?bgColor:color;
       ctx.lineWidth=tool==="eraser"?size*3:size;
-      ctx.lineCap="round";ctx.lineJoin="round";
-      ctx.stroke();
+      ctx.globalAlpha=tool==="watercolor"?.35:1;
+      ctx.lineCap="round";ctx.lineJoin="round";ctx.stroke();
+      ctx.globalAlpha=1;
+      if(pattern!=="none"&&tool==="pen")drawPattern(ctx,pos.x,pos.y,size*1.5);
       lastPosRef.current=pos;
     };
 
-    const stopDraw=(e)=>{
-      if(e)e.preventDefault();
-      isDrawingRef.current=false;
-      shapeStartRef.current=null;
-      shapeSnapRef.current=null;
-    };
+    const stopDraw=(e)=>{if(e)e.preventDefault();isDrawingRef.current=false;shapeStartRef.current=null;shapeSnapRef.current=null;if(ctxRef.current)ctxRef.current.globalAlpha=1;};
 
     const saveDrawing=()=>{
       const canvas=canvasRef.current;if(!canvas)return;
-      const link=document.createElement("a");
-      link.download=`nova-drawing-${profile?.name||"student"}-${new Date().toISOString().slice(0,10)}.png`;
-      link.href=canvas.toDataURL("image/png");
-      link.click();
+      const a=document.createElement("a");
+      a.download=`nova-drawing-${profile?.name||"artist"}-${new Date().toISOString().slice(0,10)}.png`;
+      a.href=canvas.toDataURL("image/png");a.click();
     };
 
-    const saveToNotes=()=>{
+    const saveToNotesCanvas=()=>{
       const canvas=canvasRef.current;if(!canvas)return;
       const dataUrl=canvas.toDataURL("image/png");
-      const note={
-        id:Date.now(),type:"drawing",
-        date:new Date().toISOString(),
-        title:"Drawing — "+new Date().toLocaleDateString(),
-        imageData:dataUrl,
-        studentName:profile?.name,grade:profile?.grade,
-      };
-      saveStudentNote(note);
-      // Visual feedback
+      saveStudentNote({id:Date.now(),type:"drawing",date:new Date().toISOString(),title:"Drawing — "+new Date().toLocaleDateString(),imageData:dataUrl,studentName:profile?.name,grade:profile?.grade});
       alert("✅ Drawing saved to Student Notes!");
+    };
+
+    const submitCanvasForFeedback=()=>{
+      const canvas=canvasRef.current;if(!canvas)return;
+      const dataUrl=canvas.toDataURL("image/png");
+      setDrawScreen("feedback");
+      getDrawingFeedback(dataUrl,drawTutorial?.name||"Freehand Drawing",drawTutorial?.id||"free_"+Date.now());
     };
 
     return(
       <div className="draw-wrap">
         {/* Toolbar */}
         <div className="draw-toolbar">
+          {/* Tutorial steps shortcut */}
+          {drawTutorial&&(
+            <button onClick={()=>setDrawScreen("tutorial")} title="Back to steps"
+              style={{padding:"6px 12px",borderRadius:9,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--purple)",flexShrink:0}}>
+              📋 Steps
+            </button>
+          )}
+
+          {/* Trace toggle */}
+          {drawTutorial&&(
+            <button onClick={()=>setDrawTraceMode(v=>!v)} title="Toggle trace guide"
+              className={"draw-tool-btn"+(drawTraceMode?" active":"")} style={{fontSize:14,fontWeight:900,width:"auto",padding:"0 10px"}}>
+              {drawTraceMode?"🔵 Trace ON":"⭕ Trace"}
+            </button>
+          )}
+
+          <div style={{width:1,height:26,background:"var(--border)",flexShrink:0}}/>
+
           {/* Tools */}
           {TOOLS.map(t=>(
-            <button key={t.k} title={t.l}
-              className={"draw-tool-btn"+(tool===t.k?" active":"")}
-              onClick={()=>setTool(t.k)}>
-              {t.i}
-            </button>
+            <button key={t.k} title={t.l} className={"draw-tool-btn"+(tool===t.k?" active":"")} onClick={()=>setTool(t.k)}>{t.i}</button>
           ))}
 
-          <div style={{width:1,height:28,background:"var(--border)",flexShrink:0,margin:"0 2px"}}/>
+          <div style={{width:1,height:26,background:"var(--border)",flexShrink:0}}/>
 
           {/* Sizes */}
           {SIZES.map(s=>(
-            <button key={s.v}
-              className={"draw-size-btn"+(size===s.v?" active":"")}
-              onClick={()=>setSize(s.v)}>
-              {s.l}
-            </button>
+            <button key={s.v} className={"draw-size-btn"+(size===s.v?" active":"")} onClick={()=>setSize(s.v)}>{s.l}</button>
           ))}
 
-          <div style={{width:1,height:28,background:"var(--border)",flexShrink:0,margin:"0 2px"}}/>
+          <div style={{width:1,height:26,background:"var(--border)",flexShrink:0}}/>
+
+          {/* Pattern picker */}
+          {PATTERNS.map(p=>(
+            <button key={p.k} className={"draw-size-btn"+(pattern===p.k?" active":"")} onClick={()=>setPattern(p.k)} style={{fontSize:9}}>{p.l}</button>
+          ))}
+
+          <div style={{width:1,height:26,background:"var(--border)",flexShrink:0}}/>
 
           {/* Colours */}
           {COLORS.map(c=>(
-            <div key={c}
-              className={"draw-color-swatch"+(color===c?" active":"")}
+            <div key={c} className={"draw-color-swatch"+(color===c?" active":"")}
               style={{background:c,border:c==="#ffffff"?"2px solid #e2e8f0":color===c?"3px solid var(--navy)":"3px solid transparent"}}
               onClick={()=>setColor(c)}/>
           ))}
-          {/* Custom colour picker */}
-          <label title="Custom colour" style={{width:30,height:30,borderRadius:"50%",border:"2px dashed var(--purple)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,flexShrink:0}}>
+          <label title="Custom colour" style={{width:28,height:28,borderRadius:"50%",border:"2px dashed var(--purple)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>
             <input type="color" value={color} onChange={e=>setColor(e.target.value)} style={{opacity:0,width:0,height:0,position:"absolute"}}/>
             🎨
           </label>
         </div>
 
-        {/* Canvas */}
+        {/* Canvas + trace overlay */}
         <div className="draw-canvas-wrap">
-          <canvas
-            ref={canvasRef}
-            className="draw-canvas"
+          {drawTraceMode&&drawTutorial&&(
+            <div className="sd-trace-overlay">{drawTutorial.icon}</div>
+          )}
+          <canvas ref={canvasRef} className="draw-canvas"
             style={{cursor:tool==="eraser"?"cell":tool==="fill"?"crosshair":"crosshair",width:"100%",height:"100%"}}
             onMouseDown={startDraw} onMouseMove={draw} onMouseUp={stopDraw} onMouseLeave={stopDraw}
             onTouchStart={startDraw} onTouchMove={draw} onTouchEnd={stopDraw}/>
         </div>
 
-        {/* Bottom actions */}
+        {/* Bottom bar */}
         <div className="draw-actions">
-          {drawTutorial&&(
-            <button onClick={()=>setDrawScreen("tutorial")}
-              style={{padding:"8px 12px",borderRadius:10,border:"2px solid var(--purple)",background:"#f5f3ff",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"var(--purple)"}}>
-              📋 Steps
-            </button>
-          )}
-          <button onClick={undo} disabled={!canUndo}
-            style={{padding:"8px 14px",borderRadius:10,border:"2px solid var(--border)",background:canUndo?"#fff":"#f8fafc",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:canUndo?"pointer":"not-allowed",color:canUndo?"var(--navy)":"var(--muted)"}}>
-            ↩ Undo
-          </button>
-          <button onClick={redo} disabled={!canRedo}
-            style={{padding:"8px 14px",borderRadius:10,border:"2px solid var(--border)",background:canRedo?"#fff":"#f8fafc",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:canRedo?"pointer":"not-allowed",color:canRedo?"var(--navy)":"var(--muted)"}}>
-            ↪ Redo
-          </button>
-          <button onClick={clearCanvas}
-            style={{padding:"8px 14px",borderRadius:10,border:"2px solid #fecaca",background:"#fef2f2",fontFamily:"var(--font)",fontSize:11,fontWeight:800,cursor:"pointer",color:"var(--red)"}}>
-            🗑️ Clear
-          </button>
-          <label style={{display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderRadius:10,border:"2px solid var(--border)",background:"#fff",cursor:"pointer",fontSize:11,fontWeight:800,color:"var(--muted)"}}>
-            <div style={{width:16,height:16,borderRadius:4,background:bgColor,border:"1px solid #e2e8f0"}}/>
-            BG
+          <button onClick={undo} disabled={!canUndo} style={{padding:"7px 12px",borderRadius:9,border:"2px solid var(--border)",background:canUndo?"#fff":"#f8fafc",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:canUndo?"pointer":"not-allowed",color:canUndo?"var(--navy)":"var(--muted)"}}>↩ Undo</button>
+          <button onClick={redo} disabled={!canRedo} style={{padding:"7px 12px",borderRadius:9,border:"2px solid var(--border)",background:canRedo?"#fff":"#f8fafc",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:canRedo?"pointer":"not-allowed",color:canRedo?"var(--navy)":"var(--muted)"}}>↪ Redo</button>
+          <button onClick={clearCanvas} style={{padding:"7px 12px",borderRadius:9,border:"2px solid #fecaca",background:"#fef2f2",fontFamily:"var(--font)",fontSize:10,fontWeight:800,cursor:"pointer",color:"var(--red)"}}>🗑️ Clear</button>
+          <label style={{display:"flex",alignItems:"center",gap:5,padding:"5px 10px",borderRadius:9,border:"2px solid var(--border)",background:"#fff",cursor:"pointer",fontSize:10,fontWeight:800,color:"var(--muted)"}}>
+            <div style={{width:14,height:14,borderRadius:3,background:bgColor,border:"1px solid #e2e8f0"}}/>BG
             <input type="color" value={bgColor} onChange={e=>setBgColor(e.target.value)} style={{opacity:0,width:0,height:0,position:"absolute"}}/>
           </label>
           <div style={{flex:1}}/>
-          <button onClick={saveToNotes}
-            style={{padding:"8px 14px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
-            📓 Notes
-          </button>
-          <button onClick={saveDrawing}
-            style={{padding:"8px 14px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--teal),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
-            ⬇️ PNG
-          </button>
-          {drawTutorial&&(
-            <button onClick={()=>{
-              const canvas=canvasRef.current;
-              if(!canvas)return;
-              const imageData=canvas.toDataURL("image/png");
-              setDrawScreen("feedback");
-              getDrawingFeedback(imageData,drawTutorial.name);
-            }}
-              style={{padding:"8px 16px",borderRadius:10,border:"none",background:"linear-gradient(135deg,var(--orange),var(--yellow))",color:"#fff",fontFamily:"var(--font)",fontSize:11,fontWeight:900,cursor:"pointer"}}>
-              🦉 Get Feedback
-            </button>
-          )}
+          <button onClick={saveToNotesCanvas} style={{padding:"7px 13px",borderRadius:9,border:"none",background:"linear-gradient(135deg,var(--purple),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:900,cursor:"pointer"}}>📓 Notes</button>
+          <button onClick={saveDrawing} style={{padding:"7px 13px",borderRadius:9,border:"none",background:"linear-gradient(135deg,var(--teal),var(--blue))",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:900,cursor:"pointer"}}>⬇️ PNG</button>
+          <button onClick={submitCanvasForFeedback} style={{padding:"7px 13px",borderRadius:9,border:"none",background:"linear-gradient(135deg,#f97316,#fbbf24)",color:"#fff",fontFamily:"var(--font)",fontSize:10,fontWeight:900,cursor:"pointer"}}>🦉 Feedback</button>
         </div>
       </div>
     );
