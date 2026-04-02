@@ -660,7 +660,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 .draw-actions{display:flex;gap:8px;padding:10px 14px;background:#fff;border-top:2px solid var(--border);flex-shrink:0;flex-wrap:wrap;align-items:center}
 /* Feedback */
 .sd-feedback-card{background:#fff;border-radius:14px;padding:18px;border:2px solid var(--green)}
-.sd-fb-score{font-size:28px;font-weight:900;color:var(--navy)}
 .sd-fb-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:12px}
 .sd-fb-section{margin-bottom:10px}
 .sd-fb-section-title{font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
@@ -1749,9 +1748,21 @@ function App(){
   const[drawFeedbackLoading,setDrawFeedbackLoading]=useState(false);
   const[drawPhotoPreview,setDrawPhotoPreview]=useState(null);
   const[drawPhotoLoading,setDrawPhotoLoading]=useState(false);
-  const[drawFilter,setDrawFilter]=useState("All");        // All|Beginner|Intermediate|Advanced
-  const[drawTraceMode,setDrawTraceMode]=useState(false);  // show ghost outline
-  const[drawAutoPlay,setDrawAutoPlay]=useState(false);    // video-style auto-advance
+  // DrawHome local state — lifted to avoid remount
+  const[drawShowJournal,setDrawShowJournal]=useState(false);
+  // DrawingBoard tool state — lifted to avoid canvas clearing on remount
+  const[canvasTool,setCanvasTool]=useState("pen");
+  const[canvasColor,setCanvasColor]=useState("#1e293b");
+  const[canvasSize,setCanvasSize]=useState(4);
+  const[canvasBgColor,setCanvasBgColor]=useState("#ffffff");
+  const[canvasCanUndo,setCanvasCanUndo]=useState(false);
+  const[canvasCanRedo,setCanvasCanRedo]=useState(false);
+  const[canvasPattern,setCanvasPattern]=useState("none");
+  // StudentNotes filter tab — lifted to avoid remount
+  const[notesActiveTab,setNotesActiveTab]=useState("all");
+  const[drawFilter,setDrawFilter]=useState("All");
+  const[drawTraceMode,setDrawTraceMode]=useState(false);
+  const[drawAutoPlay,setDrawAutoPlay]=useState(false);
   const[drawHistory,setDrawHistory]=useState(()=>{
     const u=localStorage.getItem("nova_user")||"";
     const p=localStorage.getItem("nova_draw_"+u);
@@ -4192,7 +4203,7 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
         ):(()=>{
           // Filter tabs
           const tabs=[{k:"all",l:"All",count:studentNotes.length},{k:"essay",l:"✏️ Essays",count:studentNotes.filter(n=>n.type==="essay").length},{k:"scan",l:"📄 Scans",count:studentNotes.filter(n=>n.type!=="essay"&&n.type!=="drawing").length},{k:"drawing",l:"🎨 Drawings",count:studentNotes.filter(n=>n.type==="drawing").length}].filter(t=>t.count>0);
-          const[activeTab,setActiveTab]=React.useState("all");
+          const[activeTab,setActiveTab]=[notesActiveTab,setNotesActiveTab];
           const filtered=activeTab==="all"?studentNotes:studentNotes.filter(n=>activeTab==="essay"?n.type==="essay":activeTab==="drawing"?n.type==="drawing":n.type!=="essay"&&n.type!=="drawing");
           return(
             <div style={{display:"flex",flexDirection:"column",gap:10}}>
@@ -4249,7 +4260,6 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
                         <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f5f3ff",color:"var(--purple)"}}>{total} annotations</span>
                         <span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>{chosen} chosen</span>
                       </>}
-                      {isDrawing&&n.score&&<span style={{fontSize:10,fontWeight:700,padding:"3px 9px",borderRadius:20,background:"#f0fdf4",color:"var(--green)"}}>⭐ {n.score}/10</span>}
                     </div>
                     {!isDrawing&&<div style={{marginTop:8,fontSize:11,color:"var(--muted)",fontWeight:600,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{isEssay?(n.body||"").slice(0,120):(n.original||"").slice(0,120)}...</div>}
                   </div>
@@ -4686,8 +4696,8 @@ Respond ONLY with a valid JSON object (no markdown, no extra text):
       :{count:s.lastDate===new Date(Date.now()-86400000).toDateString()?s.count+1:1,lastDate:today};
     setDrawStreak(newStreak);
     localStorage.setItem("nova_streak_"+u,JSON.stringify(newStreak));
-    // Award drawing XP (score * 10, bonus for first completion)
-    const xpEarned=(entry.score||5)*10 + (drawHistory[tutId]?.done?0:25);
+    // Award drawing XP (fixed per submission; bonus for first completion of this lesson)
+    const xpEarned=50 + (drawHistory[tutId]?.done?0:25);
     const newXp=drawXp+xpEarned;
     setDrawXp(newXp);
     localStorage.setItem("nova_draw_xp_"+u,String(newXp));
@@ -4751,17 +4761,15 @@ Rules:
 
 Skills they were practicing: ${skills||"basic shapes, line control, proportions"}
 
-Look carefully at their actual drawing and give specific, personalized feedback based on what you can see.
+Look carefully at their actual drawing and give specific, personalized feedback based on what you can see. Do NOT give scores, grades, or rankings — only encouragement and coaching.
 
 Respond ONLY with valid JSON (no markdown, no preamble):
 {
-  "score": <number 1-10>,
-  "scoreLabel": "Keep Practicing|Good Start|Looking Great|Excellent Work|Masterpiece",
   "praise": "2-3 sentences praising SPECIFIC things visible in the drawing — mention shapes, lines, or details you can actually see. Start with the student's name. Be warm and genuine.",
   "technique": "1 sentence about the strongest technical skill shown (e.g. line confidence, shape accuracy, proportions, shading).",
   "improve": "1-2 gentle, actionable suggestions. Focus on ONE specific thing to practice next time (e.g. 'Try making the ears a bit more rounded' not just 'keep practicing').",
   "nextChallenge": "One exciting specific challenge for next time — something achievable and concrete (e.g. 'Add a simple background', 'Try shading the belly darker', 'Draw it again from memory without the guide').",
-  "badges": ["0-2 badges from: First Drawing, Brave Beginner, Shape Master, Detail King, Colour Star, Line Control, Creative Twist, Level Up, Texture Explorer, Shadow Master"]
+  "badges": ["0-2 fun encouragement labels from: First Drawing, Brave Beginner, Shape Master, Detail King, Colour Star, Line Control, Creative Twist, Level Up, Texture Explorer, Shadow Master"]
 }`;
 
     try{
@@ -4774,12 +4782,12 @@ Respond ONLY with valid JSON (no markdown, no preamble):
       // Save to draw history — including the photo for the art journal
       const id=tutorialId||drawTutorial?.id;
       if(id){
-        saveDrawHistory(id,{done:true,score:fb.score,date:new Date().toISOString(),badges:fb.badges||[],imageData});
+        saveDrawHistory(id,{done:true,date:new Date().toISOString(),badges:fb.badges||[],imageData});
         // Also save to student notes as a drawing entry
-        saveStudentNote({id:Date.now(),type:"drawing",date:new Date().toISOString(),title:"Drawing: "+tutorialName,imageData,score:fb.score,feedback:fb,studentName:profile?.name,grade:profile?.grade});
+        saveStudentNote({id:Date.now(),type:"drawing",date:new Date().toISOString(),title:"Drawing: "+tutorialName,imageData,feedback:fb,studentName:profile?.name,grade:profile?.grade});
       }
     }catch{
-      setDrawFeedback({score:7,scoreLabel:"Good Start",praise:(profile?.name||"You")+" made a drawing! That takes real courage and creativity. The shapes look solid!",technique:"Confident line work throughout.",improve:"Try slowing down on the curves — smooth curves take practice!",nextChallenge:"Draw it again from memory without looking at the guide.",badges:["Brave Beginner"]});
+      setDrawFeedback({praise:(profile?.name||"You")+" made a drawing! That takes real courage and creativity. The shapes look solid!",technique:"Confident line work throughout.",improve:"Try slowing down on the curves — smooth curves take practice!",nextChallenge:"Draw it again from memory without looking at the guide.",badges:["Brave Beginner"]});
     }
     setDrawFeedbackLoading(false);
   };
@@ -4888,7 +4896,7 @@ Respond ONLY with valid JSON (no markdown, no preamble):
     const nextLevel=getNextDrawLevel(drawXp);
     const todayDone=Object.values(drawHistory).some(h=>h.date&&new Date(h.date).toDateString()===new Date().toDateString());
     const allBadges=[...new Set(Object.values(drawHistory).flatMap(h=>h.badges||[]))];
-    const[showJournal,setShowJournal]=React.useState(false);
+    const[showJournal,setShowJournal]=[drawShowJournal,setDrawShowJournal];
 
     return(
       <div className="sd-wrap">
@@ -4976,7 +4984,6 @@ Respond ONLY with valid JSON (no markdown, no preamble):
                     {path.lessons.map((lesson,i)=>{
                       const isDone=drawHistory[lesson.id]?.done;
                       const isLocked=i>0&&!drawHistory[path.lessons[i-1].id]?.done;
-                      const score=drawHistory[lesson.id]?.score;
                       const isCurrent=!isDone&&!isLocked&&nextLesson?.id===lesson.id;
                       return(
                         <div key={lesson.id}
@@ -4999,7 +5006,7 @@ Respond ONLY with valid JSON (no markdown, no preamble):
                             </div>
                             <div style={{fontSize:9,color:"var(--muted)",fontWeight:700,marginTop:2}}>{lesson.level} · {lesson.time}</div>
                           </div>
-                          {isDone&&<span style={{fontSize:12,fontWeight:900,color:"var(--green)",flexShrink:0}}>⭐{score}/10</span>}
+                          {isDone&&<span style={{fontSize:11,fontWeight:800,color:"var(--green)",flexShrink:0}}>Done</span>}
                           {isCurrent&&<span style={{fontSize:14,color:path.color,flexShrink:0}}>→</span>}
                         </div>
                       );
@@ -5045,7 +5052,7 @@ Respond ONLY with valid JSON (no markdown, no preamble):
                               <img src={entry.imageData} alt={lesson?.name||"Drawing"} style={{width:"100%",aspectRatio:"1/1",objectFit:"cover"}}/>
                               <div style={{padding:"5px 8px"}}>
                                 <div style={{fontSize:10,fontWeight:900,color:"var(--navy)",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{lesson?.name||"Drawing"}</div>
-                                <div style={{fontSize:9,fontWeight:700,color:"var(--green)"}}>⭐ {entry.score}/10</div>
+                                {entry.date&&<div style={{fontSize:9,fontWeight:600,color:"var(--muted)"}}>{new Date(entry.date).toLocaleDateString()}</div>}
                               </div>
                             </div>
                           );
@@ -5261,42 +5268,27 @@ Respond ONLY with valid JSON (no markdown, no preamble):
   function DrawFeedback(){
     const fb=drawFeedback;
     const path=drawTutorial?.cat;
-    const scoreColors={1:"var(--red)",2:"var(--red)",3:"var(--red)",4:"var(--orange)",5:"var(--orange)",6:"var(--orange)",7:"var(--blue)",8:"var(--blue)",9:"var(--green)",10:"var(--green)"};
-    const sc=Math.min(10,Math.max(1,fb?.score||5));
 
     return(
       <div className="sd-wrap">
         <div className="sd-tut-wrap">
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <button className="writing-back" onClick={()=>setDrawScreen("tutorial")}>← Back to Tutorial</button>
-            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)"}}>🦉 Nova's Art Review</div>
+            <div style={{fontSize:15,fontWeight:900,color:"var(--navy)"}}>🦉 Nova's coaching</div>
           </div>
 
           {drawFeedbackLoading&&(
             <div style={{textAlign:"center",padding:52,background:"#fff",borderRadius:16,border:"2px solid var(--border)"}}>
               <div style={{fontSize:56,animation:"float 1s ease-in-out infinite",marginBottom:14}}>🦉</div>
-              <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Nova is studying your drawing...</div>
-              <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Looking at your lines, shapes, shading, and proportions</div>
+              <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:6}}>Nova is looking at your drawing...</div>
+              <div style={{fontSize:12,color:"var(--muted)",fontWeight:600}}>Lines, shapes, and creative choices — encouragement coming up!</div>
             </div>
           )}
 
           {fb&&!drawFeedbackLoading&&(
             <>
-              {/* Score card */}
               <div className="sd-feedback-card">
-                <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
-                  <div style={{textAlign:"center"}}>
-                    <div style={{fontSize:48,fontWeight:900,color:scoreColors[sc],lineHeight:1}}>{sc}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:"var(--muted)"}}>/10</div>
-                  </div>
-                  <div style={{flex:1}}>
-                    <div style={{fontSize:15,fontWeight:900,color:"var(--navy)",marginBottom:4}}>{fb.scoreLabel}</div>
-                    <div style={{height:8,background:"var(--border)",borderRadius:6,overflow:"hidden"}}>
-                      <div style={{height:"100%",background:scoreColors[sc],borderRadius:6,width:(sc*10)+"%",transition:"width .8s"}}/>
-                    </div>
-                    <div style={{fontSize:10,fontWeight:700,color:"var(--muted)",marginTop:4}}>{drawTutorial?.name} · {path?.name}</div>
-                  </div>
-                </div>
+                <div style={{fontSize:12,fontWeight:800,color:"var(--muted)",marginBottom:14}}>{drawTutorial?.name}{path?" · "+path.name:""}</div>
 
                 {(fb.badges||[]).length>0&&(
                   <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
@@ -5354,13 +5346,13 @@ Respond ONLY with valid JSON (no markdown, no preamble):
     const shapeStartRef=useRef(null);
     const shapeSnapRef=useRef(null);
 
-    const[tool,setTool]=React.useState("pen");
-    const[color,setColor]=React.useState("#1e293b");
-    const[size,setSize]=React.useState(4);
-    const[bgColor,setBgColor]=React.useState("#ffffff");
-    const[canUndo,setCanUndo]=React.useState(false);
-    const[canRedo,setCanRedo]=React.useState(false);
-    const[pattern,setPattern]=React.useState("none"); // none|dots|lines|cross
+    const[tool,setTool]=[canvasTool,setCanvasTool];
+    const[color,setColor]=[canvasColor,setCanvasColor];
+    const[size,setSize]=[canvasSize,setCanvasSize];
+    const[bgColor,setBgColor]=[canvasBgColor,setCanvasBgColor];
+    const[canUndo,setCanUndo]=[canvasCanUndo,setCanvasCanUndo];
+    const[canRedo,setCanRedo]=[canvasCanRedo,setCanvasCanRedo];
+    const[pattern,setPattern]=[canvasPattern,setCanvasPattern]; // none|dots|lines|cross
 
     const COLORS=["#1e293b","#ef4444","#f97316","#eab308","#22c55e","#14b8a6","#3b82f6","#8b5cf6","#ec4899","#ffffff","#94a3b8","#713f12"];
     const SIZES=[{v:2,l:"XS"},{v:4,l:"S"},{v:8,l:"M"},{v:16,l:"L"},{v:28,l:"XL"}];
