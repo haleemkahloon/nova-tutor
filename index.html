@@ -689,13 +689,6 @@ body{font-family:var(--font);background:linear-gradient(160deg,#e0f2fe 0%,#f0fdf
 /* Tool extras */
 .sd-watercolor-preview{width:28px;height:28px;border-radius:50%;opacity:.6;filter:blur(3px);flex-shrink:0;cursor:pointer;border:3px solid transparent;transition:all .15s}
 .sd-watercolor-preview.active{border-color:var(--navy);transform:scale(1.2)}
-/* DRAWING ENGINE STYLES */
-.canvas-container{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;animation:fadeIn 0.5s ease}
-.drawing-card{background:white;border-radius:32px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,0.15);border:6px solid var(--blue);position:relative}
-.main-canvas{background:#fdfaf3;border-radius:16px;cursor:crosshair;touch-action:none;box-shadow:inset 0 2px 10px rgba(0,0,0,0.05)}
-.canvas-toolbar{margin-top:20px;display:flex;gap:15px;justify-content:center}
-.tool-btn{width:50px;height:50px;border-radius:50%;border:2px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:all 0.2s}
-.tool-btn.active{background:var(--blue);color:white;border-color:var(--blue);transform:scale(1.1)}
 </style>
 </head>
 <body>
@@ -1590,72 +1583,6 @@ function buildPrompt(profile,subject,mode,isRem,remTopic){
   return "You are Nova, an enthusiastic and encouraging STEM tutor for "+name+", a "+grade+" grade student.\nMASTERY: Math "+mastery.math+"% · Science "+mastery.science+"% · Coding "+mastery.coding+"%\nGAPS: "+(gaps.join(", ")||"None identified yet")+" | STRENGTHS: "+(strengths.join(", ")||"Still discovering")+"\nTOPIC PROGRESS: "+(tc||"None yet — fresh start!")+"\n"+ic+fw+"\nTEACHING MODE: "+(modeMap[mode]||modeMap.mixed)+"\n"+(subject?"CURRENT FOCUS SUBJECT: "+SUBJ.find(s=>s.key===subject)?.label:"")+rn+sn+"\nRULES: Always use "+name+"'s name. Connect every concept to their interests. Keep explanations to 4-8 sentences. Guide discovery — never just hand over answers. Use 🤔 Think About This!: blocks for challenges and ⭐ Fun Fact: for fascinating context.\nRESOURCES: After teaching a topic, end with a 📚 Practice Resources: block. Mention Khan Academy (with the specific grade/topic), Mathnasium for math, Code.org or Scratch for coding, NASA or Nat Geo Kids for science. Be specific — name the exact unit or activity they should try.";
 }
 
-/* ── DrawingEngine Component ── */
-const DrawingEngine=({onComplete})=>{
-  const canvasRef=React.useRef(null);
-  const contextRef=React.useRef(null);
-  const[isDrawing,setIsDrawing]=React.useState(false);
-  const[tool,setTool]=React.useState("pencil");
-  React.useEffect(()=>{
-    const canvas=canvasRef.current;
-    const dpr=window.devicePixelRatio||1;
-    canvas.style.width="500px";
-    canvas.style.height="400px";
-    canvas.width=500*dpr;
-    canvas.height=400*dpr;
-    const ctx=canvas.getContext("2d");
-    ctx.scale(dpr,dpr);
-    ctx.lineCap="round";
-    ctx.lineJoin="round";
-    ctx.lineWidth=4;
-    ctx.strokeStyle="#1a2744";
-    contextRef.current=ctx;
-  },[]);
-  const getPos=(e)=>{
-    const rect=canvasRef.current.getBoundingClientRect();
-    return{x:(e.clientX||e.touches?.[0]?.clientX)-rect.left,y:(e.clientY||e.touches?.[0]?.clientY)-rect.top};
-  };
-  const startDrawing=(e)=>{
-    const{x,y}=getPos(e);
-    contextRef.current.beginPath();
-    contextRef.current.moveTo(x,y);
-    setIsDrawing(true);
-  };
-  const draw=(e)=>{
-    if(!isDrawing)return;
-    const{x,y}=getPos(e);
-    contextRef.current.lineTo(x,y);
-    contextRef.current.stroke();
-  };
-  const toggleEraser=()=>{
-    setTool("eraser");
-    contextRef.current.strokeStyle="#fdfaf3";
-    contextRef.current.lineWidth=25;
-  };
-  const togglePencil=()=>{
-    setTool("pencil");
-    contextRef.current.strokeStyle="#1a2744";
-    contextRef.current.lineWidth=4;
-  };
-  return(
-    <div className="canvas-container">
-      <div className="drawing-card">
-        <canvas ref={canvasRef}
-          onMouseDown={startDrawing} onMouseMove={draw}
-          onMouseUp={()=>setIsDrawing(false)} onMouseLeave={()=>setIsDrawing(false)}
-          onTouchStart={startDrawing} onTouchMove={draw} onTouchEnd={()=>setIsDrawing(false)}
-          className="main-canvas"/>
-        <div className="canvas-toolbar">
-          <button className={`tool-btn ${tool==="pencil"?"active":""}`} onClick={togglePencil} title="Pencil">✏️</button>
-          <button className={`tool-btn ${tool==="eraser"?"active":""}`} onClick={toggleEraser} title="Eraser">🧼</button>
-          <button className="tool-btn" onClick={()=>contextRef.current.clearRect(0,0,1000,1000)} title="Clear">🗑️</button>
-          <button className="apikey-btn" style={{width:"auto",padding:"0 30px",marginLeft:"20px"}} onClick={onComplete}>Done! ➜</button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 /* ── App ── */
 function App(){
   const[apiKeyInput,setApiKeyInput]=useState("");
@@ -1669,7 +1596,7 @@ function App(){
   const[authErr,setAuthErr]=useState("");
   const[authLoading,setAuthLoading]=useState(false);
   const[syncStatus,setSyncStatus]=useState("idle");
-  const[screen,setScreen]=useState("loading"); // valid screens: loading|apikey|auth|onboard|tutor|parent-hub|DRAWING
+  const[screen,setScreen]=useState("loading"); // valid screens: loading|apikey|auth|onboard|tutor|parent-hub
   const[accountType,setAccountType]=useState(null);
   const[parentData,setParentData]=useState(null);
   const[selectedChild,setSelectedChild]=useState(null);
@@ -2155,7 +2082,7 @@ function App(){
           if(pd._writingHistory){
             localStorage.setItem("nova_writing_"+u,JSON.stringify(pd._writingHistory));
           }
-          if(pd.setupComplete){setProfile(pd);ls.set("nova_profile",JSON.stringify({...pd,username:u}));setAuthLoading(false);setScreen("DRAWING");}
+          if(pd.setupComplete){setProfile(pd);ls.set("nova_profile",JSON.stringify({...pd,username:u}));setAuthLoading(false);setScreen("tutor");}
           else{setAuthLoading(false);setScreen("onboard");}
         }
       }
@@ -2842,12 +2769,6 @@ Keep it warm, personal, specific. Under 220 words total. Address the parent dire
 
   /* ── Screens ── */
   if(screen==="loading")return<div className="app" style={{alignItems:"center",justifyContent:"center"}}><span style={{fontSize:44,animation:"float 1s ease-in-out infinite"}}>🦉</span></div>;
-
-  if(screen==="DRAWING")return(
-    <div className="app">
-      <DrawingEngine onComplete={()=>setScreen("tutor")}/>
-    </div>
-  );
 
   if(screen==="apikey")return(
     <div className="app">
